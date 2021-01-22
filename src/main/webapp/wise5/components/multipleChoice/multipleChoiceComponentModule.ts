@@ -11,7 +11,7 @@ let multipleChoiceComponentModule = angular
   .controller('MultipleChoiceController', MultipleChoiceController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/multipleChoice/i18n');
     }
   ]);

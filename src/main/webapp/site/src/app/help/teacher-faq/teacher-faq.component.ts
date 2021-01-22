@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigService } from "../../services/config.service";
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-teacher-faq',
@@ -7,7 +7,6 @@ import { ConfigService } from "../../services/config.service";
   styleUrls: ['./teacher-faq.component.scss']
 })
 export class TeacherFaqComponent implements OnInit {
-
   contextPath: string;
 
   constructor(private configService: ConfigService) {
@@ -18,9 +17,7 @@ export class TeacherFaqComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     const appHelpElements = document.getElementsByTagName('app-help');

@@ -15,12 +15,13 @@ import { filter, map, startWith } from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None
 })
 export class WorkgroupSelectAutocompleteComponent extends WorkgroupSelectComponent {
-
   myControl = new FormControl();
   filteredWorkgroups: Observable<any>;
 
-  constructor(protected ConfigService: ConfigService,
-      protected TeacherDataService: TeacherDataService) {
+  constructor(
+    protected ConfigService: ConfigService,
+    protected TeacherDataService: TeacherDataService
+  ) {
     super(ConfigService, TeacherDataService);
   }
 
@@ -34,12 +35,11 @@ export class WorkgroupSelectAutocompleteComponent extends WorkgroupSelectCompone
   }
 
   private updateFilteredWorkgroups() {
-    this.filteredWorkgroups = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        filter(value => typeof value === 'string'),
-        map(value => this.filterByTypedKeyword(value))
-      );
+    this.filteredWorkgroups = this.myControl.valueChanges.pipe(
+      startWith(''),
+      filter((value) => typeof value === 'string'),
+      map((value) => this.filterByTypedKeyword(value))
+    );
   }
 
   displayWith(workgroup) {
@@ -47,7 +47,9 @@ export class WorkgroupSelectAutocompleteComponent extends WorkgroupSelectCompone
   }
 
   private filterByTypedKeyword(value: string) {
-    return this.workgroups.filter(workgroup => workgroup.displayNames.toLowerCase().includes(value.toLowerCase()));
+    return this.workgroups.filter((workgroup) =>
+      workgroup.displayNames.toLowerCase().includes(value.toLowerCase())
+    );
   }
 
   currentPeriodChanged() {
@@ -58,8 +60,9 @@ export class WorkgroupSelectAutocompleteComponent extends WorkgroupSelectCompone
     this.workgroups = this.ConfigService.getClassmateUserInfos();
     this.filterWorkgroupsBySelectedPeriod();
     const students = this.getStudentsFromWorkgroups();
-    this.workgroups = this.canViewStudentNames ? this.sortByDisplayNames(students)
-        : this.sortByField(students, 'userId');
+    this.workgroups = this.canViewStudentNames
+      ? this.sortByDisplayNames(students)
+      : this.sortByField(students, 'userId');
     this.updateFilteredWorkgroups();
   }
 

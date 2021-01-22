@@ -1,0 +1,124 @@
+<mat-slide-toggle
+    [(ngModel)]="isShowOERs"
+    color="primary"
+    class="show-oer-toggle"
+    i18n>
+  Show Open Education Resources
+</mat-slide-toggle>
+<div class="select-oer-container" *ngIf="isShowOERs">
+  <p class="select-oer-instructions" i18n>
+    Select from our curated library of OERs or enter your own in the 'URL' field below. (Note: Outside resources must start with 'https://' to be displayed.)
+  </p>
+  <div fxLayout="row wrap">
+    <div fxLayout="row wrap" fxLayoutAlign="start center">
+      <mat-form-field class="topic-filter-container">
+        <mat-label i18n>Filter by Topic</mat-label>
+        <mat-select [(ngModel)]="selectedSubjects"
+            (selectionChange)="searchFieldChanged($event)"
+            multiple>
+          <mat-option *ngFor="let subject of subjects" [value]="subject.value" i18n>
+            {{subject.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="search-container">
+        <input matInput
+            [(ngModel)]="searchText"
+            (ngModelChange)="searchFieldChanged($event)"
+            type="text"
+            placeholder="Search"
+            i18n-placeholder />
+      </mat-form-field>
+      <button mat-button
+          (click)="clearFilters()"
+          *ngIf="searchText || selectedSubjects.length"
+          class="clear-button"
+          aria-label="Clear All"
+          i18n-aria-label
+          matTooltip="Clear All"
+          matTooltipPosition="above"
+          i18n-matTooltip>
+        <mat-icon>clear</mat-icon>
+      </button>
+      <span i18n>{{filteredOpenEducationalResources.length}} Item(s) Found</span>
+    </div>
+  </div>
+  <div fxLayout="row wrap" fxLayout.xs="column" class="oer-cards-container gray-lighter-bg">
+    <div fxFlex.sm="50"
+        fxFlex.md="33"
+        fxFlex.gt-md="25"
+        *ngFor="let openEducationalResource of filteredOpenEducationalResources">
+      <mat-card class="oer-card"
+          [ngStyle]="isResourceSelected(openEducationalResource.url) && {'border': '4px solid #00C853'}">
+        <mat-card-title class="oer-card-title">
+          {{openEducationalResource.metadata.title}}
+        </mat-card-title>
+        <div class="oer-card-image"
+            style="background-image: url('{{openEducationalResource.thumbnail}}');">
+        </div>
+        <mat-card-actions fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon class="success"
+              aria-label="Selected"
+              i18n-aria-label
+              *ngIf="isResourceSelected(openEducationalResource.url)">
+            check_circle
+          </mat-icon>
+          <span class="oer-card-actions-spacer"></span>
+          <a class="oer-info-link"
+              href="{{openEducationalResource.info}}"
+              target="_blank"
+              i18n>
+            Info
+          </a>
+          <button mat-raised-button
+              color="primary"
+              (click)="chooseOpenEducationalResource(openEducationalResource)"
+              target="_blank"
+              [disabled]="isResourceSelected(openEducationalResource.url)"
+              i18n>
+            Select
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center start" class="no-results-message-container">
+      <span *ngIf="filteredOpenEducationalResources.length < 1" i18n>No results found</span>
+    </div>
+  </div>
+</div>
+<div>
+  <mat-form-field class="url-input-container">
+    <mat-label i18n>URL</mat-label>
+    <input matInput
+        [(ngModel)]="authoringComponentContent.url"
+        (ngModelChange)="urlChange.next($event)"
+        placeholder="Enter URL Here"
+        i18n-placeholder />
+  </mat-form-field>
+</div>
+<div fxLayout="row" fxLayoutAlign="start center">
+  <mat-form-field class="dimension-input-container">
+    <mat-label i18n>Width (px) (optional)</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.width"
+        (ngModelChange)="widthChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="dimension-input-container">
+    <mat-label i18n>Height (px)</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.height"
+        (ngModelChange)="heightChange.next($event)"/>
+  </mat-form-field>
+  <span flex></span>
+  <button mat-button
+      (click)="reloadResource()"
+      aria-label="Reload resource"
+      i18n-aria-label
+      matTooltip="Reload resource"
+      matTooltipDirection="above"
+      i18n-matTooltip>
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>

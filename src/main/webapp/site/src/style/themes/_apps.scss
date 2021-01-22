@@ -61,12 +61,8 @@ $subhead-font-size-base:   rem(1.600) !default;
     white-space: nowrap;
   }
 
-  // TODO: remove once bootstrap dependency is removed
   label {
-    font-weight: 500 !important;
-    display: inherit;
-    max-width: none;
-    margin-bottom: 0;
+    font-weight: 500;
   }
 
   .transform--none {

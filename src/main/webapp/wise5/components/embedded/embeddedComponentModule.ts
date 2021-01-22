@@ -5,9 +5,8 @@ import { downgradeInjectable } from '@angular/upgrade/static';
 import { EmbeddedService } from './embeddedService';
 import EmbeddedController from './embeddedController';
 
-const embeddedComponentModule = angular.module('embeddedComponentModule', [
-    'pascalprecht.translate'
-  ])
+const embeddedComponentModule = angular
+  .module('embeddedComponentModule', ['pascalprecht.translate'])
   .service('EmbeddedService', downgradeInjectable(EmbeddedService))
   .controller('EmbeddedController', EmbeddedController)
   .config([

@@ -3,13 +3,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditComponent } from './edit.component';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
-@Component({selector: 'app-edit-password', template: ''})
-class EditPasswordComponent {
-}
+@Component({ selector: 'app-edit-password', template: '' })
+class EditPasswordComponent {}
 
-@Component({selector: 'app-edit-profile', template: ''})
-class EditProfileComponent {
-}
+@Component({ selector: 'app-edit-profile', template: '' })
+class EditProfileComponent {}
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -17,11 +15,10 @@ describe('EditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditComponent ],
-      providers: [ ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      declarations: [EditComponent],
+      providers: [],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

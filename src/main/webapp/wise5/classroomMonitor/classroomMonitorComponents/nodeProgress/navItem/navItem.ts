@@ -30,7 +30,7 @@ class NavItemController {
   isGroup: boolean;
   item: any;
   maxScore: number;
-  newAlert: boolean = false;;
+  newAlert: boolean = false;
   nodeHasWork: boolean;
   nodeId: string;
   nodeTitle: string;
@@ -177,24 +177,26 @@ class NavItemController {
       () => {
         return this.expanded;
       },
-      value => {
+      (value) => {
         this.$scope.$parent.itemExpanded = value;
       }
     );
 
-    this.studentStatusReceivedSubscription =
-        this.StudentStatusService.studentStatusReceived$.subscribe(() => {
-      this.setWorkgroupsOnNodeData();
-      this.setCurrentNodeStatus();
-      this.getAlertNotifications();
-    });
+    this.studentStatusReceivedSubscription = this.StudentStatusService.studentStatusReceived$.subscribe(
+      () => {
+        this.setWorkgroupsOnNodeData();
+        this.setCurrentNodeStatus();
+        this.getAlertNotifications();
+      }
+    );
 
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(({ currentPeriod }) => {
-      this.currentPeriod = currentPeriod;
-      this.setWorkgroupsOnNodeData();
-      this.getAlertNotifications();
-    });
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      ({ currentPeriod }) => {
+        this.currentPeriod = currentPeriod;
+        this.setWorkgroupsOnNodeData();
+        this.getAlertNotifications();
+      }
+    );
 
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
@@ -249,9 +251,11 @@ class NavItemController {
     if (constraints == null) {
       return false;
     } else {
-      return (this.isShowingAllPeriods() && this.isLockedForAll(constraints)) ||
-          (!this.isShowingAllPeriods() && this.isLockedForPeriod(constraints,
-          this.TeacherDataService.getCurrentPeriod().periodId));
+      return (
+        (this.isShowingAllPeriods() && this.isLockedForAll(constraints)) ||
+        (!this.isShowingAllPeriods() &&
+          this.isLockedForPeriod(constraints, this.TeacherDataService.getCurrentPeriod().periodId))
+      );
     }
   }
 
@@ -266,9 +270,11 @@ class NavItemController {
 
   isLockedForPeriod(constraints: any, periodId: number): boolean {
     for (const constraint of constraints) {
-      if (constraint.action === 'makeThisNodeNotVisitable' &&
-          constraint.targetId === this.nodeId &&
-          constraint.removalCriteria[0].params.periodId === periodId) {
+      if (
+        constraint.action === 'makeThisNodeNotVisitable' &&
+        constraint.targetId === this.nodeId &&
+        constraint.removalCriteria[0].params.periodId === periodId
+      ) {
         return true;
       }
     }
@@ -292,23 +298,27 @@ class NavItemController {
   showToggleLockNodeConfirmation(isLocked: boolean) {
     let message = '';
     if (isLocked) {
-      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle,
-          periodName: this.getPeriodLabel() });
+      message = this.$translate('lockNodeConfirmation', {
+        nodeTitle: this.nodeTitle,
+        periodName: this.getPeriodLabel()
+      });
     } else {
-      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle,
-        periodName: this.getPeriodLabel() });
+      message = this.$translate('unlockNodeConfirmation', {
+        nodeTitle: this.nodeTitle,
+        periodName: this.getPeriodLabel()
+      });
     }
-    this.$mdToast.show(
-      this.$mdToast.simple()
-      .textContent(message)
-      .hideDelay(5000));
+    this.$mdToast.show(this.$mdToast.simple().textContent(message).hideDelay(5000));
   }
 
   unlockNode(node: any) {
     if (this.isShowingAllPeriods()) {
       this.unlockNodeForAllPeriods(node);
     } else {
-      this.ProjectService.removeTeacherRemovalConstraint(node, this.TeacherDataService.getCurrentPeriod().periodId);
+      this.ProjectService.removeTeacherRemovalConstraint(
+        node,
+        this.TeacherDataService.getCurrentPeriod().periodId
+      );
     }
   }
 
@@ -316,7 +326,10 @@ class NavItemController {
     if (this.isShowingAllPeriods()) {
       this.lockNodeForAllPeriods(node);
     } else {
-      this.ProjectService.addTeacherRemovalConstraint(node, this.TeacherDataService.getCurrentPeriod().periodId);
+      this.ProjectService.addTeacherRemovalConstraint(
+        node,
+        this.TeacherDataService.getCurrentPeriod().periodId
+      );
     }
   }
 
@@ -428,7 +441,7 @@ class NavItemController {
       this.workgroupsOnNodeData.push({
         workgroupId: id,
         usernames: usernames,
-        avatarColor: avatarColor,
+        avatarColor: avatarColor
       });
     }
   }
@@ -463,8 +476,9 @@ class NavItemController {
   }
 
   getPeriodLabel() {
-    return this.isShowingAllPeriods() ? this.$translate('allPeriods') :
-       this.$translate('periodLabel', { name: this.currentPeriod.periodName });
+    return this.isShowingAllPeriods()
+      ? this.$translate('allPeriods')
+      : this.$translate('periodLabel', { name: this.currentPeriod.periodName });
   }
 
   getNodeLockedText(): string {

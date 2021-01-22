@@ -55,8 +55,10 @@ import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 
-@Component({template: ``})
+@Component({ template: `` })
 export class EmptyComponent {}
 
 @NgModule({
@@ -84,13 +86,13 @@ export class EmptyComponent {}
     MatListModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
-    RouterModule.forChild([
-      {path: '**', component: EmptyComponent}
-    ])
+    RouterModule.forChild([{ path: '**', component: EmptyComponent }])
   ],
   providers: [
     AchievementService,
@@ -142,7 +144,9 @@ export class EmptyComponent {}
     MatListModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
     NodeIconComponent,

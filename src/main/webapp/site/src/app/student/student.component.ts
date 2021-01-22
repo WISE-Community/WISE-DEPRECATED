@@ -7,12 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./student.component.scss']
 })
 export class StudentComponent implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) {
-  }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   isShowingAngularJSApp() {
     return this.router.url.includes('/student/unit');

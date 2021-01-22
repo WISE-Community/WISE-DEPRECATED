@@ -16,9 +16,9 @@ let service: TagService;
 describe('TagService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, ProjectService, SessionService, TagService, UtilService ]
-    })
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService, ProjectService, SessionService, TagService, UtilService]
+    });
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
     projectService = TestBed.get(ProjectService);
@@ -47,10 +47,7 @@ function retrieveRunTags() {
 
 function getNextAvailableTag() {
   it('should get the next available tag', () => {
-    const existingTags = [
-      { name: 'Group 1' },
-      { name: 'Group 2' }
-    ];
+    const existingTags = [{ name: 'Group 1' }, { name: 'Group 2' }];
     spyOn(projectService, 'getTags').and.returnValue(existingTags);
     expect(service.getNextAvailableTag()).toEqual('Group 3');
   });

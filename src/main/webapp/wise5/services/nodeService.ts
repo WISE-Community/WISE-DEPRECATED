@@ -20,13 +20,11 @@ export class NodeService {
   private doneRenderingComponentSource: Subject<any> = new Subject<any>();
   public doneRenderingComponent$ = this.doneRenderingComponentSource.asObservable();
   private componentShowSubmitButtonValueChangedSource: Subject<any> = new Subject<any>();
-  public componentShowSubmitButtonValueChanged$: Observable<any> =
-      this.componentShowSubmitButtonValueChangedSource.asObservable();
+  public componentShowSubmitButtonValueChanged$: Observable<any> = this.componentShowSubmitButtonValueChangedSource.asObservable();
   private showRubricSource: Subject<string> = new Subject<string>();
   public showRubric$: Observable<string> = this.showRubricSource.asObservable();
   private siblingComponentStudentDataChangedSource: Subject<any> = new Subject<any>();
-  public siblingComponentStudentDataChanged$: Observable<any> =
-      this.siblingComponentStudentDataChangedSource.asObservable();
+  public siblingComponentStudentDataChanged$: Observable<any> = this.siblingComponentStudentDataChangedSource.asObservable();
   private starterStateRequestSource: Subject<any> = new Subject<any>();
   public starterStateRequest$: Observable<any> = this.starterStateRequestSource.asObservable();
   private starterStateResponseSource: Subject<any> = new Subject<any>();
@@ -174,7 +172,7 @@ export class NodeService {
   }
 
   goToNextNode() {
-    return this.getNextNodeId().then(nextNodeId => {
+    return this.getNextNodeId().then((nextNodeId) => {
       if (nextNodeId != null) {
         const mode = this.ConfigService.getMode();
         this.DataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
@@ -260,26 +258,28 @@ export class NodeService {
                   );
                   if (parentTransitionLogic != null) {
                     parentHasTransitionLogic = true;
-                    this.chooseTransition(parentGroupId, parentTransitionLogic).then(transition => {
-                      if (transition != null) {
-                        const transitionToNodeId = transition.to;
-                        if (this.ProjectService.isGroupNode(transitionToNodeId)) {
-                          const startId = this.ProjectService.getGroupStartId(transitionToNodeId);
-                          if (startId == null || startId == '') {
-                            nextNodeId = transitionToNodeId;
+                    this.chooseTransition(parentGroupId, parentTransitionLogic).then(
+                      (transition) => {
+                        if (transition != null) {
+                          const transitionToNodeId = transition.to;
+                          if (this.ProjectService.isGroupNode(transitionToNodeId)) {
+                            const startId = this.ProjectService.getGroupStartId(transitionToNodeId);
+                            if (startId == null || startId == '') {
+                              nextNodeId = transitionToNodeId;
+                            } else {
+                              nextNodeId = startId;
+                            }
                           } else {
-                            nextNodeId = startId;
+                            nextNodeId = transitionToNodeId;
                           }
-                        } else {
-                          nextNodeId = transitionToNodeId;
                         }
+                        resolve(nextNodeId);
                       }
-                      resolve(nextNodeId);
-                    });
+                    );
                   }
                 }
               } else {
-                this.chooseTransition(currentNodeId, transitionLogic).then(transition => {
+                this.chooseTransition(currentNodeId, transitionLogic).then((transition) => {
                   resolve(transition.to);
                 });
               }
@@ -296,7 +296,7 @@ export class NodeService {
    * @return a promise that will return the next node id
    */
   goToNextNodeWithWork() {
-    this.getNextNodeIdWithWork().then(nextNodeId => {
+    this.getNextNodeIdWithWork().then((nextNodeId) => {
       if (nextNodeId) {
         this.DataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
       }
@@ -478,7 +478,7 @@ export class NodeService {
                     nodeId: toNodeId,
                     nodeTitle: this.ProjectService.getNodePositionAndTitleByNodeId(toNodeId),
                     transition: availableTransition
-                  }
+                  };
                   paths.push(path);
                 }
                 const dialogRef = this.dialog.open(ChooseBranchPathDialogComponent, {
@@ -488,7 +488,7 @@ export class NodeService {
                   },
                   disableClose: true
                 });
-                dialogRef.afterClosed().subscribe(result => {
+                dialogRef.afterClosed().subscribe((result) => {
                   resolve(result);
                 });
               }
@@ -532,8 +532,11 @@ export class NodeService {
     });
     const availableTransitions = this.getAvailableTransitions(transitionLogic.transitions);
     const transitionResult = this.getTransitionResultByNodeId(nodeId);
-    if (this.ConfigService.isPreview() && availableTransitions.length > 1 &&
-        transitionResult == null) {
+    if (
+      this.ConfigService.isPreview() &&
+      availableTransitions.length > 1 &&
+      transitionResult == null
+    ) {
       this.setChooseTransitionPromise(nodeId, promise);
     }
     return promise;
@@ -543,8 +546,7 @@ export class NodeService {
     const availableTransitions = [];
     for (const transition of transitions) {
       const criteria = transition.criteria;
-      if (criteria == null ||
-          (criteria != null && this.DataService.evaluateCriterias(criteria))) {
+      if (criteria == null || (criteria != null && this.DataService.evaluateCriterias(criteria))) {
         availableTransitions.push(transition);
       }
     }
@@ -583,7 +585,7 @@ export class NodeService {
         let transition, fromNodeId, toNodeId;
         if (alreadyBranched) {
           if (canChangePath) {
-            this.chooseTransition(nodeId, transitionLogic).then(transition => {
+            this.chooseTransition(nodeId, transitionLogic).then((transition) => {
               if (transition != null) {
                 fromNodeId = currentNode.id;
                 toNodeId = transition.to;
@@ -596,7 +598,7 @@ export class NodeService {
         } else {
           // student has not branched yet
 
-          this.chooseTransition(nodeId, transitionLogic).then(transition => {
+          this.chooseTransition(nodeId, transitionLogic).then((transition) => {
             if (transition != null) {
               fromNodeId = currentNode.id;
               toNodeId = transition.to;
@@ -623,14 +625,7 @@ export class NodeService {
       fromNodeId: fromNodeId,
       toNodeId: toNodeId
     };
-    this.DataService.saveVLEEvent(
-      nodeId,
-      componentId,
-      componentType,
-      category,
-      event,
-      eventData
-    );
+    this.DataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
   }
 
   evaluateTransitionLogicOn(event) {
@@ -766,7 +761,7 @@ export class NodeService {
         '$mdDialog',
         function DialogController($scope, $mdDialog) {
           // display the rubric in a new tab
-          $scope.openInNewWindow = function() {
+          $scope.openInNewWindow = function () {
             // open a new tab
             let w = window.open('', '_blank');
 
@@ -826,7 +821,7 @@ export class NodeService {
     this.starterStateResponseSource.next(args);
   }
 
-  showRubric(id: string) : void {
+  showRubric(id: string): void {
     this.showRubricSource.next(id);
   }
 }

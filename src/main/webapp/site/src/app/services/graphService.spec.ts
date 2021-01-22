@@ -1,22 +1,22 @@
-import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { GraphService } from "../../../../wise5/components/graph/graphService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { GraphService } from '../../../../wise5/components/graph/graphService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: GraphService;
 
 describe('GraphService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -142,10 +142,16 @@ function isCompleted() {
     nodeEvents = [];
     node = {};
   });
-  function expectIsCompleted(component: any, componentStates: any[], nodeEvents: any[], node: any,
-      expectedResult: boolean) {
-    expect(service.isCompleted(component, componentStates, [], nodeEvents, node))
-        .toEqual(expectedResult);
+  function expectIsCompleted(
+    component: any,
+    componentStates: any[],
+    nodeEvents: any[],
+    node: any,
+    expectedResult: boolean
+  ) {
+    expect(service.isCompleted(component, componentStates, [], nodeEvents, node)).toEqual(
+      expectedResult
+    );
   }
   it(`should check is completed when component when component is not editable and has no node
       entered event`, () => {
@@ -177,10 +183,10 @@ function isCompleted() {
 function hasComponentStates() {
   it('should check if there are component states when there are none', () => {
     expect(service.hasComponentStates([])).toEqual(false);
-  })
+  });
   it('should check if there are component states when there is one', () => {
     expect(service.hasComponentStates([{}])).toEqual(true);
-  })
+  });
 }
 
 function hasSubmitComponentState() {
@@ -194,16 +200,14 @@ function hasSubmitComponentState() {
   function expectHasSubmitComponentState(componentStates: any[], expectedResult: boolean) {
     expect(service.hasSubmitComponentState(componentStates)).toEqual(expectedResult);
   }
-  it('should check if there is a submit component state when there is no submit component state',
-      () => {
+  it('should check if there is a submit component state when there is no submit component state', () => {
     expectHasSubmitComponentState(componentStates, false);
-  })
-  it('should check if there is a submit component state when there is a submit component state',
-      () => {
+  });
+  it('should check if there is a submit component state when there is a submit component state', () => {
     componentStates[0].studentData.trials[0].series[0].data.push({});
     componentStates[0].isSubmit = true;
     expectHasSubmitComponentState(componentStates, true);
-  })
+  });
 }
 
 function canEdit() {
@@ -245,7 +249,14 @@ function hasTrialData() {
     expect(service.hasTrialData(studentData)).toBeFalsy();
   });
   it('should return true when there is a series in a trial with data', () => {
-    const trials = [createTrial([createSingleSeries([[1, 5], [2, 10]])])];
+    const trials = [
+      createTrial([
+        createSingleSeries([
+          [1, 5],
+          [2, 10]
+        ])
+      ])
+    ];
     const studentData = createStudentDataWithTrials(trials);
     expect(service.hasTrialData(studentData)).toBeTruthy();
   });
@@ -278,14 +289,18 @@ function isStudentChangedAxisLimit() {
     const studentData = {
       xAxis: xAxis,
       yAxis: yAxis
-    }
+    };
     componentState = createComponentState(studentData);
     componentContent = createComponentContent([], xAxis, yAxis);
   });
-  function expectIsStudentChangedAxisLimit(componentState: any, componentContent: any,
-      expectedResult: boolean) {
-    expect(service.isStudentChangedAxisLimit(componentState, componentContent))
-        .toEqual(expectedResult);
+  function expectIsStudentChangedAxisLimit(
+    componentState: any,
+    componentContent: any,
+    expectedResult: boolean
+  ) {
+    expect(service.isStudentChangedAxisLimit(componentState, componentContent)).toEqual(
+      expectedResult
+    );
   }
   it('should return false when the student has not changed the axis limit', () => {
     expectIsStudentChangedAxisLimit(componentState, componentContent, false);

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { LibraryService } from "../../../services/library.service";
-import { LibraryProject } from "../libraryProject";
-import { LibraryComponent } from "../library/library.component";
+import { LibraryService } from '../../../services/library.service';
+import { LibraryProject } from '../libraryProject';
+import { LibraryComponent } from '../library/library.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -10,7 +10,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
   styleUrls: ['./community-library.component.scss']
 })
 export class CommunityLibraryComponent extends LibraryComponent {
-
   projects: LibraryProject[] = [];
   filteredProjects: LibraryProject[] = [];
 
@@ -22,8 +21,7 @@ export class CommunityLibraryComponent extends LibraryComponent {
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
     if (numProjectsVisible) {
@@ -42,12 +40,13 @@ export class CommunityLibraryComponent extends LibraryComponent {
 
 @Component({
   selector: 'community-library-details',
-  templateUrl: 'community-library-details.html',
+  templateUrl: 'community-library-details.html'
 })
 export class CommunityLibraryDetailsComponent {
   constructor(
     public dialogRef: MatDialogRef<CommunityLibraryDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   close(): void {
     this.dialogRef.close();

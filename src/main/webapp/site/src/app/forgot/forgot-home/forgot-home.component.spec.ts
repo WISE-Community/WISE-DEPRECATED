@@ -9,8 +9,8 @@ describe('ForgotHomeComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotHomeComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      declarations: [ForgotHomeComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 

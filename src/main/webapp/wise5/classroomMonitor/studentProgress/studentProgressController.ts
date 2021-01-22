@@ -13,15 +13,15 @@ class StudentProgressController {
   permissions: any;
   sort: any;
   sortOrder: object = {
-    'team': ['workgroupId', 'username'],
+    team: ['workgroupId', 'username'],
     '-team': ['-workgroupId', 'username'],
-    'student': ['username', 'workgroupId'],
+    student: ['username', 'workgroupId'],
     '-student': ['-username', 'workgroupId'],
-    'score': ['scorePct', 'username'],
+    score: ['scorePct', 'username'],
     '-score': ['-scorePct', 'username'],
-    'completion': ['completion.completionPct', 'username'],
+    completion: ['completion.completionPct', 'username'],
     '-completion': ['-completion.completionPct', 'username'],
-    'location': ['location', 'username'],
+    location: ['location', 'username'],
     '-location': ['-location', 'username']
   };
   students: any;
@@ -54,16 +54,18 @@ class StudentProgressController {
     this.permissions = this.ConfigService.getPermissions();
     this.students = [];
     this.initializeStudents();
-    this.studentStatusReceivedSubscription =
-        this.StudentStatusService.studentStatusReceived$.subscribe((args) => {
-      const studentStatus = args.studentStatus;
-      const workgroupId = studentStatus.workgroupId;
-      this.updateTeam(workgroupId);
-    });
-    this.currentWorkgroupChangedSubscription = 
-        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
-      this.currentWorkgroup = currentWorkgroup;
-    });
+    this.studentStatusReceivedSubscription = this.StudentStatusService.studentStatusReceived$.subscribe(
+      (args) => {
+        const studentStatus = args.studentStatus;
+        const workgroupId = studentStatus.workgroupId;
+        this.updateTeam(workgroupId);
+      }
+    );
+    this.currentWorkgroupChangedSubscription = this.TeacherDataService.currentWorkgroupChanged$.subscribe(
+      ({ currentWorkgroup }) => {
+        this.currentWorkgroup = currentWorkgroup;
+      }
+    );
     const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,

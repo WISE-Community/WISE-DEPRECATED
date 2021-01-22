@@ -1,14 +1,14 @@
-import { OutsideURLService } from "../../../../wise5/components/outsideURL/outsideURLService";
-import { TestBed } from "@angular/core/testing";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { OutsideURLService } from '../../../../wise5/components/outsideURL/outsideURLService';
+import { TestBed } from '@angular/core/testing';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: OutsideURLService;
 let http: HttpTestingController;
@@ -16,10 +16,7 @@ let http: HttpTestingController;
 describe('OutsideURLService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        UpgradeModule
-      ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -54,6 +51,6 @@ function getOpenEducationalResources() {
       expect(resources.length).toEqual(1);
       expect(resources[0].url).toEqual(url);
     });
-    http.expectOne('wise5/components/outsideURL/resources.json').flush([ { url: url } ]);
+    http.expectOne('wise5/components/outsideURL/resources.json').flush([{ url: url }]);
   });
 }

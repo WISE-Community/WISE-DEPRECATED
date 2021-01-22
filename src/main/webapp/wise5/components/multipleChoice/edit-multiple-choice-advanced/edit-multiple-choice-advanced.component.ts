@@ -1,7 +1,7 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
-import { NodeService } from "../../../services/nodeService";
-import { TeacherProjectService } from "../../../services/teacherProjectService";
-import { UtilService } from "../../../services/utilService";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
+import { UtilService } from '../../../services/utilService';
 
 class EditMultipleChoiceAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['MultipleChoice'];
@@ -18,7 +18,8 @@ class EditMultipleChoiceAdvancedController extends EditAdvancedComponentAngularJ
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
         component.id != this.componentId
       ) {
         numberOfAllowedComponents += 1;
@@ -74,5 +75,6 @@ export const EditMultipleChoiceAdvancedComponent = {
     componentId: '@'
   },
   controller: EditMultipleChoiceAdvancedController,
-  templateUrl: 'wise5/components/multipleChoice/edit-multiple-choice-advanced/edit-multiple-choice-advanced.component.html'
-}
+  templateUrl:
+    'wise5/components/multipleChoice/edit-multiple-choice-advanced/edit-multiple-choice-advanced.component.html'
+};

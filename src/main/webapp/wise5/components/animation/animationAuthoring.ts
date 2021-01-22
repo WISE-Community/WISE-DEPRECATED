@@ -5,7 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class AnimationAuthoringController extends EditComponentController {
-
   static $inject = [
     '$filter',
     'ConfigService',
@@ -296,7 +295,6 @@ class AnimationAuthoringController extends EditComponentController {
   getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
     return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
   }
-
 }
 
 const AnimationAuthoring = {
@@ -307,6 +305,6 @@ const AnimationAuthoring = {
   controller: AnimationAuthoringController,
   controllerAs: 'animationController',
   templateUrl: 'wise5/components/animation/authoring.html'
-}
+};
 
 export default AnimationAuthoring;

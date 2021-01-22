@@ -1,12 +1,11 @@
-"use strict";
+'use strict';
 
 const MainMenu = {
   bindings: {
     state: '<',
     views: '<'
   },
-  template:
-    `<md-content>
+  template: `<md-content>
       <md-toolbar class="md-toolbar--sidenav">
         <div class="md-toolbar-tools" translate="authoringTool"></div>
       </md-toolbar>

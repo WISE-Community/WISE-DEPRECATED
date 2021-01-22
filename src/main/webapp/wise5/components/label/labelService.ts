@@ -1,6 +1,7 @@
 'use strict';
 
 import * as angular from 'angular';
+import SVG from 'svg.js';
 import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
 import { Injectable } from '@angular/core';
@@ -10,11 +11,12 @@ import { StudentDataService } from '../../services/studentDataService';
 
 @Injectable()
 export class LabelService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      private StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private StudentAssetService: StudentAssetService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
     this.StudentAssetService = StudentAssetService;
   }
@@ -40,8 +42,13 @@ export class LabelService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
       return true;
     }
@@ -85,8 +92,10 @@ export class LabelService extends ComponentService {
       return this.componentStateHasLabel(componentState);
     } else {
       if (this.componentHasStarterLabel(componentContent)) {
-        return componentState != null &&
-            !this.labelArraysAreTheSame(componentState.studentData.labels, componentContent.labels);
+        return (
+          componentState != null &&
+          !this.labelArraysAreTheSame(componentState.studentData.labels, componentContent.labels)
+        );
       } else {
         return this.componentStateHasLabel(componentState);
       }
@@ -108,8 +117,10 @@ export class LabelService extends ComponentService {
   componentStateIsSameAsStarter(componentState: any, componentContent: any) {
     if (componentState != null) {
       if (this.componentHasStarterLabel(componentContent)) {
-        return this.labelArraysAreTheSame(componentState.studentData.labels,
-            componentContent.labels);
+        return this.labelArraysAreTheSame(
+          componentState.studentData.labels,
+          componentContent.labels
+        );
       } else {
         return !this.componentStateHasLabel(componentState);
       }
@@ -171,12 +182,14 @@ export class LabelService extends ComponentService {
   }
 
   labelFieldsAreTheSame(label1: any, label2: any) {
-    return label1.text === label2.text &&
-        label1.pointX === label2.pointX &&
-        label1.pointY === label2.pointY &&
-        label1.textX === label2.textX &&
-        label1.textY === label2.textY &&
-        label1.color === label2.color;
+    return (
+      label1.text === label2.text &&
+      label1.pointX === label2.pointX &&
+      label1.pointY === label2.pointY &&
+      label1.textX === label2.textX &&
+      label1.textY === label2.textY &&
+      label1.color === label2.color
+    );
   }
 
   /**
@@ -275,7 +288,7 @@ export class LabelService extends ComponentService {
     const image = new Image();
     const thisUtilService = this.UtilService;
     return new Promise((resolve, reject) => {
-      image.onload = event => {
+      image.onload = (event) => {
         const image: any = event.target;
         myCanvas.width = image.width;
         myCanvas.height = image.height;
@@ -284,28 +297,30 @@ export class LabelService extends ComponentService {
         const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
         // create a student asset image
-        this.StudentAssetService.uploadAsset(imageObject).then(unreferencedAsset => {
+        this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
           /*
            * make a copy of the unreferenced asset so that we
            * get a referenced asset
            */
-          this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(referencedAsset => {
-            if (referencedAsset != null) {
-              /*
-               * get the asset url
-               * for example
-               * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
-               * if we are in preview mode this url will be a base64 string instead
-               */
-              const referencedAssetUrl = referencedAsset.url;
+          this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
+            (referencedAsset) => {
+              if (referencedAsset != null) {
+                /*
+                 * get the asset url
+                 * for example
+                 * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
+                 * if we are in preview mode this url will be a base64 string instead
+                 */
+                const referencedAssetUrl = referencedAsset.url;
 
-              // remove the unreferenced asset
-              this.StudentAssetService.deleteAsset(unreferencedAsset);
+                // remove the unreferenced asset
+                this.StudentAssetService.deleteAsset(unreferencedAsset);
 
-              // resolve the promise with the image url
-              resolve(referencedAssetUrl);
+                // resolve the promise with the image url
+                resolve(referencedAssetUrl);
+              }
             }
-          });
+          );
         });
       };
 
@@ -324,8 +339,10 @@ export class LabelService extends ComponentService {
   }
 
   getSVGTextElementString(fontSize: any, tspans: string) {
-    return `<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" font-size="` +
-        `${fontSize}">${tspans}</text>`;
+    return (
+      `<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" font-size="` +
+      `${fontSize}">${tspans}</text>`
+    );
   }
 
   /**

@@ -11,11 +11,15 @@ import { downgradeComponent } from '@angular/upgrade/static';
 const NodeGrading = angular
   .module('nodeGrading', [])
   .component('nodeGradingView', NodeGradingView)
-  .directive('componentSelect',
-      downgradeComponent({ component: ComponentSelectComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'componentSelect',
+    downgradeComponent({ component: ComponentSelectComponent }) as angular.IDirectiveFactory
+  )
   .component('cmStepTools', StepTools)
-  .directive('workgroupInfo',
-      downgradeComponent({ component: WorkgroupInfoComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'workgroupInfo',
+    downgradeComponent({ component: WorkgroupInfoComponent }) as angular.IDirectiveFactory
+  )
   .component('workgroupItem', WorkgroupItem);
 
 export default NodeGrading;

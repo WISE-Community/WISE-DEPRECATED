@@ -10,8 +10,13 @@ import { Observable } from 'rxjs/index';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
-  changePassword(username: string, answer: string, password: string, confirmPassword: string): Observable<any> {
-    return Observable.create(observer => {
+  changePassword(
+    username: string,
+    answer: string,
+    password: string,
+    confirmPassword: string
+  ): Observable<any> {
+    return Observable.create((observer) => {
       observer.next({
         status: 'success',
         messageCode: 'passwordChanged'
@@ -34,7 +39,7 @@ describe('ForgotStudentPasswordChangeComponent', () => {
   };
 
   const createObservableResponse = (status, messageCode) => {
-    const observableResponse = Observable.create(observer => {
+    const observableResponse = Observable.create((observer) => {
       const response = {
         status: status,
         messageCode: messageCode
@@ -56,17 +61,11 @@ describe('ForgotStudentPasswordChangeComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentPasswordChangeComponent ],
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule
-      ],
-      providers: [
-        { provide: StudentService, useClass: MockStudentService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [ForgotStudentPasswordChangeComponent],
+      imports: [RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
+      providers: [{ provide: StudentService, useClass: MockStudentService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -115,7 +114,9 @@ describe('ForgotStudentPasswordChangeComponent', () => {
     const params = {
       username: username
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

@@ -29,7 +29,7 @@ class WorkgroupNodeGradingController {
 
   $onInit() {
     this.nodeContent = this.getNodeContent();
-    this.components = this.getComponents().filter(component => {
+    this.components = this.getComponents().filter((component) => {
       return this.ProjectService.componentHasWork(component);
     });
     this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();

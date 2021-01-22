@@ -7,6 +7,6 @@ import * as angular from 'angular';
 const Notebook = angular
   .module('notebook', [])
   .component('notebookItemGrading', NotebookItemGrading)
-  .component('notebookWorkgroupGrading', NotebookWorkgroupGrading)
+  .component('notebookWorkgroupGrading', NotebookWorkgroupGrading);
 
 export default Notebook;

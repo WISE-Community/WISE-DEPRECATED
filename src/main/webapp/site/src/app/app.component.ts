@@ -5,8 +5,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { UtilService } from "./services/util.service";
-import { ConfigService } from "./services/config.service";
+import { UtilService } from './services/util.service';
+import { ConfigService } from './services/config.service';
 import { Announcement } from './domain/announcement';
 import { environment } from '../environments/environment';
 declare let gtag: Function;
@@ -36,13 +36,15 @@ export class AppComponent {
     '/teacher/edit': 'author-theme'
   };
 
-  constructor(private router: Router,
-              iconRegistry: MatIconRegistry,
-              sanitizer: DomSanitizer,
-              utilService: UtilService,
-              media: MediaObserver,
-              private configService: ConfigService,
-              @Inject(DOCUMENT) private document: Document) {
+  constructor(
+    private router: Router,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    utilService: UtilService,
+    media: MediaObserver,
+    private configService: ConfigService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-elicit.svg')
@@ -87,7 +89,7 @@ export class AppComponent {
       'google-classroom',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/google-classroom.svg')
     );
-    utilService.getMobileMenuState().subscribe(state => {
+    utilService.getMobileMenuState().subscribe((state) => {
       this.showMobileMenu = state;
     });
     this.mediaWatcher = media.asObservable().subscribe((change: MediaChange[]) => {
@@ -146,18 +148,18 @@ export class AppComponent {
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());`;
       this.document.head.appendChild(script);
-      gtag('config', this.googleAnalyticsId, { 'page_path': this.router.url });
+      gtag('config', this.googleAnalyticsId, { page_path: this.router.url });
 
       this.router.events.subscribe((ev: any) => {
         if (ev instanceof NavigationEnd) {
-          gtag('config', this.googleAnalyticsId, { 'page_path': ev.urlAfterRedirects });
+          gtag('config', this.googleAnalyticsId, { page_path: ev.urlAfterRedirects });
         }
       });
     }
   }
 
   fixScrollTop(ev: any) {
-    const topElement = document.querySelector('.top-content',);
+    const topElement = document.querySelector('.top-content');
     if (!topElement) {
       return;
     }
@@ -172,10 +174,12 @@ export class AppComponent {
   }
 
   isShowDefaultMode(): boolean {
-    return !this.router.url.includes('/login') &&
+    return (
+      !this.router.url.includes('/login') &&
       !this.router.url.includes('/join') &&
       !this.router.url.includes('/contact') &&
-      !this.router.url.includes('/forgot');
+      !this.router.url.includes('/forgot')
+    );
   }
 
   isShowHeaderAndFooter() {
@@ -183,14 +187,16 @@ export class AppComponent {
   }
 
   isAngularJSRoute() {
-    return this.router.url.includes('/teacher/manage') ||
+    return (
+      this.router.url.includes('/teacher/manage') ||
       this.router.url.includes('/teacher/edit') ||
       this.router.url.includes('/student/unit') ||
-      this.router.url.includes('/preview/unit');
+      this.router.url.includes('/preview/unit')
+    );
   }
 
   setTheme() {
-    Object.keys(this.themeClasses).forEach(path => {
+    Object.keys(this.themeClasses).forEach((path) => {
       if (this.router.url.includes(path)) {
         document.body.classList.add(this.themeClasses[path]);
       } else {
@@ -203,7 +209,7 @@ export class AppComponent {
     this.hasAnnouncement = false;
   }
 
-  onYPositionChange(el:HTMLElement) {
+  onYPositionChange(el: HTMLElement) {
     this.pageY = el.scrollTop;
     this.scroll = this.pageY > 360 && this.pageY < this.prevPageY;
     this.prevPageY = this.pageY;

@@ -8,12 +8,46 @@ import '../lib/jquery/jquery-global';
 @Injectable()
 export class UtilService {
   componentTypeToLabel = {};
-  CHARS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-    'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  CHARS = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9'
   ];
 
-  constructor(private upgrade: UpgradeModule) {
-  }
+  constructor(private upgrade: UpgradeModule) {}
 
   broadcastEventInRootScope(event, data = {}) {
     this.upgrade.$injector.get('$rootScope').$broadcast(event, data);
@@ -62,10 +96,7 @@ export class UtilService {
     let byteString;
     if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
     else byteString = unescape(dataURI.split(',')[1]);
-    const mimeString = dataURI
-      .split(',')[0]
-      .split(':')[1]
-      .split(';')[0];
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
     const ia = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
@@ -277,7 +308,13 @@ export class UtilService {
       let newElement = null;
       if (type == 'link') {
         newElement =
-          "<a href='#' wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
+          "<a href='#' wiselink='true' node-id='" +
+          nodeId +
+          "' " +
+          componentHTML +
+          '>' +
+          linkText +
+          '</a>';
       } else if (type == 'button') {
         newElement =
           "<button wiselink='true' node-id='" +
@@ -289,7 +326,13 @@ export class UtilService {
           '</button>';
       } else {
         newElement =
-          "<a href='#' wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
+          "<a href='#' wiselink='true' node-id='" +
+          nodeId +
+          "' " +
+          componentHTML +
+          '>' +
+          linkText +
+          '</a>';
       }
       if (newElement != null) {
         html = html.replace(wiseLinkHTML, newElement);
@@ -764,16 +807,40 @@ export class UtilService {
     }
     return arrData;
   }
+
+  greaterThanEqualTo(a: number, b: number): boolean {
+    return a >= b;
+  }
+
+  greaterThan(a: number, b: number): boolean {
+    return a > b;
+  }
+
+  lessThanEqualTo(a: number, b: number): boolean {
+    return a <= b;
+  }
+
+  lessThan(a: number, b: number): boolean {
+    return a < b;
+  }
+
+  equalTo(a: number, b: number): boolean {
+    return a === b;
+  }
+
+  notEqualTo(a: number, b: number): boolean {
+    return a !== b;
+  }
 }
 
 declare global {
   interface Array<T> {
-      last(): T;
+    last(): T;
   }
 }
 // extend array prototype with a last() method
 if (!Array.prototype.last) {
-  Array.prototype.last = function() {
+  Array.prototype.last = function () {
     return this[this.length - 1];
   };
 }

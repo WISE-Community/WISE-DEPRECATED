@@ -8,10 +8,11 @@ import { UpgradeModule } from '@angular/upgrade/static';
 
 @Injectable()
 export class MultipleChoiceService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -38,8 +39,10 @@ export class MultipleChoiceService extends ComponentService {
     const nodeId = criteria.params.nodeId;
     const componentId = criteria.params.componentId;
     const constraintChoiceIds = criteria.params.choiceIds;
-    const latestComponentState = this.StudentDataService
-        .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
     if (latestComponentState != null) {
       const studentChoices = latestComponentState.studentData.studentChoices;
       const studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
@@ -59,12 +62,12 @@ export class MultipleChoiceService extends ComponentService {
 
   isChoiceIdsMatch(choiceIds1: string[], choiceIds2: string[]) {
     if (choiceIds1.length === choiceIds2.length) {
-        for (let choiceId of choiceIds2) {
-          if (choiceIds1.indexOf(choiceId) === -1) {
-            return false;
-          }
+      for (let choiceId of choiceIds2) {
+        if (choiceIds1.indexOf(choiceId) === -1) {
+          return false;
         }
-        return true;
+      }
+      return true;
     }
     return false;
   }
@@ -87,15 +90,22 @@ export class MultipleChoiceService extends ComponentService {
     return choiceIds;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (componentStates && componentStates.length) {
       const isSubmitRequired = this.isSubmitRequired(node, component);
       for (let c = componentStates.length - 1; c >= 0; c--) {
         const componentState = componentStates[c];
         const studentChoices = this.getStudentChoicesFromComponentState(componentState);
-        if (studentChoices != null &&
-            (!isSubmitRequired || (isSubmitRequired && componentState.isSubmit))) {
+        if (
+          studentChoices != null &&
+          (!isSubmitRequired || (isSubmitRequired && componentState.isSubmit))
+        ) {
           return true;
         }
       }
@@ -121,7 +131,7 @@ export class MultipleChoiceService extends ComponentService {
       if (studentData != null) {
         const studentChoices = studentData.studentChoices;
         if (studentChoices != null) {
-          return studentChoices.map(studentChoice => studentChoice.text).join(', ');
+          return studentChoices.map((studentChoice) => studentChoice.text).join(', ');
         }
       }
     }

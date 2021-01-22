@@ -3,7 +3,7 @@
 import * as angular from 'angular';
 import * as $ from 'jquery';
 import { fabric } from 'fabric';
-window['fabric'] = fabric
+window['fabric'] = fabric;
 import ComponentController from '../componentController';
 import { LabelService } from './labelService';
 
@@ -235,7 +235,7 @@ class LabelController extends ComponentController {
       }
     }
     this.$timeout(
-      angular.bind(this, function() {
+      angular.bind(this, function () {
         // wait for angular to completely render the html before we initialize the canvas
 
         this.setupCanvas();
@@ -245,7 +245,7 @@ class LabelController extends ComponentController {
     /**
      * Returns true iff there is student work that hasn't been saved yet
      */
-    this.$scope.isDirty = function() {
+    this.$scope.isDirty = function () {
       return this.$scope.labelController.isDirty;
     }.bind(this);
 
@@ -257,7 +257,7 @@ class LabelController extends ComponentController {
      * action (optional; default is false)
      * @return a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function(isSubmit) {
+    this.$scope.getComponentState = function (isSubmit) {
       const deferred = this.$q.defer();
       let getState = false;
       let action = 'change';
@@ -276,7 +276,7 @@ class LabelController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.labelController.createComponentState(action).then(componentState => {
+        this.$scope.labelController.createComponentState(action).then((componentState) => {
           deferred.resolve(componentState);
         });
       } else {
@@ -295,7 +295,7 @@ class LabelController extends ComponentController {
      * The student has changed the file input
      * @param element the file input element
      */
-    this.$scope.fileUploadChanged = function(element) {
+    this.$scope.fileUploadChanged = function (element) {
       // get the current background image if any
       const backgroundImage = this.labelController.getBackgroundImage();
 
@@ -335,10 +335,12 @@ class LabelController extends ComponentController {
 
         if (files != null && files.length > 0) {
           // upload the file to the studentuploads folder
-          this.labelController.StudentAssetService.uploadAsset(files[0]).then(unreferencedAsset => {
-            // make a referenced copy of the unreferenced asset
-            this.labelController.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
-              referencedAsset => {
+          this.labelController.StudentAssetService.uploadAsset(files[0]).then(
+            (unreferencedAsset) => {
+              // make a referenced copy of the unreferenced asset
+              this.labelController.StudentAssetService.copyAssetForReference(
+                unreferencedAsset
+              ).then((referencedAsset) => {
                 if (referencedAsset != null) {
                   // get the url of the referenced asset
                   const imageURL = referencedAsset.url;
@@ -349,9 +351,9 @@ class LabelController extends ComponentController {
                     this.labelController.studentDataChanged();
                   }
                 }
-              }
-            );
-          });
+              });
+            }
+          );
         }
       }
     };
@@ -810,7 +812,7 @@ class LabelController extends ComponentController {
     // listen for the mouse down event
     canvas.on(
       'mouse:down',
-      angular.bind(this, function(options) {
+      angular.bind(this, function (options) {
         // get the object that was clicked on if any
         const activeObject = this.canvas.getActiveObject();
 
@@ -829,7 +831,7 @@ class LabelController extends ComponentController {
     // listen for the object moving event
     canvas.on(
       'object:moving',
-      angular.bind(this, function(options) {
+      angular.bind(this, function (options) {
         const target = options.target;
 
         if (target != null) {
@@ -955,7 +957,7 @@ class LabelController extends ComponentController {
     // listen for the text changed event
     canvas.on(
       'text:changed',
-      angular.bind(this, function(options) {
+      angular.bind(this, function (options) {
         const target = options.target;
         if (target != null) {
           const type = target.get('type');
@@ -1667,7 +1669,7 @@ class LabelController extends ComponentController {
                   null,
                   spaceInbetweenLines,
                   fontSize
-                ).then(image => {
+                ).then((image) => {
                   // set the image as the background
                   this.setBackgroundImage(image);
 
@@ -1730,7 +1732,7 @@ class LabelController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.generateImageFromComponentState(componentState).then(image => {
+    this.generateImageFromComponentState(componentState).then((image) => {
       this.setBackgroundImage(image.url);
     });
   }
@@ -1836,8 +1838,11 @@ class LabelController extends ComponentController {
   }
 
   generateStarterState() {
-    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
-        starterState: this.getLabelData()});
+    this.NodeService.respondStarterState({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      starterState: this.getLabelData()
+    });
   }
 }
 

@@ -1,31 +1,30 @@
 'use strict';
 
-import { Injectable } from "@angular/core";
-import { ConfigService } from "./configService";
-import { StudentStatusService } from "./studentStatusService";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { NotificationService } from "./notificationService";
-import { Observable, Subject } from "rxjs";
-import { AchievementService } from "./achievementService";
+import { Injectable } from '@angular/core';
+import { ConfigService } from './configService';
+import { StudentStatusService } from './studentStatusService';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { NotificationService } from './notificationService';
+import { Observable, Subject } from 'rxjs';
+import { AchievementService } from './achievementService';
 
 @Injectable()
 export class TeacherWebSocketService {
-
   runId: number;
   rootScope: any;
   stomp: any;
   private newAnnotationReceivedSource: Subject<any> = new Subject<any>();
   public newAnnotationReceived$: Observable<any> = this.newAnnotationReceivedSource.asObservable();
   private newStudentWorkReceivedSource: Subject<any> = new Subject<any>();
-  public newStudentWorkReceived$: Observable<any> =
-      this.newStudentWorkReceivedSource.asObservable();
+  public newStudentWorkReceived$: Observable<any> = this.newStudentWorkReceivedSource.asObservable();
 
   constructor(
-      private upgrade: UpgradeModule,
-      private AchievementService: AchievementService,
-      private ConfigService: ConfigService,
-      private NotificationService: NotificationService,
-      private StudentStatusService: StudentStatusService) {
+    private upgrade: UpgradeModule,
+    private AchievementService: AchievementService,
+    private ConfigService: ConfigService,
+    private NotificationService: NotificationService,
+    private StudentStatusService: StudentStatusService
+  ) {
     if (this.upgrade.$injector != null) {
       this.initializeStomp();
     }
@@ -50,11 +49,13 @@ export class TeacherWebSocketService {
   initialize() {
     this.runId = this.ConfigService.getRunId();
     try {
-      this.getStomp().connect(this.ConfigService.getWebSocketURL()).then((frame) => {
-        this.subscribeToTeacherTopic();
-        this.subscribeToTeacherWorkgroupTopic();
-      });
-    } catch(e) {
+      this.getStomp()
+        .connect(this.ConfigService.getWebSocketURL())
+        .then((frame) => {
+          this.subscribeToTeacherTopic();
+          this.subscribeToTeacherWorkgroupTopic();
+        });
+    } catch (e) {
       console.log(e);
     }
   }
@@ -63,17 +64,17 @@ export class TeacherWebSocketService {
     this.getStomp().subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
       if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
-        this.broadcastNewStudentWorkReceived({studentWork: studentWork});
+        this.broadcastNewStudentWorkReceived({ studentWork: studentWork });
       } else if (message.type === 'studentStatus') {
         const status = JSON.parse(message.content);
         this.StudentStatusService.setStudentStatus(status);
-        this.StudentStatusService.broadcastStudentStatusReceived({studentStatus: status});
+        this.StudentStatusService.broadcastStudentStatusReceived({ studentStatus: status });
       } else if (message.type === 'newStudentAchievement') {
         const achievement = JSON.parse(message.content);
-        this.AchievementService.broadcastNewStudentAchievement({studentAchievement: achievement});
+        this.AchievementService.broadcastNewStudentAchievement({ studentAchievement: achievement });
       } else if (message.type === 'annotation') {
         const annotationData = JSON.parse(message.content);
-        this.broadcastNewAnnotationReceived({annotation: annotationData});
+        this.broadcastNewAnnotationReceived({ annotation: annotationData });
       }
     });
   }
@@ -87,12 +88,14 @@ export class TeacherWebSocketService {
   }
 
   subscribeToTeacherWorkgroupTopic() {
-    this.getStomp().subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`,
-        (message, headers, res) => {
-      if (message.type === 'notification') {
-        this.NotificationService.addNotification(JSON.parse(message.content));
+    this.getStomp().subscribe(
+      `/topic/workgroup/${this.ConfigService.getWorkgroupId()}`,
+      (message, headers, res) => {
+        if (message.type === 'notification') {
+          this.NotificationService.addNotification(JSON.parse(message.content));
+        }
       }
-    });
+    );
   }
 
   pauseScreens(periodId) {

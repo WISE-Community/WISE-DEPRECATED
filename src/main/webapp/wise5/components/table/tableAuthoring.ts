@@ -413,7 +413,6 @@ class TableAuthoringController extends EditComponentController {
     this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
     this.componentChanged();
   }
-
 }
 
 const TableAuthoring = {
@@ -424,7 +423,6 @@ const TableAuthoring = {
   controller: TableAuthoringController,
   controllerAs: 'tableController',
   templateUrl: 'wise5/components/table/authoring.html'
-}
-
+};
 
 export default TableAuthoring;

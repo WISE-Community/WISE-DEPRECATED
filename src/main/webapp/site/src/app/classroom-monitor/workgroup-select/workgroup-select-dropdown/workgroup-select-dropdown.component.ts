@@ -12,11 +12,12 @@ import { WorkgroupSelectComponent } from '../workgroup-select.component';
   encapsulation: ViewEncapsulation.None
 })
 export class WorkgroupSelectDropdownComponent extends WorkgroupSelectComponent {
-
   searchTerm: string = '';
 
-  constructor(protected ConfigService: ConfigService,
-      protected TeacherDataService: TeacherDataService) {
+  constructor(
+    protected ConfigService: ConfigService,
+    protected TeacherDataService: TeacherDataService
+  ) {
     super(ConfigService, TeacherDataService);
   }
 
@@ -29,8 +30,10 @@ export class WorkgroupSelectDropdownComponent extends WorkgroupSelectComponent {
 
   filterWorkgroupsBySearchTerm(): void {
     this.workgroups = this.workgroups.filter((workgroup) => {
-      return workgroup.displayNames.concat(workgroup.workgroupId)
-          .toLowerCase().includes(this.searchTerm);
+      return workgroup.displayNames
+        .concat(workgroup.workgroupId)
+        .toLowerCase()
+        .includes(this.searchTerm);
     });
   }
 

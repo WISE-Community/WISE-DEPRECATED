@@ -13,7 +13,7 @@ const tableAuthoringComponentModule = angular
   .component('editTableAdvanced', EditTableAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/table/i18n');
     }
   ]);

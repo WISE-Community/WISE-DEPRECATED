@@ -2,17 +2,20 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { ConfigService } from '../../../../../../wise5/services/configService';
-import { ProjectService } from '../../../../../../wise5/services/projectService';
 import { TeacherDataService } from '../../../../../../wise5/services/teacherDataService';
+import { TeacherProjectService } from '../../../../../../wise5/services/teacherProjectService';
 import { UtilService } from '../../../../../../wise5/services/utilService';
 import { ChooseNewComponentLocation } from './choose-new-component-location.component';
 
 const nodeId = 'node1';
-const components = [{id:'comp1', type:'OpenResponse'},{id:'comp2', type:'MultipleChoice'}];
+const components = [
+  { id: 'comp1', type: 'OpenResponse' },
+  { id: 'comp2', type: 'MultipleChoice' }
+];
 
 class MockProjectService {
   createComponent(componentType) {
-    return {id: "comp3", type: componentType};
+    return { id: 'comp3', type: componentType };
   }
 
   getComponentsByNodeId() {
@@ -33,29 +36,29 @@ class MockTeacherDataService {
 class MockUpgradeModule {
   $injector: any = {
     get() {
-      return { componentType: 'Discussion'}
+      return { componentType: 'Discussion' };
     }
-  }
+  };
 }
 
 let component: ChooseNewComponentLocation;
-let projectService: ProjectService;
+let teacherProjectService: TeacherProjectService;
 
 describe('ChooseNewComponentLocation', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
+      imports: [HttpClientTestingModule],
       providers: [
         ChooseNewComponentLocation,
         ConfigService,
-        { provide: ProjectService, useClass: MockProjectService },
+        { provide: TeacherProjectService, useClass: MockProjectService },
         { provide: TeacherDataService, useClass: MockTeacherDataService },
         { provide: UpgradeModule, useClass: MockUpgradeModule },
         UtilService
       ]
     });
     component = TestBed.inject(ChooseNewComponentLocation);
-    projectService = TestBed.inject(ProjectService);
+    teacherProjectService = TestBed.inject(TeacherProjectService);
   });
 
   it('should have nodeId and components set after initialization', () => {
@@ -65,10 +68,13 @@ describe('ChooseNewComponentLocation', () => {
   });
 
   it('insertComponentAfter() should create a new component and save the project', () => {
-    spyOn(projectService, 'createComponent').and.returnValue({'id':'comp3', type:'Discussion'})
-    spyOn(projectService, 'saveProject').and.returnValue(new Promise(() => {}));
+    spyOn(teacherProjectService, 'createComponent').and.returnValue({
+      id: 'comp3',
+      type: 'Discussion'
+    });
+    spyOn(teacherProjectService, 'saveProject').and.returnValue(new Promise(() => {}));
     component.insertComponentAfter('comp2');
-    expect(projectService.createComponent).toHaveBeenCalled();
-    expect(projectService.saveProject).toHaveBeenCalled();
+    expect(teacherProjectService.createComponent).toHaveBeenCalled();
+    expect(teacherProjectService.saveProject).toHaveBeenCalled();
   });
 });

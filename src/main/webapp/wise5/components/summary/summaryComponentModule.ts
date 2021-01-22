@@ -11,7 +11,7 @@ const summaryComponentModule = angular
   .controller('SummaryController', SummaryController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/summary/i18n');
     }
   ]);

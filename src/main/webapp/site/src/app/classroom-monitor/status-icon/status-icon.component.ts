@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'status-icon',
@@ -6,7 +6,6 @@ import { Component, Input } from "@angular/core";
   templateUrl: 'status-icon.component.html'
 })
 export class StatusIconComponent {
-
   @Input()
   iconClass: string;
 

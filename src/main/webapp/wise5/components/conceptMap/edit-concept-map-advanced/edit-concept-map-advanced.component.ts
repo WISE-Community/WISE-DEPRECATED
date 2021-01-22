@@ -1,7 +1,7 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
-import { NodeService } from "../../../services/nodeService";
-import { TeacherProjectService } from "../../../services/teacherProjectService";
-import { UtilService } from "../../../services/utilService";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
+import { UtilService } from '../../../services/utilService';
 
 class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label', 'Table'];
@@ -77,11 +77,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
   ruleDeleteButtonClicked(index: number): void {
     const rule = this.authoringComponentContent.rules[index];
     const ruleName = rule.name;
-    if (
-      confirm(
-        $localize`Are you sure you want to delete this rule?\n\nRule Name: ${ruleName}`
-      )
-    ) {
+    if (confirm($localize`Are you sure you want to delete this rule?\n\nRule Name: ${ruleName}`)) {
       this.authoringComponentContent.rules.splice(index, 1);
       this.componentChanged();
     }
@@ -147,5 +143,6 @@ export const EditConceptMapAdvancedComponent = {
     componentId: '@'
   },
   controller: EditConceptMapAdvancedController,
-  templateUrl: 'wise5/components/conceptMap/edit-concept-map-advanced/edit-concept-map-advanced.component.html'
-}
+  templateUrl:
+    'wise5/components/conceptMap/edit-concept-map-advanced/edit-concept-map-advanced.component.html'
+};

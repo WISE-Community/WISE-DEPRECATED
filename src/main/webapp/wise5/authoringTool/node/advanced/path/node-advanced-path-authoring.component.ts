@@ -1,8 +1,7 @@
-import { TeacherDataService } from "../../../../services/teacherDataService";
-import { TeacherProjectService } from "../../../../services/teacherProjectService";
+import { TeacherDataService } from '../../../../services/teacherDataService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeAdvancedPathAuthoringController {
-
   canChangePathOptions = [null, true, false];
   items: any[];
   node: any;
@@ -13,58 +12,60 @@ class NodeAdvancedPathAuthoringController {
 
   static $inject = ['$filter', 'ProjectService', 'TeacherDataService'];
 
-  constructor(private $filter: any,
-      private ProjectService: TeacherProjectService,
-      private TeacherDataService: TeacherDataService) {
+  constructor(
+    private $filter: any,
+    private ProjectService: TeacherProjectService,
+    private TeacherDataService: TeacherDataService
+  ) {
     this.$translate = this.$filter('translate');
     this.transitionCriterias = [
-        {
-          value: 'score',
-          text: this.$translate('getASpecificScoreOnAComponent'),
-          params: [
-            {
-              value: 'nodeId',
-              text: this.$translate('nodeID')
-            },
-            {
-              value: 'componentId',
-              text: this.$translate('componentID')
-            },
-            {
-              value: 'scores',
-              text: this.$translate('scoresParens')
-            }
-          ]
-        },
-        {
-          value: 'choiceChosen',
-          text: this.$translate('chooseASpecificChoiceOnAComponent'),
-          params: [
-            {
-              value: 'nodeId',
-              text: this.$translate('nodeID')
-            },
-            {
-              value: 'componentId',
-              text: this.$translate('componentID')
-            },
-            {
-              value: 'choiceIds',
-              text: this.$translate('choices')
-            }
-          ]
-        },
-        {
-          value: 'tag',
-          text: this.$translate('tagAssignedToWorkgroup'),
-          params: [
-            {
-              value: 'tag',
-              text: this.$translate('tag')
-            }
-          ]
-        }
-      ];
+      {
+        value: 'score',
+        text: this.$translate('getASpecificScoreOnAComponent'),
+        params: [
+          {
+            value: 'nodeId',
+            text: this.$translate('nodeID')
+          },
+          {
+            value: 'componentId',
+            text: this.$translate('componentID')
+          },
+          {
+            value: 'scores',
+            text: this.$translate('scoresParens')
+          }
+        ]
+      },
+      {
+        value: 'choiceChosen',
+        text: this.$translate('chooseASpecificChoiceOnAComponent'),
+        params: [
+          {
+            value: 'nodeId',
+            text: this.$translate('nodeID')
+          },
+          {
+            value: 'componentId',
+            text: this.$translate('componentID')
+          },
+          {
+            value: 'choiceIds',
+            text: this.$translate('choices')
+          }
+        ]
+      },
+      {
+        value: 'tag',
+        text: this.$translate('tagAssignedToWorkgroup'),
+        params: [
+          {
+            value: 'tag',
+            text: this.$translate('tag')
+          }
+        ]
+      }
+    ];
   }
 
   $onInit() {
@@ -253,4 +254,4 @@ class NodeAdvancedPathAuthoringController {
 export const NodeAdvancedPathAuthoringComponent = {
   templateUrl: `/wise5/authoringTool/node/advanced/path/node-advanced-path-authoring.component.html`,
   controller: NodeAdvancedPathAuthoringController
-}
+};

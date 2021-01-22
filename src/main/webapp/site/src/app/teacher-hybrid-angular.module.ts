@@ -46,6 +46,11 @@ import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-h
 import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
 import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
 import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
+import { OutsideUrlAuthoring } from '../../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component';
+import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component';
+import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component';
+import { DrawAuthoring } from '../../../wise5/components/draw/draw-authoring/draw-authoring.component';
+import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/match-authoring.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +62,8 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
     ComponentSelectComponent,
+    ConceptMapAuthoring,
+    DrawAuthoring,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
     EditComponentMaxScoreComponent,
@@ -66,12 +73,15 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
     EditOutsideUrlAdvancedComponent,
     HtmlAuthoring,
     ManageStudentsComponent,
+    MatchAuthoring,
     MilestonesComponent,
     MilestoneReportDataComponent,
+    MultipleChoiceAuthoring,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
     OpenResponseAuthoring,
+    OutsideUrlAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
@@ -83,9 +93,7 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
     WiseAuthoringTinymceEditorComponent,
     WorkgroupNodeStatusComponent
   ],
-  imports: [
-    AngularJSModule
-  ],
+  imports: [AngularJSModule],
   providers: [
     { provide: DataService, useExisting: TeacherDataService },
     MilestoneService,

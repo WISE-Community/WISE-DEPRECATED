@@ -1,8 +1,8 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
 
 class EditDiscussionAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['Discussion'];
-  
+
   connectedComponentTypeChanged(connectedComponent) {
     this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
     super.connectedComponentTypeChanged(connectedComponent);
@@ -28,5 +28,6 @@ export const EditDiscussionAdvancedComponent = {
     componentId: '@'
   },
   controller: EditDiscussionAdvancedController,
-  templateUrl: 'wise5/components/discussion/edit-discussion-advanced/edit-discussion-advanced.component.html'
-}
+  templateUrl:
+    'wise5/components/discussion/edit-discussion-advanced/edit-discussion-advanced.component.html'
+};

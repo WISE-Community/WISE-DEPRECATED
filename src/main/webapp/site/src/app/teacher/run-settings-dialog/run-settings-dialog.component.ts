@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LibraryProjectDetailsComponent } from "../../modules/library/library-project-details/library-project-details.component";
-import { Run } from "../../domain/run";
-import { TeacherService } from "../teacher.service";
+import { LibraryProjectDetailsComponent } from '../../modules/library/library-project-details/library-project-details.component';
+import { Run } from '../../domain/run';
+import { TeacherService } from '../teacher.service';
 import * as moment from 'moment';
 
 @Component({
@@ -11,9 +11,7 @@ import * as moment from 'moment';
   templateUrl: './run-settings-dialog.component.html',
   styleUrls: ['./run-settings-dialog.component.scss']
 })
-
 export class RunSettingsDialogComponent implements OnInit {
-
   run: Run;
   newPeriodName: string;
   maxStudentsPerTeam: string;
@@ -34,11 +32,13 @@ export class RunSettingsDialogComponent implements OnInit {
   targetEndDate: Date;
   messageCodeToMessage: any;
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private teacherService: TeacherService,
-              public snackBar: MatSnackBar) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private teacherService: TeacherService,
+    public snackBar: MatSnackBar
+  ) {
     this.run = data.run;
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
@@ -68,8 +68,7 @@ export class RunSettingsDialogComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   newPeriodNameKeyUp(event) {
     if (this.isEnterKeyWithNewPeriodName(event)) {
@@ -104,17 +103,19 @@ export class RunSettingsDialogComponent implements OnInit {
   deletePeriod(periodName) {
     this.clearErrorMessages();
     if (confirm(`Are you sure you want to delete this period: ${periodName}?`)) {
-      this.teacherService.deletePeriodFromRun(this.run.id, periodName).subscribe((response: any) => {
-        if (response.status === 'success') {
-          this.run = response.run;
-          this.updateDataRun(this.run);
-          this.clearErrorMessages();
-          this.showConfirmMessage();
-        } else {
-          this.deletePeriodMessage = this.translateMessageCode(response.messageCode);
-          alert(this.deletePeriodMessage);
-        }
-      });
+      this.teacherService
+        .deletePeriodFromRun(this.run.id, periodName)
+        .subscribe((response: any) => {
+          if (response.status === 'success') {
+            this.run = response.run;
+            this.updateDataRun(this.run);
+            this.clearErrorMessages();
+            this.showConfirmMessage();
+          } else {
+            this.deletePeriodMessage = this.translateMessageCode(response.messageCode);
+            alert(this.deletePeriodMessage);
+          }
+        });
     }
   }
 
@@ -124,20 +125,25 @@ export class RunSettingsDialogComponent implements OnInit {
     if (maxStudentsPerTeam === 3) {
       maxStudentsPerTeamText = $localize`1-3`;
     }
-    if (confirm($localize`Are you sure you want to change the students per team to ${maxStudentsPerTeamText}:value:?`)) {
-      this.teacherService.updateRunStudentsPerTeam(
-          this.run.id, maxStudentsPerTeam).subscribe((response: any) => {
-        if (response.status === 'success') {
-          this.run = response.run;
-          this.updateDataRun(this.run);
-          this.clearErrorMessages();
-          this.showConfirmMessage();
-        } else {
-          this.rollbackMaxStudentsPerTeam();
-          this.maxStudentsPerTeamMessage = this.translateMessageCode(response.messageCode);
-          alert(this.maxStudentsPerTeamMessage);
-        }
-      });
+    if (
+      confirm(
+        $localize`Are you sure you want to change the students per team to ${maxStudentsPerTeamText}:value:?`
+      )
+    ) {
+      this.teacherService
+        .updateRunStudentsPerTeam(this.run.id, maxStudentsPerTeam)
+        .subscribe((response: any) => {
+          if (response.status === 'success') {
+            this.run = response.run;
+            this.updateDataRun(this.run);
+            this.clearErrorMessages();
+            this.showConfirmMessage();
+          } else {
+            this.rollbackMaxStudentsPerTeam();
+            this.maxStudentsPerTeamMessage = this.translateMessageCode(response.messageCode);
+            alert(this.maxStudentsPerTeamMessage);
+          }
+        });
       return true;
     } else {
       this.rollbackMaxStudentsPerTeam();
@@ -150,19 +156,25 @@ export class RunSettingsDialogComponent implements OnInit {
     if (this.startDate) {
       const startDate = this.startDate;
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
-      if (confirm($localize`Are you sure you want to change the start date to ${formattedStartDate}:date:?`)) {
-        this.teacherService.updateRunStartTime(this.run.id, startDate.getTime()).subscribe((response: any) => {
-          if (response.status === 'success') {
-            this.run = response.run;
-            this.updateDataRun(this.run);
-            this.rememberPreviousStartDate();
-            this.clearErrorMessages();
-            this.showConfirmMessage();
-            this.setDateRange();
-          } else {
-            this.startDateMessage = this.translateMessageCode(response.messageCode);
-          }
-        });
+      if (
+        confirm(
+          $localize`Are you sure you want to change the start date to ${formattedStartDate}:date:?`
+        )
+      ) {
+        this.teacherService
+          .updateRunStartTime(this.run.id, startDate.getTime())
+          .subscribe((response: any) => {
+            if (response.status === 'success') {
+              this.run = response.run;
+              this.updateDataRun(this.run);
+              this.rememberPreviousStartDate();
+              this.clearErrorMessages();
+              this.showConfirmMessage();
+              this.setDateRange();
+            } else {
+              this.startDateMessage = this.translateMessageCode(response.messageCode);
+            }
+          });
       } else {
         this.rollbackStartDate();
       }
@@ -240,16 +252,17 @@ export class RunSettingsDialogComponent implements OnInit {
   }
 
   updateIsLockedAfterEndDate() {
-    this.teacherService.updateIsLockedAfterEndDate(this.run.id, this.isLockedAfterEndDate)
-        .subscribe((response: any) => {
-      if (response.status === 'success') {
-        this.run = response.run;
-        this.updateDataRun(this.run);
-        this.clearErrorMessages();
-      } else {
-        this.isLockedAfterEndDateMessage = this.translateMessageCode(response.messageCode);
-      }
-    });
+    this.teacherService
+      .updateIsLockedAfterEndDate(this.run.id, this.isLockedAfterEndDate)
+      .subscribe((response: any) => {
+        if (response.status === 'success') {
+          this.run = response.run;
+          this.updateDataRun(this.run);
+          this.clearErrorMessages();
+        } else {
+          this.isLockedAfterEndDateMessage = this.translateMessageCode(response.messageCode);
+        }
+      });
   }
 
   rollbackMaxStudentsPerTeam() {

@@ -1,15 +1,15 @@
-import { MatchService } from "../../../../wise5/components/match/matchService";
-import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { MatchService } from '../../../../wise5/components/match/matchService';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: MatchService;
 let componentStateBucketWithItem: any;
@@ -17,7 +17,7 @@ let componentStateBucketWithItem: any;
 describe('MatchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -31,8 +31,9 @@ describe('MatchService', () => {
       ]
     });
     service = TestBed.get(MatchService);
-    componentStateBucketWithItem = createComponentStateBucket('bucket1', 'Bucket 1',
-        [createChoice('choice1', 'Choice 1')]);
+    componentStateBucketWithItem = createComponentStateBucket('bucket1', 'Bucket 1', [
+      createChoice('choice1', 'Choice 1')
+    ]);
   });
   createComponent();
   isCompleted();
@@ -117,21 +118,22 @@ function isCompleted() {
     componentStates = [];
     node = {};
   });
-  function expectIsCompleted(component: any, componentStates: any[], node: any,
-      expectedResult: boolean) {
+  function expectIsCompleted(
+    component: any,
+    componentStates: any[],
+    node: any,
+    expectedResult: boolean
+  ) {
     expect(service.isCompleted(component, componentStates, [], [], node)).toEqual(expectedResult);
   }
-  it(`should check if is completed when submit is not required and there are no component states`,
-      () => {
+  it(`should check if is completed when submit is not required and there are no component states`, () => {
     expectIsCompleted(component, componentStates, node, false);
   });
-  it(`should check if is completed when submit is not required and there are component states`,
-      () => {
+  it(`should check if is completed when submit is not required and there are component states`, () => {
     componentStates.push(createComponentState([componentStateBucketWithItem]));
     expectIsCompleted(component, componentStates, node, true);
   });
-  it(`should check if is completed when submit is required and there are no component states`,
-      () => {
+  it(`should check if is completed when submit is required and there are no component states`, () => {
     node.showSubmitButton = true;
     expectIsCompleted(component, componentStates, node, false);
   });
@@ -191,10 +193,7 @@ function hasCorrectAnswer() {
 function getItemById() {
   const item1 = createChoice('item1', 'Item 1');
   const item2 = createChoice('item2', 'Item 2');
-  const items: any[] = [
-    item1,
-    item2
-  ];
+  const items: any[] = [item1, item2];
   it('should get the item by id when the id exists', () => {
     expect(service.getItemById('item1', items)).toEqual(item1);
   });

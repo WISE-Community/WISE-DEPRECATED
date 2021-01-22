@@ -8,10 +8,11 @@ import { UpgradeModule } from '@angular/upgrade/static';
 
 @Injectable()
 export class MatchService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -29,8 +30,13 @@ export class MatchService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (componentStates && componentStates.length > 0) {
       const isSubmitRequired = this.isSubmitRequired(node, component);
       for (const componentState of componentStates) {
@@ -68,7 +74,7 @@ export class MatchService extends ComponentService {
     }
     return false;
   }
- 
+
   getChoiceById(id: string, choices: any[]): any {
     return this.getItemById(id, choices);
   }

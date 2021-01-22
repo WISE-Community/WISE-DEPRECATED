@@ -13,10 +13,12 @@ import { UpgradeModule } from '@angular/upgrade/static';
 export class TableService extends ComponentService {
   $translate: any;
 
-  constructor(private upgrade: UpgradeModule,
-      private StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private StudentAssetService: StudentAssetService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -213,7 +215,7 @@ export class TableService extends ComponentService {
       if (tableElement != null && tableElement.length > 0) {
         tableElement = tableElement[0];
         // convert the table element to a canvas element
-        html2canvas(tableElement).then(canvas => {
+        html2canvas(tableElement).then((canvas) => {
           // get the canvas as a base64 string
           const img_b64 = canvas.toDataURL('image/png');
 
@@ -221,7 +223,7 @@ export class TableService extends ComponentService {
           const imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
           // add the image to the student assets
-          this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+          this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
             resolve(asset);
           });
         });

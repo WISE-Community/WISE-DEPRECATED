@@ -18,13 +18,7 @@ class StudentGradingToolsController {
   workgroups: any;
   currentPeriodChangedSubscription: any;
 
-  static $inject = [
-    '$scope',
-    '$state',
-    'orderByFilter',
-    'ConfigService',
-    'TeacherDataService'
-  ];
+  static $inject = ['$scope', '$state', 'orderByFilter', 'ConfigService', 'TeacherDataService'];
 
   constructor(
     private $scope: any,
@@ -39,11 +33,12 @@ class StudentGradingToolsController {
       this.icons = { prev: 'chevron_right', next: 'chevron_left' };
     }
 
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(({ currentPeriod }) => {
-      this.periodId = currentPeriod.periodId;
-      this.filterForPeriod();
-    });
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      ({ currentPeriod }) => {
+        this.periodId = currentPeriod.periodId;
+        this.filterForPeriod();
+      }
+    );
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });
@@ -57,8 +52,7 @@ class StudentGradingToolsController {
     this.currentPeriodChangedSubscription.unsubscribe();
   }
 
-  $onInit() {
-  }
+  $onInit() {}
 
   $onChanges() {
     this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);

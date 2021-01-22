@@ -10,7 +10,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-student-password.component.scss']
 })
 export class ForgotStudentPasswordComponent implements OnInit {
-
   forgotStudentPasswordFormGroup: FormGroup = this.fb.group({
     username: new FormControl('', [Validators.required])
   });
@@ -18,19 +17,21 @@ export class ForgotStudentPasswordComponent implements OnInit {
   showForgotUsernameLink: boolean = false;
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private studentService: StudentService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private studentService: StudentService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   submit() {
     this.processing = true;
     this.clearMessage();
     this.showForgotUsernameLink = false;
     const username = this.getUsername();
-    this.studentService.getSecurityQuestion(username)
+    this.studentService
+      .getSecurityQuestion(username)
       .pipe(
         finalize(() => {
           this.processing = false;
@@ -66,8 +67,10 @@ export class ForgotStudentPasswordComponent implements OnInit {
       questionKey: questionKey,
       question: question
     };
-    this.router.navigate(['/forgot/student/password/security'],
-        {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/student/password/security'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 
   setUsernameNotFoundMessage() {

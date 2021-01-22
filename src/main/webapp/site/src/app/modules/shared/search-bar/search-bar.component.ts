@@ -1,6 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime ,  distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-bar',
@@ -9,7 +17,6 @@ import { debounceTime ,  distinctUntilChanged } from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None
 })
 export class SearchBarComponent implements OnInit {
-
   @Input()
   placeholderText: string = $localize`Search`; // placeholder text
 
@@ -25,10 +32,9 @@ export class SearchBarComponent implements OnInit {
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
-  searchField = new FormControl(""); // form control for the search input
+  searchField = new FormControl(''); // form control for the search input
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
     this.searchField = new FormControl({
@@ -38,7 +44,7 @@ export class SearchBarComponent implements OnInit {
     this.searchField.valueChanges
       .pipe(debounceTime(this.debounce)) // wait specified interval for any changes
       .pipe(distinctUntilChanged()) // only emit event if search string has changed
-      .subscribe(value => {
+      .subscribe((value) => {
         this.change.emit(this.searchField.value);
       });
   }

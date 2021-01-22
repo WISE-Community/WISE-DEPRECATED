@@ -13,7 +13,7 @@ const summaryAuthoringComponentModule = angular
   .component('editSummaryAdvanced', EditSummaryAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/summary/i18n');
     }
   ]);

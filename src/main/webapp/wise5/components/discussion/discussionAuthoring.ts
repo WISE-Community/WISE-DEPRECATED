@@ -5,7 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class DiscussionAuthoringController extends EditComponentController {
-
   static $inject = [
     '$filter',
     'ConfigService',
@@ -13,7 +12,7 @@ class DiscussionAuthoringController extends EditComponentController {
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'UtilService',
+    'UtilService'
   ];
 
   constructor(
@@ -32,10 +31,9 @@ class DiscussionAuthoringController extends EditComponentController {
       NotificationService,
       ProjectAssetService,
       ProjectService,
-      UtilService,
+      UtilService
     );
   }
-
 }
 
 const DiscussionAuthoring = {
@@ -46,6 +44,6 @@ const DiscussionAuthoring = {
   controller: DiscussionAuthoringController,
   controllerAs: 'discussionController',
   templateUrl: 'wise5/components/discussion/authoring.html'
-}
+};
 
 export default DiscussionAuthoring;

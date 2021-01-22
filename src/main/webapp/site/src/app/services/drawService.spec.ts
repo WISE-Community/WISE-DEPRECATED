@@ -1,15 +1,15 @@
-import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { DrawService } from "../../../../wise5/components/draw/drawService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { DrawService } from '../../../../wise5/components/draw/drawService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: DrawService;
 let defaultDrawDataWithNoObjectsField: string = '{"canvas":{}}';
@@ -19,7 +19,7 @@ let drawDataWithObjects: string = '{"canvas":{"objects":[{}]}}';
 describe('DrawService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -113,8 +113,10 @@ function isCompleted() {
 }
 
 function hasComponentStateWithIsSubmitTrue() {
-  function expectHasComponentStateWithIsSubmitTrue(componentStates: any[],
-      expectedResult: boolean) {
+  function expectHasComponentStateWithIsSubmitTrue(
+    componentStates: any[],
+    expectedResult: boolean
+  ) {
     expect(service.hasComponentStateWithIsSubmitTrue(componentStates)).toEqual(expectedResult);
   }
   it('should check if any component state has is submit true when there are none', () => {
@@ -131,8 +133,7 @@ function hasComponentStateWithDrawData() {
   function expectHasComponentStateWithDrawData(componentStates: any[], expectedResult: boolean) {
     expect(service.hasComponentStateWithDrawData(componentStates)).toEqual(expectedResult);
   }
-  it('should check if there is a component state with draw data when there are no component states',
-      () => {
+  it('should check if there is a component state with draw data when there are no component states', () => {
     const componentStates = [];
     expectHasComponentStateWithDrawData(componentStates, false);
   });
@@ -159,10 +160,14 @@ function componentStateHasStudentWork() {
     componentState = createComponentState(drawDataWithEmptyObjects);
     componentContent = createDrawComponent(null);
   });
-  function expectComponentStateHasStudentWork(componentState: any, componentContent: any,
-      expectedResult: boolean) {
-    expect(service.componentStateHasStudentWork(componentState, componentContent))
-        .toEqual(expectedResult);
+  function expectComponentStateHasStudentWork(
+    componentState: any,
+    componentContent: any,
+    expectedResult: boolean
+  ) {
+    expect(service.componentStateHasStudentWork(componentState, componentContent)).toEqual(
+      expectedResult
+    );
   }
   it(`should check if component state has student work when component content is not provided
       and component state does not have any objects`, () => {
@@ -232,18 +237,28 @@ function isStarterDrawDataExists() {
 }
 
 function isStudentDrawDataDifferentFromStarterData() {
-  function expectIsStudentDrawDataDifferentFromStarterData(drawDataString: string,
-      starterDrawData: string, expectedResult: boolean) {
-    expect(service.isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData))
-        .toEqual(expectedResult);
+  function expectIsStudentDrawDataDifferentFromStarterData(
+    drawDataString: string,
+    starterDrawData: string,
+    expectedResult: boolean
+  ) {
+    expect(
+      service.isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData)
+    ).toEqual(expectedResult);
   }
   it('should check when student draw data is the same as starter draw data', () => {
-    expectIsStudentDrawDataDifferentFromStarterData(defaultDrawDataWithNoObjectsField,
-        defaultDrawDataWithNoObjectsField, false);
+    expectIsStudentDrawDataDifferentFromStarterData(
+      defaultDrawDataWithNoObjectsField,
+      defaultDrawDataWithNoObjectsField,
+      false
+    );
   });
   it('should check when student draw data is different from starter draw data', () => {
     const studentDrawData = '{"canvas":{"objects":[]}}';
-    expectIsStudentDrawDataDifferentFromStarterData(studentDrawData,
-        defaultDrawDataWithNoObjectsField, true);
+    expectIsStudentDrawDataDifferentFromStarterData(
+      studentDrawData,
+      defaultDrawDataWithNoObjectsField,
+      true
+    );
   });
 }

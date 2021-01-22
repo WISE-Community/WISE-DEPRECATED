@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
-import { MatDialogModule } from "@angular/material/dialog";
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -12,14 +12,14 @@ export function fakeAsyncResponse<T>(data: T) {
 }
 
 export class MockLibraryService {
-  numberOfOfficialProjectsVisible$ = fakeAsyncResponse(0)
+  numberOfOfficialProjectsVisible$ = fakeAsyncResponse(0);
   numberOfCommunityProjectsVisible$ = fakeAsyncResponse(0);
   numberOfPersonalProjectsVisible$ = fakeAsyncResponse(0);
   newProjectSource$ = fakeAsyncResponse(0);
-  getOfficialLibraryProjects(){}
-  getCommunityLibraryProjects(){}
-  getPersonalLibraryProjects(){}
-  getSharedLibraryProjects(){}
+  getOfficialLibraryProjects() {}
+  getCommunityLibraryProjects() {}
+  getPersonalLibraryProjects() {}
+  getSharedLibraryProjects() {}
 }
 
 describe('TeacherProjectLibraryComponent', () => {
@@ -28,14 +28,11 @@ describe('TeacherProjectLibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule, RouterTestingModule, MatDialogModule ],
-      declarations: [ TeacherProjectLibraryComponent ],
-      providers: [
-        { provide: LibraryService, useClass: MockLibraryService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      imports: [MatMenuModule, RouterTestingModule, MatDialogModule],
+      declarations: [TeacherProjectLibraryComponent],
+      providers: [{ provide: LibraryService, useClass: MockLibraryService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

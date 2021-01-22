@@ -1,0 +1,264 @@
+<div fxLayout="column" fxLayoutGap="16px">
+  <mat-form-field class="prompt">
+    <mat-label i18n>Prompt</mat-label>
+    <textarea matInput
+        [ngModel]="authoringComponentContent.prompt"
+        (ngModelChange)="promptChanged($event)"
+        placeholder="Enter Prompt Here"
+        i18n-placeholder
+        cdkTextareaAutosize>
+    </textarea>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <div fxLayoutGap="8px">
+      <mat-form-field class="background">
+        <mat-label i18n>Background Image (Optional)</mat-label>
+        <input matInput
+            [(ngModel)]="authoringComponentContent.background"
+            (ngModelChange)="inputChange.next($event)" />
+      </mat-form-field>
+      <button mat-raised-button
+          color="primary"
+          (click)="chooseBackgroundImage()"
+          matTooltip="Choose an Image"
+          matTooltipPosition="above"
+          i18n-matTooltip>
+        <mat-icon>insert_photo</mat-icon>
+      </button>
+    </div>
+    <mat-checkbox color="primary"
+        [(ngModel)]="authoringComponentContent.stretchBackground"
+        (ngModelChange)="componentChanged()"
+        i18n>
+      Stretch Background
+    </mat-checkbox>
+  </div>
+  <div class="canvas-dimension" fxLayout="row wrap" fxLayoutGap="8px">
+    <mat-form-field>
+      <mat-label i18n>Canvas Width (Optional)</mat-label>
+      <input matInput
+          [(ngModel)]="authoringComponentContent.width"
+          (ngModelChange)="inputChange.next($event)"
+          type="number" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label i18n>Canvas Height (Optional)</mat-label>
+      <input matInput
+          [(ngModel)]="authoringComponentContent.height"
+          (ngModelChange)="inputChange.next($event)"
+          type="number" />
+    </mat-form-field>
+  </div>
+  <div class="add-content" fxLayout="column" fxLayoutGap="16px">
+    <div fxLayoutAlign="start center" fxLayoutGap="16px">
+      <span i18n>Nodes</span>
+      <button mat-raised-button
+          color="primary"
+          (click)="addNode()"
+          matTooltip="Add Node"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Add Node"
+          i18n-aria-label>
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="authoringComponentContent.nodes == null || authoringComponentContent.nodes.length == 0">
+      <p i18n>There are no nodes. Click the "Add Node" button to add a node.</p>
+    </div>
+    <div>
+      <div *ngFor="let node of authoringComponentContent.nodes; index as nodeIndex; first as isFirst; last as isLast"
+          class="content-item"
+          fxLayout="row wrap"
+          fxLayoutAlign="start center">
+        <mat-form-field class="content-item-setting" fxFlex="100" fxFlex.sm="40" fxFlex.gt-sm="30">
+          <mat-label i18n>Node Label</mat-label>
+          <input matInput
+              [(ngModel)]="node.label"
+              (ngModelChange)="inputChange.next($event)" />
+        </mat-form-field>
+        <div class="content-item-setting"
+            fxLayoutAlign="start center"
+            fxLayoutGap="8px"
+            fxFlex="100"
+            fxFlex.sm="60"
+            fxFlex.gt-sm="35">
+          <mat-form-field fxFlex>
+            <mat-label i18n>Image</mat-label>
+            <input matInput
+                [(ngModel)]="node.fileName"
+                (ngModelChange)="inputChange.next($event)" />
+          </mat-form-field>
+          <button mat-raised-button
+              color="primary"
+              (click)="chooseNodeImage(node.id)"
+              matTooltip="Choose an Image"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Choose an Image"
+              i18n-aria-label>
+            <mat-icon>insert_photo</mat-icon>
+          </button>
+        </div>
+        <div class="content-item-setting" fxLayoutGap="8px">
+          <mat-form-field class="node-dimension">
+            <mat-label i18n>Width</mat-label>
+            <input matInput
+                [(ngModel)]="node.width"
+                (ngModelChange)="inputChange.next($event)"
+                type="number" />
+          </mat-form-field>
+          <mat-form-field class="node-dimension">
+            <mat-label i18n>Height</mat-label>
+            <input matInput
+                [(ngModel)]="node.height"
+                (ngModelChange)="inputChange.next($event)"
+                type="number" />
+          </mat-form-field>
+        </div>
+        <span fxFlex></span>
+        <div class="content-item-setting" fxLayoutGap="8px">
+          <button mat-raised-button
+              color="primary"
+              [disabled]="isFirst"
+              (click)="moveNodeUpButtonClicked(nodeIndex)"
+              matTooltip="Move Up"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Move Up"
+              i18n-aria-label>
+            <mat-icon>arrow_upward</mat-icon>
+          </button>
+          <button mat-raised-button
+              color="primary"
+              [disabled]="isLast"
+              (click)="moveNodeDownButtonClicked(nodeIndex)"
+              matTooltip="Move Down"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Move Down"
+              i18n-aria-label>
+            <mat-icon>arrow_downward</mat-icon>
+          </button>
+          <button mat-raised-button
+              color="primary"
+              (click)="nodeDeleteButtonClicked(nodeIndex)"
+              matTooltip="Delete"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Delete"
+              i18n-aria-label>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <mat-checkbox color="primary"
+          [(ngModel)]="authoringComponentContent.showNodeLabels"
+          (ngModelChange)="componentChanged()"
+          i18n>
+        Show Node Labels
+      </mat-checkbox>
+    </div>
+  </div>
+  <div class="add-content" fxLayout="column" fxLayoutGap="16px">
+    <div fxLayoutAlign="start center" fxLayoutGap="16px">
+      <span i18n>Links</span>
+      <button mat-raised-button
+          color="primary"
+          (click)="addLink()"
+          matTooltip="Add Link"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Add Link"
+          i18n-aria-label>
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="authoringComponentContent.links == null || authoringComponentContent.links.length == 0">
+      <p i18n>There are no links. Click the "Add Link" button to add a link.</p>
+    </div>
+    <div>
+      <div *ngFor="let link of authoringComponentContent.links; index as linkIndex; first as isFirst; last as isLast"
+          class="content-item"
+          fxLayout="row wrap"
+          fxLayoutAlign="start center"
+          fxLayouGap="16px">
+        <mat-form-field class="content-item-setting" fxFlex="50" fxFlex.gt-sm="30">
+          <mat-label i18n>Link Label</mat-label>
+          <input matInput
+              [(ngModel)]="link.label"
+              (ngModelChange)="inputChange.next($event)" />
+        </mat-form-field>
+        <mat-form-field class="content-item-setting" fxFlex="50" fxFlex.gt-sm="30">
+          <mat-label i18n>Color</mat-label>
+          <input matInput
+              [(ngModel)]="link.color"
+              (ngModelChange)="inputChange.next($event)" />
+        </mat-form-field>
+        <span fxFlex></span>
+        <div class="content-item-setting" fxLayoutGap="8px">
+          <button mat-raised-button
+              color="primary"
+              [disabled]="isFirst"
+              (click)="moveLinkUpButtonClicked(linkIndex)"
+              matTooltip="Move Up"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Move Up"
+              i18n-aria-label>
+            <mat-icon>arrow_upward</mat-icon>
+          </button>
+          <button mat-raised-button
+              color="primary"
+              [disabled]="isLast"
+              (click)="moveLinkDownButtonClicked(linkIndex)"
+              matTooltip="Move Down"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Move Down"
+              i18n-aria-label>
+            <mat-icon>arrow_downward</mat-icon>
+          </button>
+          <button mat-raised-button
+              color="primary"
+              (click)="linkDeleteButtonClicked(linkIndex)"
+              matTooltip="Delete"
+              matTooltipPosition="above"
+              i18n-matTooltip
+              aria-label="Delete"
+              i18n-aria-label>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="starter-concept-map"
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+      fxLayoutGap="8px">
+    <span i18n>(Optional) Create a starting state for the concept map by editing the "Student Preview" below and then saving here:</span>
+    <button mat-raised-button
+        color="primary"
+        (click)="saveStarterConceptMap()"
+        matTooltip="Save Starter Concept Map"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Save Starter Concept Map"
+        i18n-aria-label>
+      <mat-icon>save</mat-icon>
+    </button>
+    <button mat-raised-button
+        color="primary"
+        (click)="deleteStarterConceptMap()"
+        matTooltip="Delete Starter Concept Map"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Delete Starter Concept Map"
+        i18n-aria-label>
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

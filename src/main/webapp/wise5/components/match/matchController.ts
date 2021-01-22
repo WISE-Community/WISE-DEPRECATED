@@ -115,15 +115,16 @@ class MatchController extends ComponentController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       if (this.shouldImportPrivateNotes()) {
         const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
-        this.privateNotebookItems = allPrivateNotebookItems.filter(note => {
-          return note.serverDeleteTime == null
+        this.privateNotebookItems = allPrivateNotebookItems.filter((note) => {
+          return note.serverDeleteTime == null;
         });
-        this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$
-            .subscribe((args) => {
-          if (args.notebookItem.type === 'note') {
-            this.addNotebookItemToSourceBucket(args.notebookItem);
+        this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
+          (args) => {
+            if (args.notebookItem.type === 'note') {
+              this.addNotebookItemToSourceBucket(args.notebookItem);
+            }
           }
-        });
+        );
       }
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isPromptVisible = false;
@@ -179,7 +180,7 @@ class MatchController extends ComponentController {
      * action (optional; default is false)
      * @return {promise} a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = isSubmit => {
+    this.$scope.getComponentState = (isSubmit) => {
       const deferred = this.$q.defer();
       let hasDirtyWork = false;
       let action = 'change';
@@ -197,7 +198,7 @@ class MatchController extends ComponentController {
       }
 
       if (hasDirtyWork) {
-        this.$scope.matchController.createComponentState(action).then(componentState => {
+        this.$scope.matchController.createComponentState(action).then((componentState) => {
           deferred.resolve(componentState);
         });
       } else {
@@ -239,15 +240,14 @@ class MatchController extends ComponentController {
     this.disableDraggingIfNeeded(dragId);
     const drake = this.dragulaService.find(this.$scope, dragId).drake;
     this.showVisualIndicatorWhileDragging(drake);
-    this.autoScroll(
-      [document.querySelector('#content')], {
+    this.autoScroll([document.querySelector('#content')], {
       margin: 30,
       pixels: 50,
       scrollWhenOutside: true,
-      autoScroll: function() {
-          return this.down && drake.dragging;
+      autoScroll: function () {
+        return this.down && drake.dragging;
       }
-  });
+    });
   }
 
   registerStudentDataChangedOnDrop(dragId) {
@@ -424,13 +424,13 @@ class MatchController extends ComponentController {
   isLatestComponentStateASubmit() {}
 
   getBucketIds() {
-    return this.buckets.map(b => {
+    return this.buckets.map((b) => {
       return b.id;
     });
   }
 
   getChoiceIds() {
-    return this.choices.map(c => {
+    return this.choices.map((c) => {
       return c.id;
     });
   }
@@ -439,16 +439,18 @@ class MatchController extends ComponentController {
     const latestSubmitComponentStateBuckets = latestSubmitComponentState.studentData.buckets;
     const choicesThatChangedSinceLastSubmit = [];
     for (let currentComponentStateBucket of this.buckets) {
-      const currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(choice => {
-        return choice.id;
-      });
+      const currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(
+        (choice) => {
+          return choice.id;
+        }
+      );
       let bucketFromSubmitComponentState = this.MatchService.getBucketById(
         currentComponentStateBucket.id,
         latestSubmitComponentStateBuckets
       );
       if (bucketFromSubmitComponentState != null) {
         const latestSubmitComponentStateChoiceIds = bucketFromSubmitComponentState.items.map(
-          choice => {
+          (choice) => {
             return choice.id;
           }
         );
@@ -791,7 +793,6 @@ class MatchController extends ComponentController {
     return null;
   }
 
-
   /**
    * Check if the component has been authored with a correct choice
    * @return {boolean} whether the component has been authored with a correct choice
@@ -941,7 +942,7 @@ class MatchController extends ComponentController {
       .placeholder(this.$translate('match.typeSomething'))
       .cancel(this.$translate('CANCEL'))
       .ok(this.$translate('OK'));
-    this.$mdDialog.show(confirm).then(result => {
+    this.$mdDialog.show(confirm).then((result) => {
       if (result != null && result != '') {
         const newChoice = {
           id: this.UtilService.generateKey(10),

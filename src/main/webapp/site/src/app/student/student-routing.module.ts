@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
-import { AuthGuard } from "./auth.guard";
-import { EditComponent } from "./account/edit/edit.component";
+import { AuthGuard } from './auth.guard';
+import { EditComponent } from './account/edit/edit.component';
 
 const studentRoutes: Routes = [
   {
@@ -16,17 +16,17 @@ const studentRoutes: Routes = [
       { path: 'home', component: StudentHomeComponent, pathMatch: 'full' },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
       { path: 'profile/edit', component: EditComponent },
-      {path: '', loadChildren: () => import('../student-hybrid-angular.module').then(m => m.StudentVLEAngularJSModule)}
+      {
+        path: '',
+        loadChildren: () =>
+          import('../student-hybrid-angular.module').then((m) => m.StudentVLEAngularJSModule)
+      }
     ]
   }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(studentRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(studentRoutes)],
+  exports: [RouterModule]
 })
 export class StudentRoutingModule {}

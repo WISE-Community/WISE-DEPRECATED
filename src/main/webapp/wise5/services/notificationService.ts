@@ -1,12 +1,12 @@
 import * as angular from 'angular';
-import { Injectable } from "@angular/core";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { ConfigService } from "./configService";
-import { ProjectService } from "./projectService";
-import { UtilService } from "./utilService";
-import { Notification } from "../../site/src/app/domain/notification";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ConfigService } from './configService';
+import { ProjectService } from './projectService';
+import { UtilService } from './utilService';
+import { Notification } from '../../site/src/app/domain/notification';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class NotificationService {
@@ -18,16 +18,17 @@ export class NotificationService {
   private setIsJSONValidSource: Subject<any> = new Subject<any>();
   public setIsJSONValid$: Observable<any> = this.setIsJSONValidSource.asObservable();
   private serverConnectionStatusSource: Subject<any> = new Subject<any>();
-  public serverConnectionStatus$: Observable<any> =
-      this.serverConnectionStatusSource.asObservable();
+  public serverConnectionStatus$: Observable<any> = this.serverConnectionStatusSource.asObservable();
   private viewCurrentAmbientNotificationSource: Subject<any> = new Subject<any>();
-  public viewCurrentAmbientNotification$: Observable<any> =
-      this.viewCurrentAmbientNotificationSource.asObservable();
+  public viewCurrentAmbientNotification$: Observable<any> = this.viewCurrentAmbientNotificationSource.asObservable();
 
-  constructor(private upgrade: UpgradeModule, private http: HttpClient,
-      private ConfigService: ConfigService, private ProjectService: ProjectService,
-      private UtilService: UtilService) {
-  }
+  constructor(
+    private upgrade: UpgradeModule,
+    private http: HttpClient,
+    private ConfigService: ConfigService,
+    private ProjectService: ProjectService,
+    private UtilService: UtilService
+  ) {}
 
   /**
    * Creates a new notification object
@@ -41,8 +42,18 @@ export class NotificationService {
    * @param groupId id that groups multiple notifications together
    * @returns newly created notification object
    */
-  createNewNotification(runId, periodId, notificationType, nodeId, componentId,
-      fromWorkgroupId, toWorkgroupId, message, data = null, groupId = null): Notification {
+  createNewNotification(
+    runId,
+    periodId,
+    notificationType,
+    nodeId,
+    componentId,
+    fromWorkgroupId,
+    toWorkgroupId,
+    message,
+    data = null,
+    groupId = null
+  ): Notification {
     const nodePosition = this.ProjectService.getNodePositionById(nodeId);
     const nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
@@ -70,7 +81,6 @@ export class NotificationService {
     });
   }
 
-
   retrieveNotifications() {
     if (this.ConfigService.isPreview()) {
       this.notifications = [];
@@ -79,22 +89,26 @@ export class NotificationService {
     const options: any = {};
     if (this.ConfigService.getMode() === 'studentRun') {
       options.params = new HttpParams()
-          .set('periodId', this.ConfigService.getPeriodId())
-          .set('toWorkgroupId', this.ConfigService.getWorkgroupId());
+        .set('periodId', this.ConfigService.getPeriodId())
+        .set('toWorkgroupId', this.ConfigService.getWorkgroupId());
     }
-    return this.http.get(this.ConfigService.getNotificationURL(), options).toPromise()
-        .then((notifications: any) => {
-      this.notifications = notifications;
-      this.notifications.map((notification: Notification) => {
-        this.setNotificationNodePositionAndTitle(notification);
+    return this.http
+      .get(this.ConfigService.getNotificationURL(), options)
+      .toPromise()
+      .then((notifications: any) => {
+        this.notifications = notifications;
+        this.notifications.map((notification: Notification) => {
+          this.setNotificationNodePositionAndTitle(notification);
+        });
+        return this.notifications;
       });
-      return this.notifications;
-    });
   }
 
   setNotificationNodePositionAndTitle(notification: Notification) {
     notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-    notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+    notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(
+      notification.nodeId
+    );
   }
 
   sendNotificationForScore(notificationForScore) {
@@ -103,7 +117,7 @@ export class NotificationService {
       const fromWorkgroupId = this.ConfigService.getWorkgroupId();
       const runId = this.ConfigService.getRunId();
       const periodId = this.ConfigService.getPeriodId();
-      const notificationGroupId = runId + "_" + this.UtilService.generateKey(10);  // links student and teacher notifications together
+      const notificationGroupId = runId + '_' + this.UtilService.generateKey(10); // links student and teacher notifications together
       const notificationData: any = {};
       if (notificationForScore.isAmbient) {
         notificationData.isAmbient = true;
@@ -112,31 +126,63 @@ export class NotificationService {
         notificationData.dismissCode = notificationForScore.dismissCode;
       }
       if (notificationForScore.isNotifyStudent) {
-        this.sendNotificationToUser(notificationForScore.notificationMessageToStudent,
-            fromWorkgroupId, notificationForScore, runId, periodId, notificationType,
-            this.ConfigService.getWorkgroupId(), notificationData, notificationGroupId)
-            .then((notification) => {
-              this.addNotification(notification);
-            });
+        this.sendNotificationToUser(
+          notificationForScore.notificationMessageToStudent,
+          fromWorkgroupId,
+          notificationForScore,
+          runId,
+          periodId,
+          notificationType,
+          this.ConfigService.getWorkgroupId(),
+          notificationData,
+          notificationGroupId
+        ).then((notification) => {
+          this.addNotification(notification);
+        });
       }
       if (notificationForScore.isNotifyTeacher) {
-        this.sendNotificationToUser(notificationForScore.notificationMessageToTeacher,
-            fromWorkgroupId, notificationForScore, runId, periodId, notificationType,
-            this.ConfigService.getTeacherWorkgroupId(), notificationData, notificationGroupId);
+        this.sendNotificationToUser(
+          notificationForScore.notificationMessageToTeacher,
+          fromWorkgroupId,
+          notificationForScore,
+          runId,
+          periodId,
+          notificationType,
+          this.ConfigService.getTeacherWorkgroupId(),
+          notificationData,
+          notificationGroupId
+        );
       }
     }
   }
 
-  private sendNotificationToUser(notificationMessageTemplate: string, fromWorkgroupId: number,
-      notificationForScore: any, runId: number, periodId: any, notificationType: string,
-      toWorkgroupId: number, notificationData: any, notificationGroupId: string) {
+  private sendNotificationToUser(
+    notificationMessageTemplate: string,
+    fromWorkgroupId: number,
+    notificationForScore: any,
+    runId: number,
+    periodId: any,
+    notificationType: string,
+    toWorkgroupId: number,
+    notificationData: any,
+    notificationGroupId: string
+  ) {
     const notificationMessage = notificationMessageTemplate
-        .replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId))
-        .replace('{{score}}', notificationForScore.score)
-        .replace('{{dismissCode}}', notificationForScore.dismissCode);
-    const notification = this.createNewNotification(runId, periodId, notificationType,
-        notificationForScore.nodeId, notificationForScore.componentId,
-        fromWorkgroupId, toWorkgroupId, notificationMessage, notificationData, notificationGroupId);
+      .replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId))
+      .replace('{{score}}', notificationForScore.score)
+      .replace('{{dismissCode}}', notificationForScore.dismissCode);
+    const notification = this.createNewNotification(
+      runId,
+      periodId,
+      notificationType,
+      notificationForScore.nodeId,
+      notificationForScore.componentId,
+      fromWorkgroupId,
+      toWorkgroupId,
+      notificationMessage,
+      notificationData,
+      notificationGroupId
+    );
     return this.saveNotificationToServer(notification);
   }
 
@@ -144,10 +190,12 @@ export class NotificationService {
     if (this.ConfigService.isPreview()) {
       return this.pretendServerRequest(notification);
     } else {
-      return this.http.post(this.ConfigService.getNotificationURL(), notification).toPromise()
-          .then((notification: Notification) => {
-        return notification;
-      });
+      return this.http
+        .post(this.ConfigService.getNotificationURL(), notification)
+        .toPromise()
+        .then((notification: Notification) => {
+          return notification;
+        });
     }
   }
 
@@ -156,10 +204,12 @@ export class NotificationService {
       return this.pretendServerRequest(notification);
     }
     notification.timeDismissed = Date.parse(new Date().toString());
-    return this.http.post(`${this.ConfigService.getNotificationURL()}/dismiss`, notification)
-        .toPromise().then((notification: Notification) => {
-      this.addNotification(notification);
-    });
+    return this.http
+      .post(`${this.ConfigService.getNotificationURL()}/dismiss`, notification)
+      .toPromise()
+      .then((notification: Notification) => {
+        this.addNotification(notification);
+      });
   }
 
   pretendServerRequest(notification) {
@@ -176,11 +226,9 @@ export class NotificationService {
     let notifications = this.notifications;
     for (const p in args) {
       if (args.hasOwnProperty(p) && args[p] !== null) {
-        notifications = notifications.filter(
-          notification => {
-            return (notification[p] === args[p]);
-          }
-        );
+        notifications = notifications.filter((notification) => {
+          return notification[p] === args[p];
+        });
       }
     }
     return notifications;

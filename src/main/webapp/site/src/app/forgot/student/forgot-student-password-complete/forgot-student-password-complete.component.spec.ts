@@ -15,10 +15,10 @@ describe('ForgotStudentPasswordCompleteComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentPasswordCompleteComponent ],
-      imports: [ RouterTestingModule ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [ForgotStudentPasswordCompleteComponent],
+      imports: [RouterTestingModule],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -32,7 +32,9 @@ describe('ForgotStudentPasswordCompleteComponent', () => {
   });
 
   it('should show the password successfully changed message', () => {
-    expect(fixture.debugElement.nativeElement.textContent).toContain('Your password has been successfully changed');
+    expect(fixture.debugElement.nativeElement.textContent).toContain(
+      'Your password has been successfully changed'
+    );
   });
 
   it('should show the sign in button', () => {

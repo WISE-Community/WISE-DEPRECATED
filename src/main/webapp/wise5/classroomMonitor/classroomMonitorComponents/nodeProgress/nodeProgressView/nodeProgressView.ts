@@ -93,24 +93,26 @@ class NodeProgressViewController {
       this.showRubricButton = true;
     }
 
-    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$
-        .subscribe(({ currentNode }) => {
-      this.nodeId = currentNode.id;
-      this.TeacherDataService.setCurrentNode(currentNode);
-      if (this.isGroupNode(this.nodeId)) {
-        this.currentGroup = currentNode;
-        this.currentGroupId = this.currentGroup.id;
-        this.$scope.currentgroupid = this.currentGroupId;
+    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$.subscribe(
+      ({ currentNode }) => {
+        this.nodeId = currentNode.id;
+        this.TeacherDataService.setCurrentNode(currentNode);
+        if (this.isGroupNode(this.nodeId)) {
+          this.currentGroup = currentNode;
+          this.currentGroupId = this.currentGroup.id;
+          this.$scope.currentgroupid = this.currentGroupId;
+        }
+        this.$state.go('root.cm.unit.node', { nodeId: this.nodeId });
       }
-      this.$state.go('root.cm.unit.node', { nodeId: this.nodeId });
-    });
+    );
 
-    this.currentWorkgroupChangedSubscription = 
-        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
-      this.currentWorkgroup = currentWorkgroup;
-    });
+    this.currentWorkgroupChangedSubscription = this.TeacherDataService.currentWorkgroupChanged$.subscribe(
+      ({ currentWorkgroup }) => {
+        this.currentWorkgroup = currentWorkgroup;
+      }
+    );
 
-    this.$transitions.onSuccess({}, $transition => {
+    this.$transitions.onSuccess({}, ($transition) => {
       const toNodeId = $transition.params('to').nodeId;
       const fromNodeId = $transition.params('from').nodeId;
       if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
@@ -233,7 +235,7 @@ class NodeProgressViewController {
         '$scope',
         '$mdDialog',
         function DialogController($scope, $mdDialog) {
-          $scope.openInNewWindow = function() {
+          $scope.openInNewWindow = function () {
             let w = window.open('', '_blank');
             w.document.write(windowString);
             $mdDialog.hide();

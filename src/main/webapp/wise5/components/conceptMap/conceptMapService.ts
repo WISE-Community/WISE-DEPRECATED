@@ -1,6 +1,7 @@
 'use strict';
 
 import * as angular from 'angular';
+import SVG from 'svg.js';
 import { ComponentService } from '../componentService';
 import { ConfigService } from '../../services/configService';
 import { StudentAssetService } from '../../services/studentAssetService';
@@ -13,7 +14,6 @@ import { UtilService } from '../../services/utilService';
 
 @Injectable()
 export class ConceptMapService extends ComponentService {
-
   constructor(
     private upgrade: UpgradeModule,
     private ConfigService: ConfigService,
@@ -51,8 +51,13 @@ export class ConceptMapService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (componentStates != null && componentStates.length > 0) {
       if (this.isSubmitRequired(node, component)) {
         return this.hasComponentStateWithIsSubmitTrue(componentStates);
@@ -70,7 +75,7 @@ export class ConceptMapService extends ComponentService {
         if (
           componentState.isSubmit == true ||
           (componentState.studentData.submitCounter != null &&
-          componentState.studentData.submitCounter > 0)
+            componentState.studentData.submitCounter > 0)
         ) {
           return true;
         }
@@ -98,8 +103,18 @@ export class ConceptMapService extends ComponentService {
    * @param showLabel whether to show the label
    * @param a ConceptMapNode
    */
-  newConceptMapNode(draw: any, id: string, originalId: string, filePath: string, label: string,
-      x: number, y: number, width: number, height: number, showLabel: boolean) {
+  newConceptMapNode(
+    draw: any,
+    id: string,
+    originalId: string,
+    filePath: string,
+    label: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    showLabel: boolean
+  ) {
     return new ConceptMapNode(
       draw,
       id,
@@ -449,8 +464,12 @@ export class ConceptMapService extends ComponentService {
    * @returns the links with the given source node label, link label, and
    * destination node label
    */
-  getLinksByLabels(conceptMapData: any, nodeLabel: string, linkLabel: string,
-      otherNodeLabel: string) {
+  getLinksByLabels(
+    conceptMapData: any,
+    nodeLabel: string,
+    linkLabel: string,
+    otherNodeLabel: string
+  ) {
     const resultLinks = [];
     const links = conceptMapData.links;
     if (links != null) {
@@ -463,11 +482,17 @@ export class ConceptMapService extends ComponentService {
     return resultLinks;
   }
 
-  isLinkMatchingSourceLinkDestination(link: any, sourceLabel: string, linkLabel: string,
-      destinationLabel: string) {
-    return (sourceLabel === link.sourceNodeLabel || sourceLabel === 'any') &&
-        (linkLabel === link.label || linkLabel === 'any') &&
-        (destinationLabel === link.destinationNodeLabel || destinationLabel === 'any');
+  isLinkMatchingSourceLinkDestination(
+    link: any,
+    sourceLabel: string,
+    linkLabel: string,
+    destinationLabel: string
+  ) {
+    return (
+      (sourceLabel === link.sourceNodeLabel || sourceLabel === 'any') &&
+      (linkLabel === link.label || linkLabel === 'any') &&
+      (destinationLabel === link.destinationNodeLabel || destinationLabel === 'any')
+    );
   }
 
   /**
@@ -751,7 +776,7 @@ export class ConceptMapService extends ComponentService {
         let svgString = svgElement.innerHTML;
 
         // find all the images in the svg and replace them with Base64 images
-        this.getHrefToBase64ImageReplacements(svgString, true).then(images => {
+        this.getHrefToBase64ImageReplacements(svgString, true).then((images) => {
           /*
            * Loop through all the image objects. Each object contains
            * an image href and a Base64 image.
@@ -801,7 +826,7 @@ export class ConceptMapService extends ComponentService {
           const thisUtilService = this.UtilService;
 
           // the function that is called after the image is fully loaded
-          image.onload = event => {
+          image.onload = (event) => {
             // get the image that was loaded
             const image: any = event.target;
 
@@ -817,13 +842,13 @@ export class ConceptMapService extends ComponentService {
             const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
             // create a student asset image
-            this.StudentAssetService.uploadAsset(imageObject).then(unreferencedAsset => {
+            this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
               /*
                * make a copy of the unreferenced asset so that we
                * get a referenced asset
                */
               this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
-                referencedAsset => {
+                (referencedAsset) => {
                   if (referencedAsset != null) {
                     /*
                      * get the asset url
@@ -945,7 +970,7 @@ export class ConceptMapService extends ComponentService {
       const ctx = myCanvas.getContext('2d');
 
       // the function that is called after the image is fully loaded
-      image.onload = function(event) {
+      image.onload = function (event) {
         // get the image that was loaded
         const image: any = event.target;
 
@@ -993,8 +1018,10 @@ export class ConceptMapService extends ComponentService {
           return this.hasAnyNodeOrLink(nodes, links);
         } else {
           if (this.hasStarterConceptMap(componentContent)) {
-            return this.isStudentConceptMapDifferentThanStarterConceptMap(conceptMapData,
-                componentContent.starterConceptMap);
+            return this.isStudentConceptMapDifferentThanStarterConceptMap(
+              conceptMapData,
+              componentContent.starterConceptMap
+            );
           } else {
             return this.hasAnyNodeOrLink(nodes, links);
           }
@@ -1036,8 +1063,10 @@ export class ConceptMapService extends ComponentService {
    * @return whether the student concept map is different than the starter
    * concept map
    */
-  isStudentConceptMapDifferentThanStarterConceptMap(studentConceptMap: any,
-      starterConceptMap: any) {
+  isStudentConceptMapDifferentThanStarterConceptMap(
+    studentConceptMap: any,
+    starterConceptMap: any
+  ) {
     if (studentConceptMap != null && starterConceptMap != null) {
       if (!this.isAllNodesEqual(studentConceptMap.nodes, starterConceptMap.nodes)) {
         return true;
@@ -1076,20 +1105,24 @@ export class ConceptMapService extends ComponentService {
   }
 
   isNodesEqual(node1: any, node2: any) {
-    return node1.originalId === node2.originalId &&
-        node1.instanceId === node2.instanceId &&
-        node1.x === node2.x &&
-        node1.y === node2.y;
+    return (
+      node1.originalId === node2.originalId &&
+      node1.instanceId === node2.instanceId &&
+      node1.x === node2.x &&
+      node1.y === node2.y
+    );
   }
 
   isLinksEqual(link1: any, link2: any) {
-    return link1.label === link2.label &&
-        link1.originalId === link2.originalId &&
-        link1.instanceId === link2.instanceId &&
-        link1.sourceNodeOriginalId === link2.sourceNodeOriginalId &&
-        link1.sourceNodeInstanceId === link2.sourceNodeInstanceId &&
-        link1.destinationNodeOriginalId === link2.destinationNodeOriginalId &&
-        link1.destinationNodeInstanceId === link2.destinationNodeInstanceId;
+    return (
+      link1.label === link2.label &&
+      link1.originalId === link2.originalId &&
+      link1.instanceId === link2.instanceId &&
+      link1.sourceNodeOriginalId === link2.sourceNodeOriginalId &&
+      link1.sourceNodeInstanceId === link2.sourceNodeInstanceId &&
+      link1.destinationNodeOriginalId === link2.destinationNodeOriginalId &&
+      link1.destinationNodeInstanceId === link2.destinationNodeInstanceId
+    );
   }
 
   /**
@@ -1114,7 +1147,7 @@ export class ConceptMapService extends ComponentService {
         let svgString = serializer.serializeToString(svgElement);
 
         // find all the images in the svg and replace them with Base64 images
-        this.getHrefToBase64ImageReplacements(svgString).then(images => {
+        this.getHrefToBase64ImageReplacements(svgString).then((images) => {
           /*
            * Loop through all the image objects. Each object contains
            * an image href and a Base64 image.
@@ -1150,7 +1183,7 @@ export class ConceptMapService extends ComponentService {
           const image = new Image();
 
           // the function that is called after the image is fully loaded
-          image.onload = event => {
+          image.onload = (event) => {
             // get the image that was loaded
             let image: any = event.target;
 
@@ -1166,7 +1199,7 @@ export class ConceptMapService extends ComponentService {
             const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
 
             // add the image to the student assets
-            this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+            this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
               resolve(asset);
             });
           };

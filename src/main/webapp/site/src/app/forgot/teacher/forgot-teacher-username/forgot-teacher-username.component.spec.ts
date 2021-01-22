@@ -10,7 +10,7 @@ import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   sendForgotUsernameEmail(email: string): Observable<any> {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       observer.next({
         status: 'success',
         messageCode: 'emailSent'
@@ -33,7 +33,7 @@ describe('ForgotTeacherUsernameComponent', () => {
   };
 
   const createObservableResponse = (status, messageCode) => {
-    const observableResponse = Observable.create(observer => {
+    const observableResponse = Observable.create((observer) => {
       const response = {
         status: status,
         messageCode: messageCode
@@ -51,16 +51,11 @@ describe('ForgotTeacherUsernameComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherUsernameComponent ],
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        ReactiveFormsModule
-      ],
-      providers: [
-        { provide: TeacherService, useClass: MockTeacherService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [ForgotTeacherUsernameComponent],
+      imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule],
+      providers: [{ provide: TeacherService, useClass: MockTeacherService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -80,12 +75,14 @@ describe('ForgotTeacherUsernameComponent', () => {
 
   it('should show an email not found message', () => {
     submitAndReceiveResponse('sendForgotUsernameEmail', 'failure', 'emailNotFound');
-    expect(getErrorMessage()).toContain('We did not find a WISE account associated with that email');
+    expect(getErrorMessage()).toContain(
+      'We did not find a WISE account associated with that email'
+    );
   });
 
   it('should navigate to the success page', () => {
     const teacherService = TestBed.get(TeacherService);
-    const observableResponse = Observable.create(observer => {
+    const observableResponse = Observable.create((observer) => {
       const response = {
         status: 'success',
         messageCode: 'emailSent'

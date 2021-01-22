@@ -279,7 +279,7 @@ class DrawController extends ComponentController {
     );
 
     if (this.isStudentMode()) {
-      this.drawingTool.on('tool:changed', toolName => {
+      this.drawingTool.on('tool:changed', (toolName) => {
         const category = 'Tool';
         const event = 'toolSelected';
         const data = {
@@ -529,8 +529,8 @@ class DrawController extends ComponentController {
    * @param studentAsset
    */
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
-      fabric.Image.fromURL(copiedAsset.url, oImg => {
+    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+      fabric.Image.fromURL(copiedAsset.url, (oImg) => {
         oImg.scaleToWidth(200); // set max width and have height scale proportionally
         // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
         //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
@@ -604,14 +604,15 @@ class DrawController extends ComponentController {
 
   snipButtonClicked($event) {
     if (this.isDirty) {
-      const studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$
-          .subscribe((args: any) => {
-        const componentState = args.studentWork;
-        if (this.isForThisComponent(componentState)) {
-          this.snipDrawing($event, componentState.id);
-          studentWorkSavedToServerSubscription.unsubscribe();
+      const studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$.subscribe(
+        (args: any) => {
+          const componentState = args.studentWork;
+          if (this.isForThisComponent(componentState)) {
+            this.snipDrawing($event, componentState.id);
+            studentWorkSavedToServerSubscription.unsubscribe();
+          }
         }
-      });
+      );
       this.saveButtonClicked();
     } else {
       const studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
@@ -681,14 +682,17 @@ class DrawController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.generateImageFromComponentState(componentState).then(image => {
+    this.generateImageFromComponentState(componentState).then((image) => {
       this.drawingTool.setBackgroundImage(image.url);
     });
   }
 
   generateStarterState() {
-    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
-        starterState: this.getDrawData()});
+    this.NodeService.respondStarterState({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      starterState: this.getDrawData()
+    });
   }
 }
 

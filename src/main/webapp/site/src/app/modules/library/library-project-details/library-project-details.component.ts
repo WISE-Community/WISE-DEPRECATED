@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { LibraryService } from "../../../services/library.service";
-import { UserService } from "../../../services/user.service";
-import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
-import { UseWithClassWarningDialogComponent } from "../../../teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component";
-import { NGSSStandards } from "../ngssStandards";
-import { Project } from "../../../domain/project";
-import { ParentProject } from "../../../domain/parentProject";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LibraryService } from '../../../services/library.service';
+import { UserService } from '../../../services/user.service';
+import { CreateRunDialogComponent } from '../../../teacher/create-run-dialog/create-run-dialog.component';
+import { UseWithClassWarningDialogComponent } from '../../../teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component';
+import { NGSSStandards } from '../ngssStandards';
+import { Project } from '../../../domain/project';
+import { ParentProject } from '../../../domain/parentProject';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../../services/config.service';
 
@@ -30,29 +30,32 @@ export class LibraryProjectDetailsComponent implements OnInit {
   more: boolean = false;
   isCopy: boolean = false;
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private configService: ConfigService,
-              private libraryService: LibraryService,
-              private userService: UserService) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private configService: ConfigService,
+    private libraryService: LibraryService,
+    private userService: UserService
+  ) {
     this.isTeacher = userService.isTeacher();
     this.isRunProject = data.isRunProject;
     if (this.data.project) {
       this.project = new Project(this.data.project);
-      const numParents = this.data.project.metadata.parentProjects ?
-          this.data.project.metadata.parentProjects.length : null;
+      const numParents = this.data.project.metadata.parentProjects
+        ? this.data.project.metadata.parentProjects.length
+        : null;
       if (numParents) {
-        this.parentProject =
-            new ParentProject(this.data.project.metadata.parentProjects[numParents-1]);
+        this.parentProject = new ParentProject(
+          this.data.project.metadata.parentProjects[numParents - 1]
+        );
       }
       this.setNGSS();
       this.setLicenseInfo();
     }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onClose(): void {
     this.dialogRef.close();
@@ -96,9 +99,11 @@ export class LibraryProjectDetailsComponent implements OnInit {
     if (!authors) {
       return '';
     }
-    return authors.map((author) => {
+    return authors
+      .map((author) => {
         return `${author.firstName} ${author.lastName}`;
-      }).join(', ');
+      })
+      .join(', ');
   }
 
   runProject() {
@@ -119,7 +124,10 @@ export class LibraryProjectDetailsComponent implements OnInit {
 
   previewProject() {
     if (this.project.wiseVersion === 4) {
-      window.open(`${this.configService.getWISE4Hostname()}` + `/previewproject.html?projectId=${this.project.id}`);
+      window.open(
+        `${this.configService.getWISE4Hostname()}` +
+          `/previewproject.html?projectId=${this.project.id}`
+      );
     } else {
       window.open(`/preview/unit/${this.project.id}`);
     }

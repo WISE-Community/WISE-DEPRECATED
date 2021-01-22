@@ -6,10 +6,11 @@ import { UpgradeModule } from '@angular/upgrade/static';
 
 @Injectable()
 export class HTMLService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 

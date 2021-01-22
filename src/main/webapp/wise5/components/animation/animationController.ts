@@ -686,11 +686,11 @@ class AnimationController extends ComponentController {
       const thisAnimationController = this;
       animateObject = svgObject
         .animate(t * this.millisecondsPerDataTime)
-        .during(function(pos, morph, eased, situation) {
+        .during(function (pos, morph, eased, situation) {
           let totalElapsedTime = t * pos;
           thisAnimationController.displayAndBroadcastTime(totalElapsedTime);
         })
-        .after(function() {
+        .after(function () {
           this.attr({ x: xPixel, y: yPixel });
         });
     }
@@ -704,7 +704,7 @@ class AnimationController extends ComponentController {
     return svgObject
       .animate(tDiff * this.millisecondsPerDataTime)
       .move(nextXPixel, nextYPixel)
-      .during(function(pos, morph, eased, situation) {
+      .during(function (pos, morph, eased, situation) {
         let totalElapsedTime = t + tDiff * pos;
         thisAnimationController.displayAndBroadcastTime(totalElapsedTime);
       });
@@ -750,7 +750,7 @@ class AnimationController extends ComponentController {
       svgObject.load(image);
     } else {
       // change the image after all the existing animations
-      animateObject = animateObject.after(function() {
+      animateObject = animateObject.after(function () {
         this.load(image);
       });
     }

@@ -11,7 +11,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 export class DiscussionService extends ComponentService {
   TeacherDataService: TeacherDataService;
 
-  constructor(private upgrade: UpgradeModule,
+  constructor(
+    private upgrade: UpgradeModule,
     private http: HttpClient,
     private ConfigService: ConfigService,
     protected StudentDataService: StudentDataService,
@@ -90,10 +91,10 @@ export class DiscussionService extends ComponentService {
   getClassmateResponses(runId: number, periodId: number, components: any[]) {
     return new Promise((resolve, reject) => {
       let params = new HttpParams()
-          .set('runId', runId + '')
-          .set('periodId', periodId + '')
-          .set('getStudentWork', true + '')
-          .set('getAnnotations', true + '');
+        .set('runId', runId + '')
+        .set('periodId', periodId + '')
+        .set('getStudentWork', true + '')
+        .set('getAnnotations', true + '');
       for (const component of components) {
         params = params.append('components', JSON.stringify(component));
       }
@@ -101,9 +102,12 @@ export class DiscussionService extends ComponentService {
         params: params
       };
       const url = this.ConfigService.getConfigParam('studentDataURL');
-      this.http.get(url, options).toPromise().then(data => {
-        resolve(data);
-      });
+      this.http
+        .get(url, options)
+        .toPromise()
+        .then((data) => {
+          resolve(data);
+        });
     });
   }
 
@@ -155,8 +159,10 @@ export class DiscussionService extends ComponentService {
     return componentState.studentData.componentStateIdReplyingTo == null;
   }
 
-  isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound: string[],
-      componentStateId: string) {
+  isTopLevelComponentStateIdFound(
+    topLevelComponentStateIdsFound: string[],
+    componentStateId: string
+  ) {
     return topLevelComponentStateIdsFound.indexOf(componentStateId) !== -1;
   }
 

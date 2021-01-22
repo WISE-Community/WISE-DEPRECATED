@@ -3,7 +3,7 @@ import { defer, Observable } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { TeacherService } from '../teacher.service';
 import { User } from '../../domain/user';
-import { Project} from '../../domain/project';
+import { Project } from '../../domain/project';
 import { TeacherHomeComponent } from './teacher-home.component';
 import { Run } from '../../domain/run';
 import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
@@ -18,7 +18,7 @@ export function fakeAsyncResponse<T>(data: T) {
 
 export class MockTeacherService {
   getRuns(): Observable<Run[]> {
-    const runs : Run[] = [];
+    const runs: Run[] = [];
     const run1 = new Run();
     run1.id = 1;
     run1.name = 'Photosynthesis';
@@ -39,7 +39,7 @@ export class MockTeacherService {
     run2.project = project2;
     runs.push(run1);
     runs.push(run2);
-    return Observable.create( observer => {
+    return Observable.create((observer) => {
       observer.next(runs);
       observer.complete();
     });
@@ -65,7 +65,7 @@ export class MockUserService {
     user.role = 'teacher';
     user.username = 'DemoTeacher';
     user.id = 123456;
-    return Observable.create( observer => {
+    return Observable.create((observer) => {
       observer.next(user);
       observer.complete();
     });
@@ -74,7 +74,7 @@ export class MockUserService {
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
-    return Observable.create( observer => {
+    return Observable.create((observer) => {
       const config: Config = {
         contextPath: '/wise',
         logOutURL: '/logout',
@@ -108,17 +108,16 @@ describe('TeacherHomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TeacherHomeComponent ],
-      imports: [ RouterTestingModule ],
+      declarations: [TeacherHomeComponent],
+      imports: [RouterTestingModule],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: LibraryService, useClass: MockLibraryService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

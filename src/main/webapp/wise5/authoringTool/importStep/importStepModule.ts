@@ -7,13 +7,19 @@ import { downgradeComponent } from '@angular/upgrade/static';
 
 const importStepModule = angular
   .module('importStepModule', ['ui.router'])
-  .directive('chooseImportStepComponent',
-      downgradeComponent({ component: ChooseImportStepComponent}) as angular.IDirectiveFactory)
-  .directive('chooseImportStepLocationComponent',
-      downgradeComponent({ component: ChooseImportStepLocationComponent}) as angular.IDirectiveFactory)
+  .directive(
+    'chooseImportStepComponent',
+    downgradeComponent({ component: ChooseImportStepComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'chooseImportStepLocationComponent',
+    downgradeComponent({
+      component: ChooseImportStepLocationComponent
+    }) as angular.IDirectiveFactory
+  )
   .config([
     '$stateProvider',
-    $stateProvider => {
+    ($stateProvider) => {
       $stateProvider
         .state('root.at.project.import-step', {
           url: '/import-step',

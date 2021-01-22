@@ -28,25 +28,25 @@ export class MockStudentService {
     projectThumb: '/wise/curriculum/360/assets/project_thumb.png'
   });
   getRuns(): Observable<StudentRun[]> {
-    const runs : Run[] = [
+    const runs: Run[] = [
       new Run({
-        id:1,
-        name:'Photosynthesis',
+        id: 1,
+        name: 'Photosynthesis',
         startTime: new Date('2018-08-22T00:00:00.0').getTime()
       }),
       new Run({
-        id:2,
-        name:'Plate Tectonics',
+        id: 2,
+        name: 'Plate Tectonics',
         startTime: new Date('2018-08-25T00:00:00.0').getTime()
       }),
       new Run({
-        id:3,
-        name:'Chemical Reactions',
+        id: 3,
+        name: 'Chemical Reactions',
         startTime: new Date('2018-08-20T00:00:00.0').getTime(),
         endTime: new Date('2018-08-22T00:00:00.0').getTime()
       })
-      ];
-    return Observable.create( observer => {
+    ];
+    return Observable.create((observer) => {
       observer.next(runs);
       observer.complete();
     });
@@ -65,15 +65,15 @@ describe('StudentRunListComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ StudentRunListComponent ],
-      imports: [ MomentModule ],
+      declarations: [StudentRunListComponent],
+      imports: [MomentModule],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: ActivatedRoute, useValue: { queryParams: Observable.create() } },
         { provide: MatDialog, useValue: {} }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -89,6 +89,8 @@ describe('StudentRunListComponent', () => {
 
   it('should show number of runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#unitCount').textContent).toContain('My WISE units: 3 (1 scheduled, 1 active)');
-  })
+    expect(compiled.querySelector('#unitCount').textContent).toContain(
+      'My WISE units: 3 (1 scheduled, 1 active)'
+    );
+  });
 });

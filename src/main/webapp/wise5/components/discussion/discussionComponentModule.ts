@@ -15,7 +15,7 @@ const discussionComponentModule = angular
   .component('classResponse', ClassResponse)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/discussion/i18n');
     }
   ]);

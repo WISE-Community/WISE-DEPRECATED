@@ -1,4 +1,4 @@
-import { Project } from "../../domain/project";
+import { Project } from '../../domain/project';
 
 export class LibraryProject extends Project {
   notes: string;

@@ -82,7 +82,6 @@ class TopBarController {
         runId: this.runId
       });
     }
-
   }
 
   goHome() {

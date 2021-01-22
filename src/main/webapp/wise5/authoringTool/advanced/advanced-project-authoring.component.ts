@@ -12,7 +12,6 @@ import { UpgradeModule } from '@angular/upgrade/static';
   templateUrl: 'advanced-project-authoring.component.html'
 })
 export class AdvancedProjectAuthoringComponent {
-
   isJSONDisplayed: boolean = false;
   projectId: number;
   projectJSONString: string;
@@ -45,8 +44,11 @@ export class AdvancedProjectAuthoringComponent {
     if (this.UtilService.isValidJSONString(this.projectJSONString)) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
-    } else if (confirm(
-        $localize`The JSON is invalid. Invalid JSON will not be saved.\nClick "OK" to revert back to the last valid JSON.\nClick "Cancel" to keep the invalid JSON open so you can fix it.`)) {
+    } else if (
+      confirm(
+        $localize`The JSON is invalid. Invalid JSON will not be saved.\nClick "OK" to revert back to the last valid JSON.\nClick "Cancel" to keep the invalid JSON open so you can fix it.`
+      )
+    ) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
     }
@@ -84,8 +86,9 @@ export class AdvancedProjectAuthoringComponent {
       projectId: this.projectId,
       target: 'scriptFilename'
     };
-    this.ProjectAssetService.openAssetChooser(params).then(
-        (data: any) => { this.assetSelected(data); });
+    this.ProjectAssetService.openAssetChooser(params).then((data: any) => {
+      this.assetSelected(data);
+    });
   }
 
   assetSelected({ assetItem }) {

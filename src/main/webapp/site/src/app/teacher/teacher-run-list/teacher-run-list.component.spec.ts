@@ -12,7 +12,7 @@ import { configureTestSuite } from 'ng-bullet';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-@Component({selector: 'app-teacher-run-list-item', template: ''})
+@Component({ selector: 'app-teacher-run-list-item', template: '' })
 class TeacherRunListItemStubComponent {
   @Input()
   run: TeacherRun = new TeacherRun();
@@ -29,7 +29,7 @@ export class MockTeacherService {
     run1.id = 1;
     run1.name = 'Photosynthesis';
     run1.numStudents = 30;
-    run1.periods = ['1','2'];
+    run1.periods = ['1', '2'];
     run1.startTime = new Date('2018-01-01T00:00:00.0').getTime();
     const project1 = new Project();
     project1.id = 1;
@@ -40,7 +40,7 @@ export class MockTeacherService {
     run2.id = 2;
     run2.name = 'Plate Tectonics';
     run2.numStudents = 15;
-    run2.periods = ['3','4'];
+    run2.periods = ['3', '4'];
     run2.startTime = new Date('2018-03-03T00:00:00.0').getTime();
     const project2 = new Project();
     project2.id = 1;
@@ -49,26 +49,23 @@ export class MockTeacherService {
     run2.project = project2;
     runs.push(run1);
     runs.push(run2);
-    return Observable.create( observer => {
+    return Observable.create((observer) => {
       observer.next(runs);
       observer.complete();
     });
   }
   getSharedRuns(): Observable<TeacherRun[]> {
     const runs: TeacherRun[] = [];
-    return Observable.create(observer => {
-        observer.next(runs);
-        observer.complete();
-      }
-    );
+    return Observable.create((observer) => {
+      observer.next(runs);
+      observer.complete();
+    });
   }
-  newRunSource$ = fakeAsyncResponse(
-    {
-      id: 3,
-      name: 'Global Climate Change',
-      periods: ['1', '2']
-    }
-  );
+  newRunSource$ = fakeAsyncResponse({
+    id: 3,
+    name: 'Global Climate Change',
+    periods: ['1', '2']
+  });
 }
 
 export class MockConfigService {
@@ -83,13 +80,13 @@ describe('TeacherRunListComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ TeacherRunListComponent ],
-      imports: [ MomentModule, RouterTestingModule ],
+      declarations: [TeacherRunListComponent],
+      imports: [MomentModule, RouterTestingModule],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: ConfigService, useClass: MockConfigService },
+        { provide: ConfigService, useClass: MockConfigService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -130,5 +127,5 @@ describe('TeacherRunListComponent', () => {
     component.runs.push(run3);
     component.runs.sort(component.sortByStartTimeDesc);
     expect(isRunsSortedByStartTimeDesc(component.runs)).toBeTruthy();
-  })
+  });
 });

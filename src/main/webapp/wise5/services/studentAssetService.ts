@@ -14,9 +14,11 @@ export class StudentAssetService {
   private showStudentAssetsSource: Subject<any> = new Subject<any>();
   public showStudentAssets$: Observable<any> = this.showStudentAssetsSource.asObservable();
 
-  constructor(private upgrade: UpgradeModule, private http: HttpClient,
-      private ConfigService: ConfigService) {
-  }
+  constructor(
+    private upgrade: UpgradeModule,
+    private http: HttpClient,
+    private ConfigService: ConfigService
+  ) {}
 
   getAssetById(assetId) {
     for (const asset of this.allAssets) {
@@ -34,37 +36,44 @@ export class StudentAssetService {
       deferred.resolve(this.allAssets);
       return deferred.promise;
     } else {
-      return this.http.get(
-          `${this.ConfigService.getStudentAssetsURL()}/${this.ConfigService.getWorkgroupId()}`)
-          .toPromise().then((assets: any) => {
-        this.allAssets = [];
-        const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-        for (const asset of assets) {
-          if (!asset.isReferenced && asset.serverDeleteTime == null &&
-              asset.fileName !== '.DS_Store') {
-            asset.url = studentUploadsBaseURL + asset.filePath;
-            if (this.isImage(asset)) {
-              asset.type = 'image';
-              asset.iconURL = asset.url;
-            } else if (this.isAudio(asset)) {
-              asset.type = 'audio';
-              asset.iconURL = 'wise5/vle/notebook/audio.png';
-            } else {
-              asset.type = 'file';
-              asset.iconURL = 'wise5/vle/notebook/file.png';
+      return this.http
+        .get(`${this.ConfigService.getStudentAssetsURL()}/${this.ConfigService.getWorkgroupId()}`)
+        .toPromise()
+        .then((assets: any) => {
+          this.allAssets = [];
+          const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+          for (const asset of assets) {
+            if (
+              !asset.isReferenced &&
+              asset.serverDeleteTime == null &&
+              asset.fileName !== '.DS_Store'
+            ) {
+              asset.url = studentUploadsBaseURL + asset.filePath;
+              if (this.isImage(asset)) {
+                asset.type = 'image';
+                asset.iconURL = asset.url;
+              } else if (this.isAudio(asset)) {
+                asset.type = 'audio';
+                asset.iconURL = 'wise5/vle/notebook/audio.png';
+              } else {
+                asset.type = 'file';
+                asset.iconURL = 'wise5/vle/notebook/file.png';
+              }
+              this.allAssets.push(asset);
             }
-            this.allAssets.push(asset);
           }
-        }
-        return this.allAssets;
-      });
+          return this.allAssets;
+        });
     }
   }
 
   getAssetContent(asset) {
-    return this.http.get(asset.url).toPromise().then(response => {
-      return response;
-    });
+    return this.http
+      .get(asset.url)
+      .toPromise()
+      .then((response) => {
+        return response;
+      });
   }
 
   hasSuffix(assetURL, suffixes) {
@@ -92,8 +101,8 @@ export class StudentAssetService {
     if (this.ConfigService.isPreview()) {
       return this.upgrade.$injector.get('$q')((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = (theFile => {
-          return e => {
+        reader.onload = ((theFile) => {
+          return (e) => {
             let fileSrc = e.target.result;
             let fileName = theFile.name;
 
@@ -118,45 +127,53 @@ export class StudentAssetService {
       });
     } else {
       const deferred = this.upgrade.$injector.get('$q').defer();
-      this.upgrade.$injector.get('Upload').upload({
-        url: this.ConfigService.getStudentAssetsURL(),
-        fields: {
-          runId: this.ConfigService.getRunId(),
-          workgroupId: this.ConfigService.getWorkgroupId(),
-          periodId: this.ConfigService.getPeriodId(),
-          clientSaveTime: Date.parse(new Date().toString())
-        },
-        file: file
-      })
-      .success((asset, status, headers, config) => {
-        if (asset === 'error') {
-          alert(this.upgrade.$injector.get('$filter')('translate')('THERE_WAS_AN_ERROR_UPLOADING'));
-        } else {
-          const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-          asset.url = studentUploadsBaseURL + asset.filePath;
-          if (this.isImage(asset)) {
-            asset.type = 'image';
-            asset.iconURL = asset.url;
-          } else if (this.isAudio(asset)) {
-            asset.type = 'audio';
-            asset.iconURL = 'wise5/themes/default/images/audio.png';
+      this.upgrade.$injector
+        .get('Upload')
+        .upload({
+          url: this.ConfigService.getStudentAssetsURL(),
+          fields: {
+            runId: this.ConfigService.getRunId(),
+            workgroupId: this.ConfigService.getWorkgroupId(),
+            periodId: this.ConfigService.getPeriodId(),
+            clientSaveTime: Date.parse(new Date().toString())
+          },
+          file: file
+        })
+        .success((asset, status, headers, config) => {
+          if (asset === 'error') {
+            alert(
+              this.upgrade.$injector.get('$filter')('translate')('THERE_WAS_AN_ERROR_UPLOADING')
+            );
           } else {
-            asset.type = 'file';
-            asset.iconURL = 'wise5/themes/default/images/file.png';
+            const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+            asset.url = studentUploadsBaseURL + asset.filePath;
+            if (this.isImage(asset)) {
+              asset.type = 'image';
+              asset.iconURL = asset.url;
+            } else if (this.isAudio(asset)) {
+              asset.type = 'audio';
+              asset.iconURL = 'wise5/themes/default/images/audio.png';
+            } else {
+              asset.type = 'file';
+              asset.iconURL = 'wise5/themes/default/images/file.png';
+            }
+            this.allAssets.push(asset);
+            deferred.resolve(asset);
           }
-          this.allAssets.push(asset);
-          deferred.resolve(asset);
-        }
-      })
-      .error((asset, status, headers, config) => {
-        alert(this.upgrade.$injector.get('$filter')('translate')('THERE_WAS_AN_ERROR_UPLOADING_YOU_MIGHT_HAVE_REACHED_LIMIT'));
-      });
+        })
+        .error((asset, status, headers, config) => {
+          alert(
+            this.upgrade.$injector.get('$filter')('translate')(
+              'THERE_WAS_AN_ERROR_UPLOADING_YOU_MIGHT_HAVE_REACHED_LIMIT'
+            )
+          );
+        });
       return deferred.promise;
     }
   }
 
   uploadAssets(files) {
-    const promises = files.map(file => {
+    const promises = files.map((file) => {
       return this.upgrade.$injector.get('Upload').upload({
         url: this.ConfigService.getStudentAssetsURL(),
         fields: {
@@ -166,7 +183,7 @@ export class StudentAssetService {
           clientSaveTime: Date.parse(new Date().toString())
         },
         file: file
-      })
+      });
     });
     return this.upgrade.$injector.get('$q').all(promises);
   }
@@ -178,33 +195,34 @@ export class StudentAssetService {
         return resolve(studentAsset);
       });
     } else {
-      return this.http.post(`${this.ConfigService.getStudentAssetsURL()}/copy`,
-          {
-            studentAssetId: studentAsset.id,
-            workgroupId: this.ConfigService.getWorkgroupId(),
-            periodId: this.ConfigService.getPeriodId(),
-            clientSaveTime: Date.parse(new Date().toString())
-          })
-          .toPromise().then((copiedAsset: any) => {
-        if (copiedAsset != null) {
-          const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-          if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
-            copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
-            if (this.isImage(copiedAsset)) {
-              copiedAsset.type = 'image';
-              copiedAsset.iconURL = copiedAsset.url;
-            } else if (this.isAudio(copiedAsset)) {
-              copiedAsset.type = 'audio';
-              copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
-            } else {
-              copiedAsset.type = 'file';
-              copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
+      return this.http
+        .post(`${this.ConfigService.getStudentAssetsURL()}/copy`, {
+          studentAssetId: studentAsset.id,
+          workgroupId: this.ConfigService.getWorkgroupId(),
+          periodId: this.ConfigService.getPeriodId(),
+          clientSaveTime: Date.parse(new Date().toString())
+        })
+        .toPromise()
+        .then((copiedAsset: any) => {
+          if (copiedAsset != null) {
+            const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+            if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
+              copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
+              if (this.isImage(copiedAsset)) {
+                copiedAsset.type = 'image';
+                copiedAsset.iconURL = copiedAsset.url;
+              } else if (this.isAudio(copiedAsset)) {
+                copiedAsset.type = 'audio';
+                copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
+              } else {
+                copiedAsset.type = 'file';
+                copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
+              }
+              return copiedAsset;
             }
-            return copiedAsset;
           }
-        }
-        return null;
-      });
+          return null;
+        });
     }
   }
 
@@ -221,11 +239,13 @@ export class StudentAssetService {
       httpParams = httpParams.set('periodId', this.ConfigService.getPeriodId());
       httpParams = httpParams.set('clientDeleteTime', `${Date.parse(new Date().toString())}`);
       const options = { params: httpParams };
-      return this.http.delete(`${this.ConfigService.getStudentAssetsURL()}/delete`, options)
-          .toPromise().then(() => {
-        this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
-        return studentAsset;
-      });
+      return this.http
+        .delete(`${this.ConfigService.getStudentAssetsURL()}/delete`, options)
+        .toPromise()
+        .then(() => {
+          this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
+          return studentAsset;
+        });
     }
   }
 

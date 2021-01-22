@@ -3,8 +3,15 @@ import { TeacherService } from '../teacher.service';
 import { Course } from '../../domain/course';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../services/user.service';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
-import { Run } from "../../domain/run";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  ValidatorFn
+} from '@angular/forms';
+import { Run } from '../../domain/run';
 
 @Component({
   selector: 'app-list-classroom-courses-dialog',
@@ -25,12 +32,14 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   coursesSuccessfullyAdded: any[] = [];
   coursesFailedToAdd: any[] = [];
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private teacherService: TeacherService,
-              private userService: UserService,
-              private fb: FormBuilder) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    private fb: FormBuilder
+  ) {
     this.run = data.run;
     for (const course of data.courses) {
       this.courses.push(new Course(course));
@@ -38,11 +47,9 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    const descriptionText =$localize`Hi class! Please complete the "${this.data.run.name}:unitTitle:" WISE unit. (Access Code: ${this.data.run.runCode}:accessCode:)`;
+    const descriptionText = $localize`Hi class! Please complete the "${this.data.run.name}:unitTitle:" WISE unit. (Access Code: ${this.data.run.runCode}:accessCode:)`;
     const description = new FormControl(descriptionText, Validators.required);
-    this.coursesControl = new FormArray(this.courses.map(() =>
-      new FormControl(false)
-    ));
+    this.coursesControl = new FormArray(this.courses.map(() => new FormControl(false)));
     this.coursesControl.valueChanges.subscribe((controls) => {
       this.courseIds = [];
       controls.forEach((value, index) => {
@@ -51,10 +58,13 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         }
       });
     });
-    this.form = this.fb.group({
-      selectedCourses: this.coursesControl,
-      description: description
-    }, { validator: this.isCourseSelected() });
+    this.form = this.fb.group(
+      {
+        selectedCourses: this.coursesControl,
+        description: description
+      },
+      { validator: this.isCourseSelected() }
+    );
   }
 
   isCourseSelected(): ValidatorFn {
@@ -72,9 +82,16 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         endTime = date.toString();
       }
     }
-    this.teacherService.addToClassroom(this.data.run.runCode, this.data.run.name, this.courseIds,
-        this.userService.getUser().getValue().username, endTime,
-      this.form.controls['description'].value).subscribe((response) => {
+    this.teacherService
+      .addToClassroom(
+        this.data.run.runCode,
+        this.data.run.name,
+        this.courseIds,
+        this.userService.getUser().getValue().username,
+        endTime,
+        this.form.controls['description'].value
+      )
+      .subscribe((response) => {
         this.showAddToClassroomResults(response.courses);
       });
   }
@@ -111,7 +128,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   get selectedCoursesControl() {
-    return <FormArray>this.form.get("selectedCourses");
+    return <FormArray>this.form.get('selectedCourses');
   }
 
   closeAll() {

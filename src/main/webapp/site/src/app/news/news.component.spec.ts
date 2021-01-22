@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NewsComponent } from './news.component';
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { NewsService } from "../services/news.service";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NewsService } from '../services/news.service';
 import { MomentModule } from 'ngx-moment';
-import { News } from "../domain/news";
+import { News } from '../domain/news';
 import { Observable } from 'rxjs';
-import { User } from "../domain/user";
+import { User } from '../domain/user';
 import * as moment from 'moment';
 import { configureTestSuite } from 'ng-bullet';
 
@@ -31,15 +31,17 @@ const createUser = (id, firstName, lastName, displayName) => {
 
 const news1Date = '2018-10-16 18:45:38.0';
 const news1Title = 'Testing new portal website';
-const news1Text = 'We have begun testing the new website with some of our users. Once that is completed, everyone will be able to use the new website.';
+const news1Text =
+  'We have begun testing the new website with some of our users. Once that is completed, everyone will be able to use the new website.';
 
 const news2Date = '2018-9-21 15:37:14.0';
 const news2Title = 'Working on a new portal website';
-const news2Text = 'We have been working on a new portal website. The new website will have a more modern user interface.';
+const news2Text =
+  'We have been working on a new portal website. The new website will have a more modern user interface.';
 
 export class MockNewsService {
   getAllNews(): Observable<News[]> {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       const allNewsItems: News[] = [];
       const user1 = createUser(100, 'Spongebob', 'Squarepants', 'Spongebob Squarepants');
       const news1 = createNewsItem(1, news1Date, 'public', news1Title, news1Text, user1);
@@ -76,13 +78,11 @@ describe('NewsComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewsComponent ],
-      imports: [ MomentModule ],
-      providers: [
-        { provide: NewsService, useClass: MockNewsService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [NewsComponent],
+      imports: [MomentModule],
+      providers: [{ provide: NewsService, useClass: MockNewsService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {

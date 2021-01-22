@@ -10,7 +10,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-student-password-change.component.scss']
 })
 export class ForgotStudentPasswordChangeComponent implements OnInit {
-
   username: string;
   questionKey: string;
   answer: string;
@@ -21,10 +20,12 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   message: string = '';
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private studentService: StudentService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private studentService: StudentService
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -38,7 +39,8 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     const confirmPassword = this.getConfirmPassword();
     if (this.isPasswordsMatch(password, confirmPassword)) {
       this.processing = true;
-      this.studentService.changePassword(this.username, this.answer, password, confirmPassword)
+      this.studentService
+        .changePassword(this.username, this.answer, password, confirmPassword)
         .pipe(
           finalize(() => {
             this.processing = false;
@@ -112,7 +114,9 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     const params = {
       username: this.username
     };
-    this.router.navigate(['/forgot/student/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/student/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

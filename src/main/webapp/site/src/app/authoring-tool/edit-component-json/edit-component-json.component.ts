@@ -1,7 +1,7 @@
 import * as angular from 'angular';
-import { Component, Input } from "@angular/core";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { NotificationService } from "../../../../../wise5/services/notificationService";
+import { Component, Input } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { NotificationService } from '../../../../../wise5/services/notificationService';
 import { TeacherProjectService } from '../../../../../wise5/services/teacherProjectService';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -12,7 +12,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrls: ['edit-component-json.component.scss']
 })
 export class EditComponentJsonComponent {
-
   validComponentContentJSONString: string;
   componentContentJSONString: string;
   @Input()
@@ -24,25 +23,24 @@ export class EditComponentJsonComponent {
   jsonChanged: Subject<string> = new Subject<string>();
   jsonChangedSubscription: Subscription;
 
-  constructor(private upgrade: UpgradeModule, private NotificationService: NotificationService,
-      private ProjectService: TeacherProjectService) {
-  }
+  constructor(
+    private upgrade: UpgradeModule,
+    private NotificationService: NotificationService,
+    private ProjectService: TeacherProjectService
+  ) {}
 
   ngOnInit() {
-    this.setComponentContentJsonString()
+    this.setComponentContentJsonString();
     this.jsonChangedSubscription = this.jsonChanged
-        .pipe(
-          debounceTime(1000),
-          distinctUntilChanged()
-        )
-        .subscribe(() => {
-          if (this.isJSONValid()) {
-            this.rememberRecentValidJSON();
-            this.NotificationService.showJSONValidMessage();
-          } else {
-            this.NotificationService.showJSONInvalidMessage();
-          }
-        });
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe(() => {
+        if (this.isJSONValid()) {
+          this.rememberRecentValidJSON();
+          this.NotificationService.showJSONValidMessage();
+        } else {
+          this.NotificationService.showJSONInvalidMessage();
+        }
+      });
     this.nodeChangedSubscription = this.ProjectService.nodeChanged$.subscribe(() => {
       this.setComponentContentJsonString();
     });
@@ -55,7 +53,9 @@ export class EditComponentJsonComponent {
 
   setComponentContentJsonString() {
     const authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
-        this.nodeId, this.componentId);
+      this.nodeId,
+      this.componentId
+    );
     this.componentContentJSONString = angular.toJson(authoringComponentContent, 4);
   }
 
@@ -65,8 +65,9 @@ export class EditComponentJsonComponent {
         this.saveChanges();
         this.showJSONAuthoring = false;
       } else {
-        const doRollback =
-            confirm(this.upgrade.$injector.get('$filter')('translate')('jsonInvalidErrorMessage'));
+        const doRollback = confirm(
+          this.upgrade.$injector.get('$filter')('translate')('jsonInvalidErrorMessage')
+        );
         if (doRollback) {
           this.rollbackToRecentValidJSON();
           this.saveChanges();
@@ -92,7 +93,7 @@ export class EditComponentJsonComponent {
       const editedComponentContent = angular.fromJson(this.componentContentJSONString);
       this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
       this.ProjectService.componentChanged();
-    } catch(e) {
+    } catch (e) {
       this.NotificationService.showJSONInvalidMessage();
     }
   }

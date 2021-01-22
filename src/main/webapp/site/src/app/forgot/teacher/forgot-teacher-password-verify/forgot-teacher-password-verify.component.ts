@@ -10,7 +10,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-teacher-password-verify.component.scss']
 })
 export class ForgotTeacherPasswordVerifyComponent implements OnInit {
-
   username: string;
   verificationCodeFormGroup: FormGroup = this.fb.group({
     verificationCode: new FormControl('', [Validators.required])
@@ -21,10 +20,12 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   isSubmitButtonEnabled: boolean = true;
   showForgotPasswordLink: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private teacherService: TeacherService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private teacherService: TeacherService
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -47,7 +48,8 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
     this.clearMessage();
     this.showForgotPasswordLink = false;
     const verificationCode = this.getControlFieldValue('verificationCode');
-    this.teacherService.checkVerificationCode(this.username, verificationCode)
+    this.teacherService
+      .checkVerificationCode(this.username, verificationCode)
       .pipe(
         finalize(() => {
           this.processing = false;
@@ -110,7 +112,9 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
       username: this.username,
       verificationCode: this.getControlFieldValue('verificationCode')
     };
-    this.router.navigate(['/forgot/teacher/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/teacher/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

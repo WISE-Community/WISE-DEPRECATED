@@ -1,15 +1,15 @@
-import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { OpenResponseService } from "../../../../wise5/components/openResponse/openResponseService";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { OpenResponseService } from '../../../../wise5/components/openResponse/openResponseService';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: OpenResponseService;
 let studentDataService: StudentDataService;
@@ -17,7 +17,7 @@ let studentDataService: StudentDataService;
 describe('OpenResponseService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -98,10 +98,15 @@ function isCompleted() {
     componentStates = [];
     node = createNode();
   });
-  function expectIsCompleted(component: any, componentStates: any, node: any,
-      expectedResult: boolean) {
-    expect(service.isCompleted(component, componentStates, componentEvents, nodeEvents, node))
-        .toEqual(expectedResult);
+  function expectIsCompleted(
+    component: any,
+    componentStates: any,
+    node: any,
+    expectedResult: boolean
+  ) {
+    expect(
+      service.isCompleted(component, componentStates, componentEvents, nodeEvents, node)
+    ).toEqual(expectedResult);
   }
   it('should check if a component is completed when there are no component states', () => {
     expectIsCompleted(component, componentStates, node, false);
@@ -212,8 +217,11 @@ function componentStatehasStudentWork() {
     component = createComponentContent();
     component.starterSentence = 'I think...';
   });
-  function expectComponentStateHasStudentWork(componentState: any, component: any,
-      expectedResult: boolean) {
+  function expectComponentStateHasStudentWork(
+    componentState: any,
+    component: any,
+    expectedResult: boolean
+  ) {
     expect(service.componentStateHasStudentWork(componentState, component)).toEqual(expectedResult);
   }
   it('should check if a component state has student work when it does not have work', () => {
@@ -277,8 +285,9 @@ function isAnyComponentStateHasResponse() {
     expect(service.isAnyComponentStateHasResponse([createComponentState('')])).toEqual(false);
   });
   it('should check if any component state has a response when there is a response', () => {
-    expect(service.isAnyComponentStateHasResponse([createComponentState('Hello World')]))
-        .toEqual(true);
+    expect(service.isAnyComponentStateHasResponse([createComponentState('Hello World')])).toEqual(
+      true
+    );
   });
 }
 
@@ -286,10 +295,10 @@ function isAnyComponentStateHasResponseAndIsSubmit() {
   it('should check if any component state has a response and submit when there are none', () => {
     const componentStates = [createComponentState('Hello World', false)];
     expect(service.isAnyComponentStateHasResponseAndIsSubmit(componentStates)).toEqual(false);
-  })
+  });
   it(`should check if any component state has a response and submit when there is a submit
       response`, () => {
     const componentStates = [createComponentState('Hello World', true)];
     expect(service.isAnyComponentStateHasResponseAndIsSubmit(componentStates)).toEqual(true);
-  })
+  });
 }

@@ -113,8 +113,8 @@ class OpenResponseController extends ComponentController {
       autoresize_min_height: '100',
       image_advtab: true,
       content_css: themePath + '/style/tinymce.css',
-      setup: function(ed) {
-        ed.on('focus', function(e) {
+      setup: function (ed) {
+        ed.on('focus', function (e) {
           $(e.target.editorContainer)
             .addClass('input--focused')
             .parent()
@@ -122,7 +122,7 @@ class OpenResponseController extends ComponentController {
           $('label[for="' + e.target.id + '"]').addClass('input-label--focused');
         });
 
-        ed.on('blur', function(e) {
+        ed.on('blur', function (e) {
           $(e.target.editorContainer)
             .removeClass('input--focused')
             .parent()
@@ -204,7 +204,7 @@ class OpenResponseController extends ComponentController {
     /**
      * Returns true iff there is student work that hasn't been saved yet
      */
-    this.$scope.isDirty = function() {
+    this.$scope.isDirty = function () {
       return this.$scope.openResponseController.isDirty;
     }.bind(this);
 
@@ -216,7 +216,7 @@ class OpenResponseController extends ComponentController {
      * action (optional; default is false)
      * @return a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function(isSubmit) {
+    this.$scope.getComponentState = function (isSubmit) {
       const deferred = this.$q.defer();
       let getState = false;
       let action = 'change';
@@ -235,7 +235,7 @@ class OpenResponseController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.openResponseController.createComponentState(action).then(componentState => {
+        this.$scope.openResponseController.createComponentState(action).then((componentState) => {
           deferred.resolve(componentState);
         });
       } else {
@@ -256,7 +256,7 @@ class OpenResponseController extends ComponentController {
     // load script for this component, if any
     let script = this.componentContent.script;
     if (script != null) {
-      this.ProjectService.retrieveScript(script).then(script => {
+      this.ProjectService.retrieveScript(script).then((script) => {
         new Function(script).call(this);
       });
     }
@@ -484,9 +484,9 @@ class OpenResponseController extends ComponentController {
       this.CRaterService.makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData).then(
         (data: any) => {
           /*
-            * annotations we put in the component state will be
-            * removed from the component state and saved separately
-            */
+           * annotations we put in the component state will be
+           * removed from the component state and saved separately
+           */
           componentState.annotations = [];
 
           // get the CRater score
@@ -539,8 +539,7 @@ class OpenResponseController extends ComponentController {
               ) {
                 let globalAnnotationMaxCount = 0;
                 if (
-                  this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount !=
-                  null
+                  this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null
                 ) {
                   globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings
                     .globalAnnotationMaxCount;
@@ -559,8 +558,7 @@ class OpenResponseController extends ComponentController {
                     autoScoreAnnotation.clientSaveTime; // save annotation creation time
 
                   if (
-                    globalAnnotationGroupsByNodeIdAndComponentId.length >=
-                    globalAnnotationMaxCount
+                    globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount
                   ) {
                     // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
                     annotationGroupForScore = null;
@@ -573,7 +571,7 @@ class OpenResponseController extends ComponentController {
                   annotationGroupForScore.unGlobalizeCriteria != null
                 ) {
                   // check if this annotation is global and what criteria needs to be met to un-globalize.
-                  annotationGroupForScore.unGlobalizeCriteria.map(unGlobalizeCriteria => {
+                  annotationGroupForScore.unGlobalizeCriteria.map((unGlobalizeCriteria) => {
                     // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
                     // so we can compare it when we check for criteria satisfaction.
                     if (unGlobalizeCriteria.params != null) {
@@ -598,9 +596,9 @@ class OpenResponseController extends ComponentController {
               }
 
               /*
-                * we are in the authoring view so we will set the
-                * latest score annotation manually
-                */
+               * we are in the authoring view so we will set the
+               * latest score annotation manually
+               */
               this.latestAnnotations.score = autoScoreAnnotation;
             }
 
@@ -614,9 +612,9 @@ class OpenResponseController extends ComponentController {
               submitCounter > 1
             ) {
               /*
-                * this step has multiple attempt scoring rules and this is
-                * a subsequent submit
-                */
+               * this step has multiple attempt scoring rules and this is
+               * a subsequent submit
+               */
               // get the feedback based upon the previous score and current score
               autoComment = this.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(
                 this.componentContent,
@@ -656,9 +654,9 @@ class OpenResponseController extends ComponentController {
                 }
 
                 /*
-                  * we are in the authoring view so we will set the
-                  * latest comment annotation manually
-                  */
+                 * we are in the authoring view so we will set the
+                 * latest comment annotation manually
+                 */
                 this.latestAnnotations.comment = autoCommentAnnotation;
               }
             }
@@ -829,28 +827,29 @@ class OpenResponseController extends ComponentController {
 
   snipButtonClicked($event) {
     if (this.isDirty) {
-      const studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$
-          .subscribe((args: any) => {
-        const componentState = args.studentWork;
-        if (
-          componentState &&
-          this.nodeId === componentState.nodeId &&
-          this.componentId === componentState.componentId
-        ) {
-          const imageObject = null;
-          const noteText = componentState.studentData.response;
-          const isEditTextEnabled = false;
-          const isFileUploadEnabled = false;
-          this.NotebookService.addNote(
-            imageObject,
-            noteText,
-            [componentState.id],
-            isEditTextEnabled,
-            isFileUploadEnabled
-          );
-          studentWorkSavedToServerSubscription.unsubscribe();
+      const studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$.subscribe(
+        (args: any) => {
+          const componentState = args.studentWork;
+          if (
+            componentState &&
+            this.nodeId === componentState.nodeId &&
+            this.componentId === componentState.componentId
+          ) {
+            const imageObject = null;
+            const noteText = componentState.studentData.response;
+            const isEditTextEnabled = false;
+            const isFileUploadEnabled = false;
+            this.NotebookService.addNote(
+              imageObject,
+              noteText,
+              [componentState.id],
+              isEditTextEnabled,
+              isFileUploadEnabled
+            );
+            studentWorkSavedToServerSubscription.unsubscribe();
+          }
         }
-      });
+      );
       this.saveButtonClicked(); // trigger a save
     } else {
       const studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
@@ -1031,9 +1030,11 @@ class OpenResponseController extends ComponentController {
   }
 
   hasAudioResponses() {
-    return this.attachments.filter(attachment => {
-      return attachment.type === 'audio';
-    }).length > 0;
+    return (
+      this.attachments.filter((attachment) => {
+        return attachment.type === 'audio';
+      }).length > 0
+    );
   }
 
   removeAudioAttachment(attachment) {
@@ -1043,7 +1044,7 @@ class OpenResponseController extends ComponentController {
   }
 
   removeAudioAttachments() {
-    this.attachments.forEach(attachment => {
+    this.attachments.forEach((attachment) => {
       if (attachment.type === 'audio') {
         this.removeAttachment(attachment);
       }

@@ -8,8 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class ConfigService {
   public config: any = null;
 
-  constructor(private upgrade: UpgradeModule, private http: HttpClient) {
-  }
+  constructor(private upgrade: UpgradeModule, private http: HttpClient) {}
 
   setConfig(config) {
     this.config = config;
@@ -18,53 +17,56 @@ export class ConfigService {
   }
 
   retrieveConfig(configURL) {
-    return this.http.get(configURL).toPromise().then((configJSON: any) => {
-      this.setTimestampDiff(configJSON);
+    return this.http
+      .get(configURL)
+      .toPromise()
+      .then((configJSON: any) => {
+        this.setTimestampDiff(configJSON);
 
-      let constraints = true;
+        let constraints = true;
 
-      const absURL = document.location.href;
+        const absURL = document.location.href;
 
-      if (configJSON.mode === 'preview') {
-        // constraints can only be disabled using the url in preview mode
+        if (configJSON.mode === 'preview') {
+          // constraints can only be disabled using the url in preview mode
 
-        // regex to match constraints=false in the url
-        const constraintsRegEx = new RegExp('constraints=false', 'gi');
+          // regex to match constraints=false in the url
+          const constraintsRegEx = new RegExp('constraints=false', 'gi');
 
-        if (absURL != null && absURL.match(constraintsRegEx)) {
-          // the url contains constraints=false
-          constraints = false;
+          if (absURL != null && absURL.match(constraintsRegEx)) {
+            // the url contains constraints=false
+            constraints = false;
+          }
         }
-      }
 
-      // set the constraints value into the config so we can access it later
-      configJSON.constraints = constraints;
+        // set the constraints value into the config so we can access it later
+        configJSON.constraints = constraints;
 
-      // regex to match showProjectPath=true in the url
-      const showProjectPathRegEx = new RegExp('showProjectPath=true', 'gi');
+        // regex to match showProjectPath=true in the url
+        const showProjectPathRegEx = new RegExp('showProjectPath=true', 'gi');
 
-      if (absURL != null && absURL.match(showProjectPathRegEx)) {
-        // the url contains showProjectPath=true
-        const host = location.origin;
-        const projectURL = configJSON.projectURL;
-        const projectPath = host + projectURL;
-        console.log(projectPath);
-      }
-
-      configJSON.isRunActive = this.calculateIsRunActive(configJSON);
-
-      this.setConfig(configJSON);
-
-      if (this.isPreview()) {
-        const myUserInfo = this.getMyUserInfo();
-        if (myUserInfo != null) {
-          // set the workgroup id to a random integer between 1 and 100
-          myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
+        if (absURL != null && absURL.match(showProjectPathRegEx)) {
+          // the url contains showProjectPath=true
+          const host = location.origin;
+          const projectURL = configJSON.projectURL;
+          const projectPath = host + projectURL;
+          console.log(projectPath);
         }
-      }
 
-      return configJSON;
-    });
+        configJSON.isRunActive = this.calculateIsRunActive(configJSON);
+
+        this.setConfig(configJSON);
+
+        if (this.isPreview()) {
+          const myUserInfo = this.getMyUserInfo();
+          if (myUserInfo != null) {
+            // set the workgroup id to a random integer between 1 and 100
+            myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
+          }
+        }
+
+        return configJSON;
+      });
   }
 
   setTimestampDiff(configJSON) {
@@ -392,11 +394,18 @@ export class ConfigService {
   getWorkgroupsByPeriod(periodId) {
     const workgroupsInPeriod = [];
     const myUserInfo = this.getMyUserInfo();
-    if (this.isStudent() && this.upgrade.$injector.get('UtilService').isMatchingPeriods(myUserInfo.periodId, periodId)) {
+    if (
+      this.isStudent() &&
+      this.upgrade.$injector.get('UtilService').isMatchingPeriods(myUserInfo.periodId, periodId)
+    ) {
       workgroupsInPeriod.push(myUserInfo);
     }
     for (const classmateUserInfo of this.getClassmateUserInfos()) {
-      if (this.upgrade.$injector.get('UtilService').isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
+      if (
+        this.upgrade.$injector
+          .get('UtilService')
+          .isMatchingPeriods(classmateUserInfo.periodId, periodId)
+      ) {
         workgroupsInPeriod.push(classmateUserInfo);
       }
     }
@@ -910,12 +919,16 @@ export class ConfigService {
   }
 
   getFormattedStartDate() {
-    return this.upgrade.$injector.get('UtilService').convertMillisecondsToFormattedDateTime(this.getStartDate());
+    return this.upgrade.$injector
+      .get('UtilService')
+      .convertMillisecondsToFormattedDateTime(this.getStartDate());
   }
 
   getFormattedEndDate() {
     if (this.getEndDate() != null) {
-      return this.upgrade.$injector.get('UtilService').convertMillisecondsToFormattedDateTime(this.getEndDate());
+      return this.upgrade.$injector
+        .get('UtilService')
+        .convertMillisecondsToFormattedDateTime(this.getEndDate());
     }
     return '';
   }

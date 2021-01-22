@@ -1,21 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditProfileComponent } from './edit-profile.component';
-import { User } from "../../../domain/user";
+import { User } from '../../../domain/user';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { UserService } from "../../../services/user.service";
+import { UserService } from '../../../services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
-import { StudentService } from "../../student.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { StudentService } from '../../student.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Student } from "../../../domain/student";
+import { Student } from '../../../domain/student';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
-
   user: User;
 
   getUser(): BehaviorSubject<User> {
@@ -33,7 +32,7 @@ export class MockUserService {
   }
 
   getLanguages() {
-    return Observable.create( observer => {
+    return Observable.create((observer) => {
       observer.next([]);
       observer.complete();
     });
@@ -47,7 +46,7 @@ export class MockUserService {
 
 export class MockStudentService {
   updateProfile() {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       observer.next({});
       observer.complete();
     });
@@ -73,7 +72,7 @@ describe('EditProfileComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditProfileComponent ],
+      declarations: [EditProfileComponent],
       imports: [
         BrowserAnimationsModule,
         ReactiveFormsModule,
@@ -85,8 +84,8 @@ describe('EditProfileComponent', () => {
         { provide: StudentService, useClass: MockStudentService },
         { provide: UserService, useClass: MockUserService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -117,7 +116,7 @@ describe('EditProfileComponent', () => {
     expect(submitButton.disabled).toBe(false);
   });
 
-  it('should disable submit button when form is submitted', async() => {
+  it('should disable submit button when form is submitted', async () => {
     const submitButton = getSubmitButton();
     const form = getForm();
     form.triggerEventHandler('submit', null);
@@ -125,7 +124,7 @@ describe('EditProfileComponent', () => {
     expect(submitButton.disabled).toBe(true);
   });
 
-  it('should update the user', async() => {
+  it('should update the user', async () => {
     component.editProfileFormGroup.get('language').setValue('Spanish');
     submitForm();
     fixture.detectChanges();

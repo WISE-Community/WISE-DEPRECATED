@@ -11,9 +11,11 @@ export class SummaryService extends ComponentService {
   componentsWithScoresSummary: string[];
   componentsWithResponsesSummary: string[];
 
-  constructor(private upgrade: UpgradeModule,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
     this.componentsWithScoresSummary = [
       'Animation',

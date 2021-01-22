@@ -89,9 +89,11 @@ class ProjectInfoController {
     let choiceText = choice;
     let userLocale = this.ConfigService.getLocale();
     let i18nMapping = this.metadataAuthoring.i18n;
-    let i18nMappingContainingChoiceTextArray = Object.values(i18nMapping).filter(onei18nMapping => {
-      return Object.values(onei18nMapping).indexOf(choice) != -1;
-    });
+    let i18nMappingContainingChoiceTextArray = Object.values(i18nMapping).filter(
+      (onei18nMapping) => {
+        return Object.values(onei18nMapping).indexOf(choice) != -1;
+      }
+    );
     if (
       i18nMappingContainingChoiceTextArray != null &&
       i18nMappingContainingChoiceTextArray.length > 0
@@ -130,7 +132,7 @@ class ProjectInfoController {
   }
 
   getFeaturedProjectIcons() {
-    this.ProjectService.getFeaturedProjectIcons().then(featuredProjectIcons => {
+    this.ProjectService.getFeaturedProjectIcons().then((featuredProjectIcons) => {
       this.projectIcons = featuredProjectIcons;
     });
   }
@@ -148,9 +150,9 @@ class ProjectInfoController {
       isPopup: true,
       target: 'projectIcon'
     };
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
+    this.ProjectAssetService.openAssetChooser(params).then((data: any) => {
+      this.assetSelected(data);
+    });
   }
 
   assetSelected(args) {

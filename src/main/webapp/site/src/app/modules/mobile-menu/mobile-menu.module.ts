@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 
-import { AppRoutingModule } from "../../app-routing.module";
+import { AppRoutingModule } from '../../app-routing.module';
 import { MobileMenuComponent } from './mobile-menu.component';
 
 @NgModule({
@@ -18,8 +18,6 @@ import { MobileMenuComponent } from './mobile-menu.component';
     MatIconModule
   ],
   declarations: [MobileMenuComponent],
-  exports: [
-    MobileMenuComponent
-  ]
+  exports: [MobileMenuComponent]
 })
-export class MobileMenuModule { }
+export class MobileMenuModule {}

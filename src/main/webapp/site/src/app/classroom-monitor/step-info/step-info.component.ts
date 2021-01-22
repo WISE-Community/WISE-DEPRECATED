@@ -22,16 +22,16 @@ export class StepInfoComponent {
   rubricIconLabel: string;
   stepTitle: string;
 
-  constructor(private ProjectService: TeacherProjectService) {
-  }
+  constructor(private ProjectService: TeacherProjectService) {}
 
   ngOnInit() {
     this.stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
     if (this.hasAlert) {
       this.alertIconClass = this.hasNewAlert ? 'warn' : 'text-disabled';
       this.alertIconName = 'notifications';
-      this.alertIconLabel = this.hasNewAlert ? $localize`Has new alert(s)`:
-          $localize`Has dismissed alert(s)`;
+      this.alertIconLabel = this.hasNewAlert
+        ? $localize`Has new alert(s)`
+        : $localize`Has dismissed alert(s)`;
     }
     this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
     this.rubricIconLabel = $localize`Step has rubrics/teaching tips`;

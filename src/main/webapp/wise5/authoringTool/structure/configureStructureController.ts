@@ -9,7 +9,15 @@ abstract class ConfigureStructureController {
   groupsPath: string;
   nodesPath: string;
 
-  static $inject = ['$filter', '$http', '$rootScope', '$state', '$stateParams', '$scope', 'UtilService'];
+  static $inject = [
+    '$filter',
+    '$http',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    'UtilService'
+  ];
 
   constructor(
     protected $filter: any,
@@ -42,15 +50,13 @@ abstract class ConfigureStructureController {
   }
 
   fetchGroups(groupsPath: string = this.groupsPath) {
-    this.$http.get(`${this.structureDir}/${groupsPath}`)
-        .then(({data : group}) => {
+    this.$http.get(`${this.structureDir}/${groupsPath}`).then(({ data: group }) => {
       this.structure.group = group;
     });
   }
 
   fetchNodes(nodesPath: string = this.nodesPath) {
-    this.$http.get(`${this.structureDir}/${nodesPath}`)
-        .then(({data : nodes}) => {
+    this.$http.get(`${this.structureDir}/${nodesPath}`).then(({ data: nodes }) => {
       this.structure.nodes = nodes;
     });
   }

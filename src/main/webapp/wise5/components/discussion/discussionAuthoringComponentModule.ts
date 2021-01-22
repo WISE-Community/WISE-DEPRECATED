@@ -13,7 +13,7 @@ const discussionAuthoringComponentModule = angular
   .component('editDiscussionAdvanced', EditDiscussionAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/discussion/i18n');
     }
   ]);

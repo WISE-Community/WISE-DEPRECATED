@@ -1,15 +1,15 @@
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { LabelService } from "../../../../wise5/components/label/labelService";
-import { TestBed } from "@angular/core/testing";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { LabelService } from '../../../../wise5/components/label/labelService';
+import { TestBed } from '@angular/core/testing';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: LabelService;
 let utilService: UtilService;
@@ -19,7 +19,7 @@ let label2: any;
 describe('LabelServiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -67,8 +67,14 @@ function createObjectWithLabels(labels: any[]) {
   };
 }
 
-function createLabel(text: string, pointX: number, pointY: number, textX: number, textY: number,
-    color: string) {
+function createLabel(
+  text: string,
+  pointX: number,
+  pointY: number,
+  textX: number,
+  textY: number,
+  color: string
+) {
   return {
     text: text,
     pointX: pointX,
@@ -106,8 +112,12 @@ function isCompleted() {
     componentStates = [];
     node = {};
   });
-  function expectIsCompleted(component: any, componentStates: any[], node: any,
-      expectedResult: boolean) {
+  function expectIsCompleted(
+    component: any,
+    componentStates: any[],
+    node: any,
+    expectedResult: boolean
+  ) {
     expect(service.isCompleted(component, componentStates, [], [], node)).toEqual(expectedResult);
   }
   it('should check if is completed when submit is not required and there are no labels', () => {
@@ -117,14 +127,12 @@ function isCompleted() {
     componentStates.push(createComponentState([label1]));
     expectIsCompleted(component, componentStates, node, true);
   });
-  it(`should check if is completed when submit is required and there are labels but not submitted`,
-      () => {
+  it(`should check if is completed when submit is required and there are labels but not submitted`, () => {
     node.showSubmitButton = true;
     componentStates.push(createComponentState([label1]));
     expectIsCompleted(component, componentStates, node, false);
   });
-  it(`should check if is completed when submit is required and there are labels submitted`,
-      () => {
+  it(`should check if is completed when submit is required and there are labels submitted`, () => {
     node.showSubmitButton = true;
     componentStates.push(createComponentState([label1], true));
     expectIsCompleted(component, componentStates, node, true);
@@ -136,17 +144,14 @@ function componentStateHasSubmitWithLabel() {
   beforeEach(() => {
     componentState = createComponentState([]);
   });
-  it('should check if a component state has a submit with label when it does not have any labels',
-      () => {
+  it('should check if a component state has a submit with label when it does not have any labels', () => {
     expect(service.componentStateHasSubmitWithLabel(componentState)).toEqual(false);
   });
-  it('should check if a component state has a submit with label when it has a label but no submit',
-      () => {
+  it('should check if a component state has a submit with label when it has a label but no submit', () => {
     componentState.studentData.labels.push(label1);
     expect(service.componentStateHasSubmitWithLabel(componentState)).toEqual(false);
   });
-  it('should check if a component state has a submit with label when it has a label and submit',
-      () => {
+  it('should check if a component state has a submit with label when it has a label and submit', () => {
     componentState.studentData.labels.push(label1);
     componentState.isSubmit = true;
     expect(service.componentStateHasSubmitWithLabel(componentState)).toEqual(true);
@@ -187,10 +192,14 @@ function componentStateHasStudentWork() {
     componentState = createComponentState([]);
     componentContent = createComponentContent([]);
   });
-  function expectComponentStateHasStudentWork(componentState: any, componentContent: any,
-      expectedResult: boolean) {
-    expect(service.componentStateHasStudentWork(componentState, componentContent))
-        .toEqual(expectedResult);
+  function expectComponentStateHasStudentWork(
+    componentState: any,
+    componentContent: any,
+    expectedResult: boolean
+  ) {
+    expect(service.componentStateHasStudentWork(componentState, componentContent)).toEqual(
+      expectedResult
+    );
   }
   it('should check if a component state has work when it has no labels', () => {
     expectComponentStateHasStudentWork(componentState, componentContent, false);
@@ -216,10 +225,14 @@ function componentStateIsSameAsStarter() {
     componentState = createComponentState([]);
     componentContent = createComponentContent([]);
   });
-  function expectComponentStateIsSameAsStarter(componentState: any, componentContent: any,
-      expectedResult: boolean) {
-    expect(service.componentStateIsSameAsStarter(componentState, componentContent))
-        .toEqual(expectedResult);
+  function expectComponentStateIsSameAsStarter(
+    componentState: any,
+    componentContent: any,
+    expectedResult: boolean
+  ) {
+    expect(service.componentStateIsSameAsStarter(componentState, componentContent)).toEqual(
+      expectedResult
+    );
   }
   it(`should check if component state is the same as starter when component state has no labels and
       there are no starter labels`, () => {
@@ -279,12 +292,10 @@ function labelsAreTheSame() {
   it('should check if labels are the same when one is null and one is not null', () => {
     expectLabelsAreTheSame({}, null, false);
   });
-  it(`should check if labels are the same when both are not null and do not have the same values`,
-      () => {
+  it(`should check if labels are the same when both are not null and do not have the same values`, () => {
     expectLabelsAreTheSame(label1, label2, false);
   });
-  it(`should check if labels are the same when both are not null and do have the same values`,
-      () => {
+  it(`should check if labels are the same when both are not null and do have the same values`, () => {
     const label3 = createLabel('Label 1', 1, 11, 111, 1111, 'blue');
     expectLabelsAreTheSame(label1, label3, true);
   });
@@ -297,9 +308,9 @@ function getTSpans() {
     const spaceInbetweenLines = 40;
     const tspans = service.getTSpans(textWrapped, xPositionOfText, spaceInbetweenLines);
     const expectedResult =
-        `<tspan x="${xPositionOfText}" dy="${spaceInbetweenLines}">The quick brown fox</tspan>` + 
-        `<tspan x="${xPositionOfText}" dy="${spaceInbetweenLines}">jumps over</tspan>` + 
-        `<tspan x="${xPositionOfText}" dy="${spaceInbetweenLines}">the lazy dog.</tspan>`;
+      `<tspan x="${xPositionOfText}" dy="${spaceInbetweenLines}">The quick brown fox</tspan>` +
+      `<tspan x="${xPositionOfText}" dy="${spaceInbetweenLines}">jumps over</tspan>` +
+      `<tspan x="${xPositionOfText}" dy="${spaceInbetweenLines}">the lazy dog.</tspan>`;
     expect(tspans).toEqual(expectedResult);
   });
 }
@@ -309,8 +320,9 @@ function getSVGTextElementString() {
     const fontSize = 16;
     const tspans = '<tspan x="10" dy="40">The quick brown fox</tspan>';
     const textElementString = service.getSVGTextElementString(fontSize, tspans);
-    const expectedResult = `<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" ` + 
-        `font-size="${fontSize}">${tspans}</text>`;
+    const expectedResult =
+      `<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" ` +
+      `font-size="${fontSize}">${tspans}</text>`;
     expect(textElementString).toEqual(expectedResult);
   });
 }

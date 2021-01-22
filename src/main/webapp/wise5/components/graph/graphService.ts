@@ -13,10 +13,12 @@ import { UpgradeModule } from '@angular/upgrade/static';
 export class GraphService extends ComponentService {
   seriesColors: string[] = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
 
-  constructor(private upgrade: UpgradeModule,
-      private StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private StudentAssetService: StudentAssetService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -92,8 +94,13 @@ export class GraphService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (this.canEdit(component)) {
       return this.hasCompletedComponentState(componentStates, node, component);
     } else {
@@ -213,8 +220,10 @@ export class GraphService extends ComponentService {
    */
   isStudentChangedAxisLimit(componentState: any, componentContent: any) {
     if (componentState != null && componentState.studentData != null && componentContent != null) {
-      if (this.isXAxisChanged(componentState, componentContent) ||
-          this.isYAxisChanged(componentState, componentContent)) {
+      if (
+        this.isXAxisChanged(componentState, componentContent) ||
+        this.isYAxisChanged(componentState, componentContent)
+      ) {
         return true;
       }
     }
@@ -223,8 +232,10 @@ export class GraphService extends ComponentService {
 
   isXAxisChanged(componentState: any, componentContent: any) {
     if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
-      if (componentState.studentData.xAxis.min != componentContent.xAxis.min ||
-          componentState.studentData.xAxis.max != componentContent.xAxis.max) {
+      if (
+        componentState.studentData.xAxis.min != componentContent.xAxis.min ||
+        componentState.studentData.xAxis.max != componentContent.xAxis.max
+      ) {
         return true;
       }
     }
@@ -233,8 +244,10 @@ export class GraphService extends ComponentService {
 
   isYAxisChanged(componentState: any, componentContent: any) {
     if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
-      if (componentState.studentData.yAxis.min != componentContent.yAxis.min ||
-          componentState.studentData.yAxis.max != componentContent.yAxis.max) {
+      if (
+        componentState.studentData.yAxis.min != componentContent.yAxis.min ||
+        componentState.studentData.yAxis.max != componentContent.yAxis.max
+      ) {
         return true;
       }
     }
@@ -303,10 +316,10 @@ export class GraphService extends ComponentService {
   generateImageFromRenderedComponentState(componentState: any) {
     return new Promise((resolve, reject) => {
       const highchartsDiv = this.getHighchartsDiv(componentState.componentId);
-      html2canvas(highchartsDiv).then(canvas => {
+      html2canvas(highchartsDiv).then((canvas) => {
         const base64Image = canvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-        this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
           resolve(asset);
         });
       });
@@ -329,6 +342,4 @@ export class GraphService extends ComponentService {
   getSeriesColor(index: number): string {
     return this.seriesColors[index];
   }
-
 }
-

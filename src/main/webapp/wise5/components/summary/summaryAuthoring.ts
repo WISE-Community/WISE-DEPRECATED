@@ -207,8 +207,7 @@ class SummaryAuthoringController extends EditComponentController {
      * create a new array using concat() to actually trigger a change so the SummaryDisplay will
      * update when a custom label color is changed in the authoring view.
      */
-    this.authoringComponentContent.customLabelColors =
-        this.authoringComponentContent.customLabelColors.concat();
+    this.authoringComponentContent.customLabelColors = this.authoringComponentContent.customLabelColors.concat();
   }
 }
 
@@ -220,6 +219,6 @@ const SummaryAuthoring = {
   controller: SummaryAuthoringController,
   controllerAs: 'summaryController',
   templateUrl: 'wise5/components/summary/authoring.html'
-}
+};
 
 export default SummaryAuthoring;

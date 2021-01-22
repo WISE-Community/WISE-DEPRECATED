@@ -1,11 +1,11 @@
 'use strict';
 
 import { Injectable } from '@angular/core';
-import { ProjectService } from './projectService';
+import { TeacherProjectService } from './teacherProjectService';
 
 @Injectable()
 export class SpaceService {
-  constructor(private ProjectService: ProjectService) {}
+  constructor(private TeacherProjectService: TeacherProjectService) {}
 
   createSpace(
     id: string,
@@ -22,10 +22,10 @@ export class SpaceService {
   }
 
   addSpace(id: string, name: string, isPublic: boolean = true, isShowInNotebook: boolean = true) {
-    this.ProjectService.addSpace(this.createSpace(id, name, isPublic, isShowInNotebook));
+    this.TeacherProjectService.addSpace(this.createSpace(id, name, isPublic, isShowInNotebook));
   }
 
   removeSpace(id: string) {
-    this.ProjectService.removeSpace(id);
+    this.TeacherProjectService.removeSpace(id);
   }
 }

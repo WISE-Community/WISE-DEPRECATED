@@ -1,47 +1,45 @@
 'use strict';
 
-import { Directive } from '@angular/core';
-import { EditComponentController } from '../../authoringTool/components/editComponentController';
+import { Component } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
+import { ComponentAuthoring } from '../../../authoringTool/components/component-authoring.component';
+import { ConfigService } from '../../../services/configService';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
+import { UtilService } from '../../../services/utilService';
+import { ConceptMapService } from '../conceptMapService';
 
-@Directive()
-class ConceptMapAuthoringController extends EditComponentController {
+@Component({
+  selector: 'concept-map-authoring',
+  templateUrl: 'concept-map-authoring.component.html',
+  styleUrls: ['concept-map-authoring.component.scss']
+})
+export class ConceptMapAuthoring extends ComponentAuthoring {
   availableNodes: any[];
   availableLinks: any[];
-
-  static $inject = [
-    '$filter',
-    'ConceptMapService',
-    'ConfigService',
-    'NodeService',
-    'NotificationService',
-    'ProjectAssetService',
-    'ProjectService',
-    'UtilService'
-  ];
+  inputChange: Subject<string> = new Subject<string>();
+  inputChangeSubscription: Subscription;
 
   constructor(
-    $filter,
-    private ConceptMapService,
-    ConfigService,
-    NodeService,
-    NotificationService,
-    ProjectAssetService,
-    ProjectService,
-    UtilService
+    private ConceptMapService: ConceptMapService,
+    protected ConfigService: ConfigService,
+    protected NodeService: NodeService,
+    protected ProjectAssetService: ProjectAssetService,
+    protected ProjectService: TeacherProjectService,
+    protected UtilService: UtilService
   ) {
-    super(
-      $filter,
-      ConfigService,
-      NodeService,
-      NotificationService,
-      ProjectAssetService,
-      ProjectService,
-      UtilService
-    );
+    super(ConfigService, NodeService, ProjectAssetService, ProjectService);
+    this.inputChangeSubscription = this.inputChange
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe(() => {
+        this.componentChanged();
+      });
   }
 
-  $onInit() {
-    super.$onInit();
+  ngOnInit() {
+    super.ngOnInit();
 
     this.availableNodes = this.componentContent.nodes;
     this.availableLinks = this.componentContent.links;
@@ -52,28 +50,20 @@ class ConceptMapAuthoringController extends EditComponentController {
     }
   }
 
-  /**
-   * A move node up button was clicked in the authoring tool
-   * @param index the index of the node that we will move
-   */
+  ngOnDestroy() {
+    this.inputChangeSubscription.unsubscribe();
+  }
+
   moveNodeUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);
     this.componentChanged();
   }
 
-  /**
-   * A move node down button was clicked in the authoring tool.
-   * @param index the index of the node that we will move
-   */
   moveNodeDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.nodes, index);
     this.componentChanged();
   }
 
-  /**
-   * A node delete button was clicked in the authoring tool.
-   * @param index the index of the node that we will delete
-   */
   nodeDeleteButtonClicked(index: number): void {
     const nodes = this.authoringComponentContent.nodes;
     const node = nodes[index];
@@ -81,10 +71,7 @@ class ConceptMapAuthoringController extends EditComponentController {
     const nodeLabel = node.label;
     if (
       confirm(
-        this.$translate('conceptMap.areYouSureYouWantToDeleteThisNode', {
-          nodeFileName: nodeFileName,
-          nodeLabel: nodeLabel
-        })
+        $localize`Are you sure you want to delete this node?\n\nFile Name: ${nodeFileName}\nLabel: ${nodeLabel}`
       )
     ) {
       nodes.splice(index, 1);
@@ -92,37 +79,21 @@ class ConceptMapAuthoringController extends EditComponentController {
     }
   }
 
-  /**
-   * A move link up button was clicked in the authoring tool.
-   * @param index the index of the link
-   */
   moveLinkUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.links, index);
     this.componentChanged();
   }
 
-  /**
-   * A move link down button was clicked in the authoring tool.
-   * @param index the index of the link
-   */
   moveLinkDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.links, index);
     this.componentChanged();
   }
 
-  /**
-   * A link delete button was clicked in the authoring tool.
-   * @param index the index of the link
-   */
   linkDeleteButtonClicked(index: number): void {
     const links = this.authoringComponentContent.links;
     const link = links[index];
     const linkLabel = link.label;
-    if (
-      confirm(
-        this.$translate('conceptMap.areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel })
-      )
-    ) {
+    if (confirm($localize`Are you sure you want to delete this link?\n\nLabel: ${linkLabel}`)) {
       links.splice(index, 1);
       this.componentChanged();
     }
@@ -140,11 +111,6 @@ class ConceptMapAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  /**
-   * Get the concept map node with the given id
-   * @param nodeId the concept map node id
-   * @return the concept map node with the given node id
-   */
   getNodeById(nodeId: number): any {
     for (const node of this.authoringComponentContent.nodes) {
       if (nodeId === node.id) {
@@ -164,25 +130,17 @@ class ConceptMapAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  /**
-   * Get a new ConceptMapNode id that isn't being used
-   * @returns a new ConceptMapNode id e.g. 'node3'
-   */
   getNewConceptMapNodeId(): string {
     return this.ConceptMapService.getNextAvailableId(this.authoringComponentContent.nodes, 'node');
   }
 
-  /**
-   * Get a new ConceptMapLink id that isn't being used
-   * @returns a new ConceptMapLink id e.g. 'link3'
-   */
   getNewConceptMapLinkId(): string {
     return this.ConceptMapService.getNextAvailableId(this.authoringComponentContent.links, 'link');
   }
 
   saveStarterConceptMap(): void {
-    if (confirm(this.$translate('conceptMap.areYouSureYouWantToSaveTheStarterConceptMap'))) {
-      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
+    if (confirm($localize`Are you sure you want to save the starter concept map?`)) {
+      this.NodeService.requestStarterState({ nodeId: this.nodeId, componentId: this.componentId });
     }
   }
 
@@ -192,15 +150,12 @@ class ConceptMapAuthoringController extends EditComponentController {
   }
 
   deleteStarterConceptMap(): void {
-    if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheStarterConceptMap'))) {
+    if (confirm($localize`Are you sure you want to delete the starter concept map?`)) {
       this.authoringComponentContent.starterConceptMap = null;
       this.componentChanged();
     }
   }
 
-  /**
-   * Show the asset popup to allow the author to choose the background image
-   */
   chooseBackgroundImage(): void {
     const params = {
       isPopup: true,
@@ -211,10 +166,6 @@ class ConceptMapAuthoringController extends EditComponentController {
     this.openAssetChooser(params);
   }
 
-  /**
-   * Show the asset popup to allow the author to choose an image for the node
-   * @param conceptMapNodeId the id of the node in the concept map
-   */
   chooseNodeImage(conceptMapNodeId: string): void {
     const params = {
       isPopup: true,
@@ -237,17 +188,4 @@ class ConceptMapAuthoringController extends EditComponentController {
       this.componentChanged();
     }
   }
-
 }
-
-const ConceptMapAuthoring = {
-  bindings: {
-    nodeId: '@',
-    componentId: '@'
-  },
-  controller: ConceptMapAuthoringController,
-  controllerAs: 'conceptMapController',
-  templateUrl: 'wise5/components/conceptMap/authoring.html'
-}
-
-export default ConceptMapAuthoring;

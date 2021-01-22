@@ -7,13 +7,11 @@ import { ConfigService } from '../../services/config.service';
   styleUrls: ['./register-google-user-already-exists.component.scss']
 })
 export class RegisterGoogleUserAlreadyExistsComponent implements OnInit {
+  constructor(private configService: ConfigService) {}
 
-  constructor(private configService: ConfigService) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
-
-  public socialSignIn(socialPlatform : string) {
+  public socialSignIn(socialPlatform: string) {
     window.location.href = `${this.configService.getContextPath()}/google-login`;
   }
 }

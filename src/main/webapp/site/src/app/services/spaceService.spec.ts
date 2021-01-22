@@ -1,22 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { UpgradeModule } from '@angular/upgrade/static';
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../../../wise5/services/configService';
-import { ProjectService } from '../../../../wise5/services/projectService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { SessionService } from '../../../../wise5/services/sessionService';
+import { TeacherProjectService } from '../../../../wise5/services/teacherProjectService';
 let service: SpaceService;
-let projectService: ProjectService;
+let teacherProjectService: TeacherProjectService;
 
 describe('SpaceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, ProjectService, SessionService, SpaceService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService, TeacherProjectService, SessionService, SpaceService, UtilService]
     });
-    projectService = TestBed.get(ProjectService);
-    service = TestBed.get(SpaceService)
+    teacherProjectService = TestBed.get(TeacherProjectService);
+    service = TestBed.get(SpaceService);
   });
   createSpace();
   addSpace();
@@ -36,7 +36,7 @@ function createSpace() {
         name: name,
         isPublic: isPublic,
         isShowInNotebook: isShowInNotebook
-      })
+      });
     });
   });
 }
@@ -48,14 +48,14 @@ function addSpace() {
       const name = 'Public';
       const isPublic = true;
       const isShowInNotebook = true;
-      spyOn(projectService, 'addSpace');
+      spyOn(teacherProjectService, 'addSpace');
       service.addSpace(id, name, isPublic, isShowInNotebook);
-      expect(projectService.addSpace).toHaveBeenCalledWith({
+      expect(teacherProjectService.addSpace).toHaveBeenCalledWith({
         id: id,
         name: name,
         isPublic: isPublic,
         isShowInNotebook: isShowInNotebook
-      })
+      });
     });
   });
 }
@@ -63,9 +63,9 @@ function addSpace() {
 function removeSpace() {
   describe('removeSpace()', () => {
     it('should remove a space', () => {
-      spyOn(projectService, 'removeSpace');
+      spyOn(teacherProjectService, 'removeSpace');
       service.removeSpace('public');
-      expect(projectService.removeSpace).toHaveBeenCalledWith('public');
+      expect(teacherProjectService.removeSpace).toHaveBeenCalledWith('public');
     });
   });
 }

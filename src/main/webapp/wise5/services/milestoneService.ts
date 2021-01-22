@@ -19,6 +19,50 @@ export class MilestoneService {
   projectMilestones: any[];
   workgroupIds: any[];
   workgroupsStorage: any[] = [];
+  satisfyCriteriaFuncNameToFunc = {
+    percentOfScoresGreaterThan: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.greaterThan
+      );
+    },
+    percentOfScoresGreaterThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.greaterThanEqualTo
+      );
+    },
+    percentOfScoresLessThan: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.lessThan
+      );
+    },
+    percentOfScoresLessThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.lessThanEqualTo
+      );
+    },
+    percentOfScoresEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.equalTo
+      );
+    },
+    percentOfScoresNotEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.notEqualTo
+      );
+    }
+  };
 
   constructor(
     private upgrade: UpgradeModule,
@@ -28,8 +72,7 @@ export class MilestoneService {
     private ProjectService: ProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
-  ) {
-  }
+  ) {}
 
   getTranslation(key: string, args: any = null) {
     if (args == null) {
@@ -42,7 +85,7 @@ export class MilestoneService {
   getProjectMilestones() {
     const achievements = this.ProjectService.getAchievements();
     if (achievements.isEnabled) {
-      return achievements.items.filter(achievement => {
+      return achievements.items.filter((achievement) => {
         return ['milestone', 'milestoneReport'].includes(achievement.type);
       });
     }
@@ -50,7 +93,7 @@ export class MilestoneService {
   }
 
   getProjectMilestoneReports() {
-    return this.getProjectMilestones().filter(milestone => {
+    return this.getProjectMilestones().filter((milestone) => {
       return milestone.type === 'milestoneReport';
     });
   }
@@ -91,8 +134,7 @@ export class MilestoneService {
   }
 
   insertMilestoneCompletion(milestone: any) {
-    const achievementIdToStudentAchievements =
-        this.AchievementService.getAchievementIdToStudentAchievementsMappings();
+    const achievementIdToStudentAchievements = this.AchievementService.getAchievementIdToStudentAchievementsMappings();
     const studentAchievements = achievementIdToStudentAchievements[milestone.id];
     const workgroupIdsCompleted = [];
     const achievementTimes = [];
@@ -246,123 +288,39 @@ export class MilestoneService {
   }
 
   isTemplateCriterionSatisfied(satisfyCriterion: any, aggregateAutoScores: any) {
-    if (satisfyCriterion.function === 'percentOfScoresGreaterThan') {
-      return this.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresGreaterThanOrEqualTo') {
-      return this.isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresLessThan') {
-      return this.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresLessThanOrEqualTo') {
-      return this.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresEqualTo') {
-      return this.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresNotEqualTo') {
-      return this.isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'default') {
+    if (satisfyCriterion.function === 'default') {
       return true;
     }
+    return this.satisfyCriteriaFuncNameToFunc[satisfyCriterion.function](
+      satisfyCriterion,
+      aggregateAutoScores
+    );
   }
 
-  isPercentOfScoresGreaterThan(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getGreaterThanSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
+  getComparatorSum(
+    satisfyCriterion: any,
+    aggregateData: any,
+    possibleScores: number[],
+    comparator: any
+  ): number {
     let sum = 0;
     for (const possibleScore of possibleScores) {
-      if (possibleScore > satisfyCriterion.value) {
+      if (comparator(possibleScore, satisfyCriterion.value)) {
         sum += aggregateData.counts[possibleScore];
       }
     }
     return sum;
   }
 
-  isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
+  isPercentOfScoresSatisfiesComparator(
+    satisfyCriterion: any,
+    aggregateAutoScores: any,
+    comparator: any
+  ) {
     const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
     const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+    const sum = this.getComparatorSum(satisfyCriterion, aggregateData, possibleScores, comparator);
     return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getGreaterThanOrEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore >= satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresLessThan(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getLessThanSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getLessThanSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore < satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresLessThanOrEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getLessThanOrEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore <= satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getEqualToSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore === satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresNotEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getNotEqualToSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getNotEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore !== satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
   }
 
   getAggregateData(satisfyCriterion: any, aggregateAutoScores: any) {
@@ -371,9 +329,7 @@ export class MilestoneService {
   }
 
   getPossibleScores(aggregateData: any) {
-    return Object.keys(aggregateData.counts)
-      .map(Number)
-      .sort();
+    return Object.keys(aggregateData.counts).map(Number).sort();
   }
 
   isPercentThresholdSatisfied(satisfyCriterion: any, aggregateData: any, sum: number) {
@@ -398,8 +354,12 @@ export class MilestoneService {
     return components;
   }
 
-  calculateAggregateAutoScores(nodeId: string, componentId: string, periodId: number,
-      reportSettings: any) {
+  calculateAggregateAutoScores(
+    nodeId: string,
+    componentId: string,
+    periodId: number,
+    reportSettings: any
+  ) {
     const aggregate = {};
     const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(
       nodeId,
@@ -429,8 +389,11 @@ export class MilestoneService {
     return aggregate;
   }
 
-  mergeAutoScoreAndTeacherScore(autoScoreAnnotation: any, teacherScoreAnnotation: any,
-      reportSettings: any) {
+  mergeAutoScoreAndTeacherScore(
+    autoScoreAnnotation: any,
+    teacherScoreAnnotation: any,
+    reportSettings: any
+  ) {
     if (autoScoreAnnotation.data.scores) {
       for (const subScore of autoScoreAnnotation.data.scores) {
         if (subScore.id === 'ki') {
@@ -547,46 +510,6 @@ export class MilestoneService {
     projectAchievement.isReportAvailable = reportAvailable;
   }
 
-  deleteMilestone(milestone: any) {
-    const projectAchievements = this.ProjectService.getAchievementItems();
-    let index = -1;
-    for (let i = 0; i < projectAchievements.length; i++) {
-      if (projectAchievements[i].id === milestone.id) {
-        index = i;
-        break;
-      }
-    }
-
-    if (index > -1) {
-      projectAchievements.splice(index, 1);
-      this.saveProject();
-    }
-  }
-
-  saveProject() {
-    this.clearTempFields();
-    this.ProjectService.saveProject();
-  }
-
-  clearTempFields() {
-    const projectAchievements = this.ProjectService.getAchievementItems();
-    for (const projectAchievement of projectAchievements) {
-      this.workgroupsStorage.push(projectAchievement.workgroups);
-      this.numberOfStudentsCompletedStorage.push(projectAchievement.numberOfStudentsCompleted);
-      this.percentageCompletedStorage.push(projectAchievement.percentageCompleted);
-      delete projectAchievement.items;
-      delete projectAchievement.workgroups;
-      delete projectAchievement.numberOfStudentsCompleted;
-      delete projectAchievement.numberOfStudentsInRun;
-      delete projectAchievement.percentageCompleted;
-      delete projectAchievement.generatedReport;
-      delete projectAchievement.generatedRecommendations;
-      delete projectAchievement.nodeId;
-      delete projectAchievement.componentId;
-      delete projectAchievement.isReportAvailable;
-    }
-  }
-
   showMilestoneDetails(milestone: any, $event: any, hideStudentWork: boolean = false) {
     const title = this.getTranslation('MILESTONE_DETAILS_TITLE', {
       name: milestone.name
@@ -618,87 +541,86 @@ export class MilestoneService {
             </md-button>
           </md-dialog-actions>
         </md-dialog>`;
-    this.upgrade.$injector.get('$mdDialog')
-      .show({
-        parent: angular.element(document.body),
-        template: template,
-        ariaLabel: title,
-        fullscreen: true,
-        multiple: true,
-        targetEvent: $event,
-        clickOutsideToClose: true,
-        escapeToClose: true,
-        locals: {
-          $event: $event,
-          milestone: milestone,
-          hideStudentWork: hideStudentWork
-        },
-        controller: [
-          '$scope',
-          '$state',
-          '$mdDialog',
-          'milestone',
-          '$event',
-          'TeacherDataService',
-          function DialogController(
-            $scope,
-            $state,
-            $mdDialog,
-            milestone,
-            $event,
-            TeacherDataService
-          ) {
-            $scope.milestone = milestone;
-            $scope.hideStudentWork = hideStudentWork;
-            $scope.event = $event;
-            $scope.close = function() {
-              $scope.saveMilestoneClosedEvent();
-              $mdDialog.hide();
-            };
-            $scope.edit = function() {
-              $mdDialog.hide({
-                milestone: $scope.milestone,
-                action: 'edit',
-                $event: $event
-              });
-            };
-            $scope.onShowWorkgroup = function(workgroup: any) {
-              $scope.saveMilestoneClosedEvent();
-              $mdDialog.hide();
-              TeacherDataService.setCurrentWorkgroup(workgroup);
-              $state.go('root.nodeProgress');
-            };
-            $scope.onVisitNodeGrading = function() {
-              $mdDialog.hide();
-            };
-            $scope.saveMilestoneOpenedEvent = function() {
-              $scope.saveMilestoneEvent('MilestoneOpened');
-            };
-            $scope.saveMilestoneClosedEvent = function() {
-              $scope.saveMilestoneEvent('MilestoneClosed');
-            };
-            $scope.saveMilestoneEvent = function(event: any) {
-              const context = 'ClassroomMonitor',
-                nodeId = null,
-                componentId = null,
-                componentType = null,
-                category = 'Navigation',
-                data = { milestoneId: $scope.milestone.id },
-                projectId = null;
-              TeacherDataService.saveEvent(
-                context,
-                nodeId,
-                componentId,
-                componentType,
-                category,
-                event,
-                data,
-                projectId
-              );
-            };
-            $scope.saveMilestoneOpenedEvent();
-          }
-        ]
-      });
+    this.upgrade.$injector.get('$mdDialog').show({
+      parent: angular.element(document.body),
+      template: template,
+      ariaLabel: title,
+      fullscreen: true,
+      multiple: true,
+      targetEvent: $event,
+      clickOutsideToClose: true,
+      escapeToClose: true,
+      locals: {
+        $event: $event,
+        milestone: milestone,
+        hideStudentWork: hideStudentWork
+      },
+      controller: [
+        '$scope',
+        '$state',
+        '$mdDialog',
+        'milestone',
+        '$event',
+        'TeacherDataService',
+        function DialogController(
+          $scope,
+          $state,
+          $mdDialog,
+          milestone,
+          $event,
+          TeacherDataService
+        ) {
+          $scope.milestone = milestone;
+          $scope.hideStudentWork = hideStudentWork;
+          $scope.event = $event;
+          $scope.close = function () {
+            $scope.saveMilestoneClosedEvent();
+            $mdDialog.hide();
+          };
+          $scope.edit = function () {
+            $mdDialog.hide({
+              milestone: $scope.milestone,
+              action: 'edit',
+              $event: $event
+            });
+          };
+          $scope.onShowWorkgroup = function (workgroup: any) {
+            $scope.saveMilestoneClosedEvent();
+            $mdDialog.hide();
+            TeacherDataService.setCurrentWorkgroup(workgroup);
+            $state.go('root.nodeProgress');
+          };
+          $scope.onVisitNodeGrading = function () {
+            $mdDialog.hide();
+          };
+          $scope.saveMilestoneOpenedEvent = function () {
+            $scope.saveMilestoneEvent('MilestoneOpened');
+          };
+          $scope.saveMilestoneClosedEvent = function () {
+            $scope.saveMilestoneEvent('MilestoneClosed');
+          };
+          $scope.saveMilestoneEvent = function (event: any) {
+            const context = 'ClassroomMonitor',
+              nodeId = null,
+              componentId = null,
+              componentType = null,
+              category = 'Navigation',
+              data = { milestoneId: $scope.milestone.id },
+              projectId = null;
+            TeacherDataService.saveEvent(
+              context,
+              nodeId,
+              componentId,
+              componentType,
+              category,
+              event,
+              data,
+              projectId
+            );
+          };
+          $scope.saveMilestoneOpenedEvent();
+        }
+      ]
+    });
   }
 }

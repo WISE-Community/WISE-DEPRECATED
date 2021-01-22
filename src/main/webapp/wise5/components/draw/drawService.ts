@@ -10,11 +10,12 @@ import { UtilService } from '../../services/utilService';
 
 @Injectable()
 export class DrawService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      private StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private StudentAssetService: StudentAssetService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -52,8 +53,13 @@ export class DrawService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (componentStates != null && componentStates.length > 0) {
       if (this.isSubmitRequired(node, component)) {
         return this.hasComponentStateWithIsSubmitTrue(componentStates);
@@ -137,7 +143,7 @@ export class DrawService extends ComponentService {
       const canvas = this.getDrawingToolCanvas(componentState.nodeId, componentState.componentId);
       const canvasBase64String = canvas.toDataURL('image/png');
       const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64String);
-      this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+      this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
         resolve(asset);
       });
     });

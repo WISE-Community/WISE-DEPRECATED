@@ -29,7 +29,7 @@ export class AddProjectDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['accessCode'] != null) {
         this.accessCode = params['accessCode'];
         this.addProjectForm.controls['runCode'].setValue(params['accessCode']);
@@ -42,7 +42,7 @@ export class AddProjectDialogComponent implements OnInit {
     this.isAdding = true;
     this.studentService
       .addRun(this.registerRunRunCode, this.selectedPeriod)
-      .subscribe(studentRun => {
+      .subscribe((studentRun) => {
         if (studentRun.status === 'error') {
           if (studentRun.messageCode === 'alreadyAddedRun') {
             this.addProjectForm.controls['runCode'].setErrors({ alreadyAddedRun: true });
@@ -70,7 +70,7 @@ export class AddProjectDialogComponent implements OnInit {
     const runCode = this.addProjectForm.controls['runCode'].value;
     this.registerRunRunCode = runCode;
     if (this.isValidRunCodeSyntax(runCode)) {
-      this.studentService.getRunInfo(runCode).subscribe(runInfo => {
+      this.studentService.getRunInfo(runCode).subscribe((runInfo) => {
         this.handleRunCodeResponse(runInfo);
       });
     } else {

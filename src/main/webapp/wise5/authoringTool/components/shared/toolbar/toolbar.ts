@@ -1,7 +1,7 @@
 'use strict';
 
-import { Directive } from "@angular/core";
-import { NotificationService } from "../../../../services/notificationService";
+import { Directive } from '@angular/core';
+import { NotificationService } from '../../../../services/notificationService';
 
 @Directive()
 class ToolbarController {
@@ -16,14 +16,16 @@ class ToolbarController {
 
   constructor(private $scope, NotificationService: NotificationService) {
     this.NotificationService = NotificationService;
-    this.setGlobalMessageSubscription =
-        this.NotificationService.setGlobalMessage$.subscribe(({ globalMessage }) => {
-      this.globalMessage = globalMessage;
-    });
-    this.setIsJSONValidSubscription = 
-        this.NotificationService.setIsJSONValid$.subscribe(({ isJSONValid }) => {
-      this.isJSONValid = isJSONValid;
-    });
+    this.setGlobalMessageSubscription = this.NotificationService.setGlobalMessage$.subscribe(
+      ({ globalMessage }) => {
+        this.globalMessage = globalMessage;
+      }
+    );
+    this.setIsJSONValidSubscription = this.NotificationService.setIsJSONValid$.subscribe(
+      ({ isJSONValid }) => {
+        this.isJSONValid = isJSONValid;
+      }
+    );
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });

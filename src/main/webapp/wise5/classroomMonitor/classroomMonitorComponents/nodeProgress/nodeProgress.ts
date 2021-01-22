@@ -13,10 +13,14 @@ const NodeProgress = angular
   .module('nodeProgress', [])
   .component('nodeProgressView', NodeProgressView)
   .component('navItem', NavItem)
-  .directive('navItemProgress',
-      downgradeComponent({ component: NavItemProgressComponent }) as angular.IDirectiveFactory)
-  .directive('navItemScore',
-      downgradeComponent({ component: NavItemScoreComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'navItemProgress',
+    downgradeComponent({ component: NavItemProgressComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'navItemScore',
+    downgradeComponent({ component: NavItemScoreComponent }) as angular.IDirectiveFactory
+  )
   .component('workgroupsOnNode', WorkgroupsOnNode)
   .component('workgroupProgress', WorkgroupProgress);
 

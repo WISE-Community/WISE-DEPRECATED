@@ -151,7 +151,7 @@ class AuthoringToolMainController {
       this.startErrorCreatingProjectTimeout();
       const projectJSONString = angular.toJson(this.project, 4);
       this.ProjectService.registerNewProject(this.project.metadata.title, projectJSONString)
-        .then(projectId => {
+        .then((projectId) => {
           this.cancelErrorCreatingProjectTimeout();
           this.saveEvent('projectCreated', 'Authoring', {}, projectId);
           this.$state.go('root.at.project', { projectId: projectId });
@@ -216,9 +216,7 @@ class AuthoringToolMainController {
   previewProject(projectId) {
     const data = { constraints: true };
     this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
-    window.open(
-      `${this.ConfigService.getWISEBaseURL()}/preview/unit/${projectId}`
-    );
+    window.open(`${this.ConfigService.getWISEBaseURL()}/preview/unit/${projectId}`);
   }
 
   goHome() {

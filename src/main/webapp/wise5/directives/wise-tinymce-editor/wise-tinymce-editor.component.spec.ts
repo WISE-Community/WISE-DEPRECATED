@@ -1,18 +1,17 @@
-
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { ProjectAssetService } from "../../../site/src/app/services/projectAssetService";
-import { AnnotationService } from "../../services/annotationService";
-import { ConfigService } from "../../services/configService";
-import { NotebookService } from "../../services/notebookService";
-import { ProjectService } from "../../services/projectService";
-import { SessionService } from "../../services/sessionService";
-import { StudentAssetService } from "../../services/studentAssetService";
-import { StudentDataService } from "../../services/studentDataService";
-import { TagService } from "../../services/tagService";
-import { UtilService } from "../../services/utilService";
-import { WiseTinymceEditorComponent } from "./wise-tinymce-editor.component";
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
+import { AnnotationService } from '../../services/annotationService';
+import { ConfigService } from '../../services/configService';
+import { NotebookService } from '../../services/notebookService';
+import { ProjectService } from '../../services/projectService';
+import { SessionService } from '../../services/sessionService';
+import { StudentAssetService } from '../../services/studentAssetService';
+import { StudentDataService } from '../../services/studentDataService';
+import { TagService } from '../../services/tagService';
+import { UtilService } from '../../services/utilService';
+import { WiseTinymceEditorComponent } from './wise-tinymce-editor.component';
 
 let component: WiseTinymceEditorComponent;
 let fixture: ComponentFixture<WiseTinymceEditorComponent>;
@@ -20,8 +19,8 @@ let fixture: ComponentFixture<WiseTinymceEditorComponent>;
 describe('WiseTinymceEditorComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ WiseTinymceEditorComponent ],
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      declarations: [WiseTinymceEditorComponent],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -60,24 +59,24 @@ function getAttachmentsHTML() {
     const attachmentURLs: string[] = ['spongebob.png'];
     const text = '';
     expect(component.getAttachmentsHTML(attachmentURLs, text)).toEqual(
-      '<figure class="image align-center">' + 
-      `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURLs[0]}" ` + 
-      'alt="Image from notebook" />' +
-      '<figcaption contenteditable="true"> </figcaption>' +
-      '</figure>'
+      '<figure class="image align-center">' +
+        `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURLs[0]}" ` +
+        'alt="Image from notebook" />' +
+        '<figcaption contenteditable="true"> </figcaption>' +
+        '</figure>'
     );
   });
   it('should get the attachments html when there are multiple attachments', () => {
     const attachmentURLs: string[] = ['spongebob.png', 'patrick.png'];
     const text = '';
     expect(component.getAttachmentsHTML(attachmentURLs, text)).toEqual(
-      '<figure class="image align-center">' + 
-      `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURLs[0]}" ` + 
-      'alt="Image from notebook" />' +
-      `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURLs[1]}" ` + 
-      'alt="Image from notebook" />' +
-      '<figcaption contenteditable="true"> </figcaption>' +
-      '</figure>'
+      '<figure class="image align-center">' +
+        `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURLs[0]}" ` +
+        'alt="Image from notebook" />' +
+        `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURLs[1]}" ` +
+        'alt="Image from notebook" />' +
+        '<figcaption contenteditable="true"> </figcaption>' +
+        '</figure>'
     );
   });
 }
@@ -111,9 +110,9 @@ function getAudioHTML() {
     data.altsourcemime = altsourcemime;
     expect(component.getAudioHTML(data)).toEqual(
       '<audio controls>' +
-      `<source src="${source}" type="${sourcemime}"/>` + 
-      `<source src="${altsource}" type="${altsourcemime}"/>` + 
-      '</audio>'
+        `<source src="${source}" type="${sourcemime}"/>` +
+        `<source src="${altsource}" type="${altsourcemime}"/>` +
+        '</audio>'
     );
   });
 }
@@ -124,10 +123,7 @@ function getAttachmentURLs() {
     const iconURL2 = 'patrick.png';
     const notebookItem: any = {
       content: {
-        attachments: [
-          { iconURL: iconURL1 },
-          { iconURL: iconURL2 }
-        ]
+        attachments: [{ iconURL: iconURL1 }, { iconURL: iconURL2 }]
       }
     };
     const attachmentURLs = component.getAttachmentURLs(notebookItem);

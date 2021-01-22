@@ -19,7 +19,7 @@ const htmlComponentModule = angular
   )
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/html/i18n');
     }
   ]);
