@@ -1,6 +1,6 @@
 @import '~style/abstracts/variables';
 
-.mat-form-field {
+.prompt {
   width: 100%;
 }
 
@@ -15,6 +15,11 @@ label.mat-radio-label {
 .mat-radio-button.choice-radio-button {
   display: block;
   margin-top: 10px;
+  width: 5%;
+}
+
+.choices-label {
+  margin-right: 10px;
 }
 
 .add-choice-button {

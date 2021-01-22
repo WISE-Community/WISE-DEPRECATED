@@ -11,8 +11,7 @@ import { UtilService } from '../../../services/utilService';
 @Component({
   selector: 'multiple-choice-authoring',
   templateUrl: 'multiple-choice-authoring.component.html',
-  styleUrls: ['multiple-choice-authoring.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['multiple-choice-authoring.component.scss']
 })
 export class MultipleChoiceAuthoring extends ComponentAuthoring {
   allowedConnectedComponentTypes = ['MultipleChoice'];

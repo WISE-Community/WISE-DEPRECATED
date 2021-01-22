@@ -1,4 +1,4 @@
-<mat-form-field>
+<mat-form-field class="prompt">
   <mat-label i18n>Prompt</mat-label>
   <textarea matInput
       [ngModel]="authoringComponentContent.prompt"
@@ -13,21 +13,30 @@
   <mat-radio-group aria-labelledby="selection-type-label"
       [(ngModel)]="authoringComponentContent.choiceType"
       (ngModelChange)="componentChanged()">
-    <mat-radio-button class="choice-radio-button" value="radio" i18n>
+    <mat-radio-button
+        class="choice-radio-button"
+        color="primary"
+        value="radio"
+        i18n>
       Single Answer
     </mat-radio-button>
-    <mat-radio-button class="choice-radio-button" value="checkbox" i18n>
+    <mat-radio-button
+        class="choice-radio-button"
+        color="primary"
+        value="checkbox"
+        i18n>
       Multiple Answer
     </mat-radio-button>
   </mat-radio-group>
 </p>
+<span class="choices-label" i18n>Choices</span>
 <button mat-raised-button
     color="primary"
     class="add-choice-button"
     (click)="addChoice()"
     i18nMatTooltip
     matTooltip="Add Choice"
-    matTooltipDirection="above"
+    matTooltipPosition="above"
     i18n-aria-label
     aria-label="Add">
   <mat-icon>add</mat-icon>
@@ -54,13 +63,15 @@
         (click)="chooseChoiceAsset(choice)"
         i18n-matTooltip
         matTooltip="Choose an Image"
-        matTooltipDirection="above"
+        matTooltipPosition="above"
         i18n-aria-label
         aria-label="Image">
       <mat-icon>insert_photo</mat-icon>
     </button>
     <div>
-      <mat-checkbox [(ngModel)]="choice.isCorrect"
+      <mat-checkbox
+          color="primary"
+          [(ngModel)]="choice.isCorrect"
           (change)="feedbackChanged()"
           i18n-aria-label
           aria-label="Is Correct"
@@ -85,7 +96,7 @@
         (click)="moveChoiceUp(choice.id)"
         i18n-matTooltip
         matTooltip="Move Up"
-        matTooltipDirection="above"
+        matTooltipPosition="above"
         i18n-aria-label
         aria-label="Up">
       <mat-icon>arrow_upward</mat-icon>
@@ -97,7 +108,7 @@
         (click)="moveChoiceDown(choice.id)"
         i18n-matTooltip
         matTooltip="Move Down"
-        matTooltipDirection="above"
+        matTooltipPosition="above"
         i18n-aria-label
         aria-label="Down">
       <mat-icon>arrow_downward</mat-icon>
@@ -108,7 +119,7 @@
         (click)="deleteChoice(choice.id)"
         i18n-matTooltip
         matTooltip="Delete"
-        matTooltipDirection="above"
+        matTooltipPosition="above"
         i18n-aria-label
         aria-label="Delete">
       <mat-icon>delete</mat-icon>
