@@ -51,9 +51,8 @@ export class MatchAuthoring extends ComponentAuthoring {
   }
 
   turnOnSubmitButtonIfFeedbackExists() {
-    const show = this.componentHasFeedback();
-    if (show) {
-      this.setShowSubmitButtonValue(show);
+    if (this.componentHasFeedback()) {
+      this.setShowSubmitButtonValue(true);
     }
   }
 
@@ -237,16 +236,10 @@ export class MatchAuthoring extends ComponentAuthoring {
   }
 
   removeChoiceFromFeedback(choiceId: string): void {
-    const feedback = this.authoringComponentContent.feedback;
-    for (const bucketFeedback of feedback) {
-      const choices = bucketFeedback.choices;
-      for (let c = 0; c < choices.length; c++) {
-        const choice = choices[c];
-        if (choiceId === choice.choiceId) {
-          choices.splice(c, 1);
-          break;
-        }
-      }
+    for (const bucketFeedback of this.authoringComponentContent.feedback) {
+      bucketFeedback.choices = bucketFeedback.choices.filter((choice) => {
+        return choice.choiceId !== choiceId;
+      });
     }
   }
 
@@ -264,16 +257,18 @@ export class MatchAuthoring extends ComponentAuthoring {
   }
 
   componentHasFeedback(): boolean {
-    const feedback = this.authoringComponentContent.feedback;
-    for (const tempFeedback of feedback) {
-      const tempChoices = tempFeedback.choices;
-      for (const tempChoice of tempChoices) {
-        if (tempChoice.isCorrect || (tempChoice.feedback != null && tempChoice.feedback != '')) {
+    for (const feedback of this.authoringComponentContent.feedback) {
+      for (const choice of feedback.choices) {
+        if (choice.isCorrect || this.isNonEmpty(choice.feedback)) {
           return true;
         }
       }
     }
     return false;
+  }
+
+  isNonEmpty(str: string): boolean {
+    return str != null && str != '';
   }
 
   isCorrectClicked(feedback: any): void {
@@ -286,25 +281,21 @@ export class MatchAuthoring extends ComponentAuthoring {
   }
 
   chooseChoiceAsset(choice: any): void {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'choice',
-      targetObject: choice
-    };
-    this.openAssetChooser(params);
+    this.openAssetChooserHelper('choice', choice);
   }
 
   chooseBucketAsset(bucket: any): void {
-    const params = {
+    this.openAssetChooserHelper('bucket', bucket);
+  }
+
+  openAssetChooserHelper(target: string, targetObject: any): void {
+    this.openAssetChooser({
       isPopup: true,
       nodeId: this.nodeId,
       componentId: this.componentId,
-      target: 'bucket',
-      targetObject: bucket
-    };
-    this.openAssetChooser(params);
+      target: target,
+      targetObject: targetObject
+    });
   }
 
   assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
