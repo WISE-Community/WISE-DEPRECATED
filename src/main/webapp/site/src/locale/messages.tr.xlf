@@ -1378,7 +1378,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <target state="translated">Ekle</target>
       </trans-unit>
@@ -6798,7 +6798,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <target state="needs-translation">Choose an Image</target>
       </trans-unit>
@@ -6874,7 +6874,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <target state="needs-translation">Image</target>
       </trans-unit>
@@ -6930,7 +6930,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <target state="needs-translation">Move Up</target>
       </trans-unit>
@@ -6966,7 +6966,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <target state="needs-translation">Move Down</target>
       </trans-unit>
@@ -7014,11 +7014,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <target state="needs-translation">Delete</target>
       </trans-unit>
@@ -7290,7 +7290,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <target state="needs-translation">Up</target>
       </trans-unit>
@@ -7318,7 +7318,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <target state="needs-translation">Down</target>
       </trans-unit>
@@ -7432,6 +7432,10 @@
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
         <target state="needs-translation">Choices</target>
       </trans-unit>
       <trans-unit datatype="html" id="1fc2618c7ca4b3722929d8739dbf6d9ab4f7dacf">
@@ -7470,7 +7474,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <target state="needs-translation">Type text or choose an image</target>
       </trans-unit>
@@ -7602,7 +7606,7 @@
         <source> Single Answer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <target state="needs-translation"> Single Answer </target>
       </trans-unit>
@@ -7610,7 +7614,7 @@
         <source> Multiple Answer </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <target state="needs-translation"> Multiple Answer </target>
       </trans-unit>
@@ -7618,7 +7622,7 @@
         <source> There are no choices. Click the "Add Choice" button to add a choice. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <target state="needs-translation"> There are no choices. Click the "Add Choice" button to add a choice. </target>
       </trans-unit>
@@ -7626,7 +7630,7 @@
         <source>Choice Text</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <target state="needs-translation">Choice Text</target>
       </trans-unit>
@@ -7634,7 +7638,7 @@
         <source> Is Correct </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <target state="needs-translation"> Is Correct </target>
       </trans-unit>
@@ -7642,7 +7646,7 @@
         <source>Is Correct</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <target state="needs-translation">Is Correct</target>
       </trans-unit>
@@ -7650,7 +7654,7 @@
         <source>Feeback</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <target state="needs-translation">Feeback</target>
       </trans-unit>
@@ -7658,7 +7662,7 @@
         <source>Optional</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <target state="needs-translation">Optional</target>
       </trans-unit>
