@@ -9,6 +9,7 @@ import { TeacherDataService } from './teacherDataService';
 import { UtilService } from './utilService';
 import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
+import { MilestoneDetailsDialog } from '../classroomMonitor/classroomMonitorComponents/milestones/milestoneDetailsDialog/milestoneDetailsDialog';
 
 @Injectable()
 export class MilestoneService {
@@ -511,40 +512,12 @@ export class MilestoneService {
   }
 
   showMilestoneDetails(milestone: any, $event: any, hideStudentWork: boolean = false) {
-    const title = this.getTranslation('MILESTONE_DETAILS_TITLE', {
-      name: milestone.name
-    });
-    const template = `<md-dialog class="dialog--wider">
-          <md-toolbar>
-            <div class="md-toolbar-tools">
-              <h2>${title}</h2>
-            </div>
-          </md-toolbar>
-          <md-dialog-content class="gray-lighter-bg md-dialog-content">
-            <milestone-details milestone="milestone"
-                               hide-student-work="hideStudentWork"
-                               on-show-workgroup="onShowWorkgroup(value)"
-                               on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
-          </md-dialog-content>
-          <md-dialog-actions layout="row" layout-align="start center">
-            <span flex></span>
-            <md-button class="md-primary"
-                       ng-click="edit()"
-                       ng-if="milestone.type !== 'milestoneReport'"
-                       aria-label="{{ ::'EDIT' | translate }}">
-              {{ ::'EDIT' | translate }}
-            </md-button>
-            <md-button class="md-primary"
-                       ng-click="close()"
-                       aria-label="{{ ::'CLOSE' | translate }}">
-              {{ ::'CLOSE' | translate }}
-            </md-button>
-          </md-dialog-actions>
-        </md-dialog>`;
     this.upgrade.$injector.get('$mdDialog').show({
       parent: angular.element(document.body),
-      template: template,
-      ariaLabel: title,
+      templateUrl:
+        'wise5/classroomMonitor/classroomMonitorComponents/milestones/milestoneDetailsDialog/milestoneDetailsDialog.html',
+      controller: MilestoneDetailsDialog,
+      controllerAs: '$ctrl',
       fullscreen: true,
       multiple: true,
       targetEvent: $event,
@@ -554,73 +527,7 @@ export class MilestoneService {
         $event: $event,
         milestone: milestone,
         hideStudentWork: hideStudentWork
-      },
-      controller: [
-        '$scope',
-        '$state',
-        '$mdDialog',
-        'milestone',
-        '$event',
-        'TeacherDataService',
-        function DialogController(
-          $scope,
-          $state,
-          $mdDialog,
-          milestone,
-          $event,
-          TeacherDataService
-        ) {
-          $scope.milestone = milestone;
-          $scope.hideStudentWork = hideStudentWork;
-          $scope.event = $event;
-          $scope.close = function () {
-            $scope.saveMilestoneClosedEvent();
-            $mdDialog.hide();
-          };
-          $scope.edit = function () {
-            $mdDialog.hide({
-              milestone: $scope.milestone,
-              action: 'edit',
-              $event: $event
-            });
-          };
-          $scope.onShowWorkgroup = function (workgroup: any) {
-            $scope.saveMilestoneClosedEvent();
-            $mdDialog.hide();
-            TeacherDataService.setCurrentWorkgroup(workgroup);
-            $state.go('root.nodeProgress');
-          };
-          $scope.onVisitNodeGrading = function () {
-            $mdDialog.hide();
-          };
-          $scope.saveMilestoneOpenedEvent = function () {
-            $scope.saveMilestoneEvent('MilestoneOpened');
-          };
-          $scope.saveMilestoneClosedEvent = function () {
-            $scope.saveMilestoneEvent('MilestoneClosed');
-          };
-          $scope.saveMilestoneEvent = function (event: any) {
-            const context = 'ClassroomMonitor',
-              nodeId = null,
-              componentId = null,
-              componentType = null,
-              category = 'Navigation',
-              data = { milestoneId: $scope.milestone.id },
-              projectId = null;
-            TeacherDataService.saveEvent(
-              context,
-              nodeId,
-              componentId,
-              componentType,
-              category,
-              event,
-              data,
-              projectId
-            );
-          };
-          $scope.saveMilestoneOpenedEvent();
-        }
-      ]
+      }
     });
   }
 }

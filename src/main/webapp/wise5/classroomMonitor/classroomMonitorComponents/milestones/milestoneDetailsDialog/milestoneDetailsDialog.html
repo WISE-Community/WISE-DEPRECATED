@@ -1,0 +1,21 @@
+<md-dialog class="dialog--wider" aria-label="{{ 'MILESTONE_DETAILS_TITLE' | translate : { name: $ctrl.milestone.name } }}">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>{{ 'MILESTONE_DETAILS_TITLE' | translate : { name: $ctrl.milestone.name } }}</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="gray-lighter-bg md-dialog-content">
+    <milestone-details milestone="$ctrl.milestone"
+                       hide-student-work="$ctrl.hideStudentWork"
+                       on-show-workgroup="$ctrl.onShowWorkgroup(value)"
+                       on-visit-node-grading="$ctrl.onVisitNodeGrading()"></milestone-details>
+  </md-dialog-content>
+  <md-dialog-actions layout="row" layout-align="start center">
+    <span flex></span>
+    <md-button class="md-primary"
+               ng-click="$ctrl.close()"
+               aria-label="{{ ::'CLOSE' | translate }}">
+      {{ ::'CLOSE' | translate }}
+    </md-button>
+  </md-dialog-actions>
+</md-dialog>
