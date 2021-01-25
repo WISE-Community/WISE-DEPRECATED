@@ -48,6 +48,10 @@ const aggregateAutoScoresSample = {
 
 const possibleScoresKi = [1, 2, 3, 4, 5];
 
+const sampleAggregateData = {
+  counts: createScoreCounts([10, 20, 30, 40, 50])
+};
+
 const reportSettingsCustomScoreValuesSample = {
   customScoreValues: {
     ki: [1, 2, 3, 4]
@@ -964,205 +968,39 @@ function isPercentOfScoresNotEqualTo() {
 
 function getComparatorSum() {
   describe('getComparatorSum()', () => {
-    getGreaterThanSum();
-    getGreaterThanOrEqualToSum();
-    getLessThanSum();
-    getEqualToSum();
-    getNotEqualToSum();
+    getComparatorSum_greaterThan0_ReturnSumAll();
+    getComparatorSum_greaterThan3_ReturnSumPartial();
+    getComparatorSum_greaterThan5_Return0();
   });
 }
 
-function getGreaterThanSum() {
-  const aggregateData = {
-    counts: createScoreCounts([10, 20, 30, 40, 50])
-  };
-  it('should get greater than sum with score 1', () => {
-    const satisfyCriterion = { value: 1 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThan
-      )
-    ).toEqual(140);
-  });
-  it('should get greater than sum with score 2', () => {
-    const satisfyCriterion = { value: 2 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThan
-      )
-    ).toEqual(120);
-  });
-  it('should get greater than sum with score 3', () => {
-    const satisfyCriterion = { value: 3 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThan
-      )
-    ).toEqual(90);
-  });
-  it('should get greater than sum with score 4', () => {
-    const satisfyCriterion = { value: 4 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThan
-      )
-    ).toEqual(50);
-  });
-}
-
-function getGreaterThanOrEqualToSum() {
-  const aggregateData = {
-    counts: createScoreCounts([10, 20, 30, 40, 50])
-  };
-  it('should get greater than or equal to sum with score 1', () => {
-    const satisfyCriterion = { value: 1 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThanEqualTo
-      )
-    ).toEqual(150);
-  });
-  it('should get greater than or equal to sum with score 2', () => {
-    const satisfyCriterion = { value: 2 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThanEqualTo
-      )
-    ).toEqual(140);
-  });
-  it('should get greater than or equal to sum with score 3', () => {
-    const satisfyCriterion = { value: 3 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThanEqualTo
-      )
-    ).toEqual(120);
-  });
-  it('should get greater than or equal to sum with score 4', () => {
-    const satisfyCriterion = { value: 4 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThanEqualTo
-      )
-    ).toEqual(90);
-  });
-  it('should get greater than or equal to sum with score 5', () => {
-    const satisfyCriterion = { value: 5 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.greaterThanEqualTo
-      )
-    ).toEqual(50);
-  });
-}
-
-function getLessThanSum() {
-  const aggregateData = {
-    counts: createScoreCounts([10, 20, 30, 40, 50])
-  };
-  it('should get less than sum with score 2', () => {
-    const satisfyCriterion = { value: 2 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.lessThan
-      )
-    ).toEqual(10);
-  });
-  it('should get less than sum with score 3', () => {
-    const satisfyCriterion = { value: 3 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.lessThan
-      )
-    ).toEqual(30);
-  });
-  it('should get less than sum with score 4', () => {
-    const satisfyCriterion = { value: 4 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.lessThan
-      )
-    ).toEqual(60);
-  });
-  it('should get less than sum with score 5', () => {
-    const satisfyCriterion = { value: 5 };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.lessThan
-      )
-    ).toEqual(100);
-  });
-}
-
-function getEqualToSum() {
-  it('should return the sum of scores equal to value', () => {
-    const satisfyCriterion = { value: 3 };
-    const aggregateData = {
-      counts: createScoreCounts([10, 20, 30, 40, 50])
-    };
-    expect(
-      service.getComparatorSum(
-        satisfyCriterion,
-        aggregateData,
-        possibleScoresKi,
-        utilService.equalTo
-      )
-    ).toEqual(30);
-  });
-}
-
-function getNotEqualToSum() {
-  const aggregateData = {
-    counts: { 1: 2, 2: 0, 3: 1, 4: 0, 5: 0 },
-    scoreCount: 3
-  };
-  it('should return the sum of scores not equal to value', () => {
-    const result = service.getComparatorSum(
-      satisfyCriterionSample,
-      aggregateData,
+function expectComparatorResult(satisfyCriterionValue: number, expectedResult: number) {
+  const satisfyCriterion = { value: satisfyCriterionValue };
+  expect(
+    service.getComparatorSum(
+      satisfyCriterion,
+      sampleAggregateData,
       possibleScoresKi,
-      utilService.notEqualTo
-    );
-    expect(result).toBe(2);
+      utilService.greaterThan
+    )
+  ).toEqual(expectedResult);
+}
+
+function getComparatorSum_greaterThan0_ReturnSumAll() {
+  it('should get greater than sum with score 0', () => {
+    expectComparatorResult(0, 150);
+  });
+}
+
+function getComparatorSum_greaterThan3_ReturnSumPartial() {
+  it('should get greater than sum with score 3', () => {
+    expectComparatorResult(3, 90);
+  });
+}
+
+function getComparatorSum_greaterThan5_Return0() {
+  it('should get greater than sum with score 5', () => {
+    expectComparatorResult(5, 0);
   });
 }
 
