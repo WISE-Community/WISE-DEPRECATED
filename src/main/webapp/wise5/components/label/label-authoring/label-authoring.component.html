@@ -99,7 +99,7 @@
     <span i18n class="starter-labels-button-label">Starter Labels</span>
     <button mat-raised-button
         color="primary"
-        (click)="addLabelClicked()"
+        (click)="addLabel()"
         matTooltip="Add Starter Label"
         matTooltipPosition="above"
         i18n-matTooltip
@@ -199,7 +199,7 @@
       <span fxFlex></span>
       <button mat-raised-button
           color="primary"
-          (click)="deleteLabelClicked(labelIndex, label)"
+          (click)="deleteLabel(labelIndex, label)"
           matTooltip="Delete Label"
           matTooltipPosition="above"
           i18n-matTooltip

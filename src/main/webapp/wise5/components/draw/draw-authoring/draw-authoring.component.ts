@@ -176,16 +176,6 @@ export class DrawAuthoring extends ComponentAuthoring {
     this.componentChanged();
   }
 
-  chooseBackgroundImage(): void {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'background'
-    };
-    this.openAssetChooser(params);
-  }
-
   chooseStampImage(stampIndex: number): void {
     const params = {
       isPopup: true,

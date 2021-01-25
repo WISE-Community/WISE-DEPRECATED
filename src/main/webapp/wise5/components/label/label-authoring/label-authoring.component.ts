@@ -59,7 +59,7 @@ export class LabelAuthoring extends ComponentAuthoring {
     this.textInputChangeSubscription.unsubscribe();
   }
 
-  addLabelClicked(): void {
+  addLabel(): void {
     const newLabel = {
       text: $localize`Enter text here`,
       color: 'blue',
@@ -74,21 +74,11 @@ export class LabelAuthoring extends ComponentAuthoring {
     this.componentChanged();
   }
 
-  deleteLabelClicked(index: number, label: any): void {
-    if (confirm($localize`Are you sure you want to delete this label?\n\n${label.textString}`)) {
+  deleteLabel(index: number, label: any): void {
+    if (confirm($localize`Are you sure you want to delete this label?\n\n${label.text}`)) {
       this.authoringComponentContent.labels.splice(index, 1);
       this.componentChanged();
     }
-  }
-
-  chooseBackgroundImage(): void {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'background'
-    };
-    this.openAssetChooser(params);
   }
 
   assetSelected({ nodeId, componentId, assetItem, target }): void {
