@@ -6025,6 +6025,10 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
@@ -6045,6 +6049,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
@@ -6104,6 +6112,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">228</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
@@ -6188,6 +6200,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">87</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6317,6 +6333,14 @@
           <context context-type="linenumber">38</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
@@ -6377,6 +6401,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">195</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="9fae747b3706d7f4d6b694ae273d7df2799a732c">
@@ -6613,6 +6641,10 @@
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">277</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a5a5b66acab96c55cf12967a05d09f0ad6524482">
         <source>Delete Starter Drawing</source>
@@ -6689,6 +6721,196 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-width/edit-component-width.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b8c5c01ab5965f003ba27c1aad429045431ba260">
+        <source>Background Image</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="33fa790e0ddac9013da2c3c2016b0c015fc20e6c">
+        <source>Canvas Width (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="579bd990c53c37a00d6f2be19b772c2bd901b5eb">
+        <source>Canvas Height (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="19858049294089faa3ac7a89cd9fd8cb7c0cb084">
+        <source>Point Radius Size (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0bd1b7ca428a0c47d189e1f26194062b13a0aa6c">
+        <source>Font Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="121f675f133037351ec1ab755f28255087d9a8d0">
+        <source>Label Max Character Width</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a810bf354768354951108e32fa7e876345690b41">
+        <source> Can Student Create Labels </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ba37ce872dd59293b716f4aab9ffa2dcacef8720">
+        <source> Enable Dots </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f89b35f27f0d1b5e3a9d45a5440a7646af2499b9">
+        <source> Allow Student to Upload Image for Background </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="720864f262b53e2fff90515031217f60a6f6f6fc">
+        <source>Starter Labels</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c731b40da1d127154343d68fc55d26306861ac21">
+        <source>Add Starter Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a11ec4e640f241329943237d2a3cceaa4823658e">
+        <source>add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="576fe3dc92e73a8a329cf2fbd1ec8557b37446e1">
+        <source> There are no starter labels. Click the "Add Label" button to add a starter label. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="8ba143716c2da6e4120c0c1a804f0bdd9a7e5f5b">
+        <source>Text</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="8cf83753f4aa4dcef3ace7c49f8501c15d2951d2">
+        <source>Enter Label Text Here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5040677be611ec050369ecb2b9c1501219b9a5d1">
+        <source>View Colors</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e534bce868110db32f1c6d91a123548048dc66c1">
+        <source>Color Palette</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b2170964421e8fb291a89d020602cc92cb4eaf56">
+        <source> Can Student Edit Label </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5005a394c03499dd6211c362e47d7d1c6987a020">
+        <source> Can Student Delete Label </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d70bab20ade1a98b907f11f54c14a2c9b9012605">
+        <source>Point Location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="eb652ec6e5b2ef867985722c158224053cca15ab">
+        <source>X</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5f735468df8e1a39a74409adff2c9a9a5f29ead8">
+        <source>Y</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="054b7124def3fc0eacfb779c0d98a6dc4dec2ae3">
+        <source>Text Location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b5b4ee55539c3229b8eb1f201029aeffcbbd0841">
+        <source>Delete Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f1e5600c2fa5270b62ebe32c80557986dd7e1fc0">
+        <source>Save Starter Labels</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ce8236188975ede0677402fb75456a3db8499613">
+        <source>Delete Starter Labels</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e599864c0a890e5dfad60da9e9ed9f53ca9893bb">
