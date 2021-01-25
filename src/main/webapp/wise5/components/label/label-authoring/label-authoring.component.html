@@ -1,0 +1,236 @@
+<mat-form-field class="prompt">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      placeholder="Enter Prompt Here"
+      i18n-placeholder
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<div>
+  <mat-form-field class="background-image input">
+    <mat-label i18n>Background Image</mat-label>
+    <input matInput
+        [(ngModel)]="authoringComponentContent.backgroundImage"
+        (ngModelChange)="textInputChange.next($event)"/>
+  </mat-form-field>
+  <button mat-raised-button
+      color="primary"
+      (click)="chooseBackgroundImage()"
+      matTooltip="Choose an Image"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Image"
+      i18n-aria-label>
+    <mat-icon>insert_photo</mat-icon>
+  </button>
+</div>
+<div>
+  <mat-form-field class="input">
+    <mat-label i18n>Canvas Width (px)</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.width"
+        (ngModelChange)="numberInputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label i18n>Canvas Height (px)</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.height"
+        (ngModelChange)="numberInputChange.next($event)"/>
+  </mat-form-field>
+</div>
+<div>
+  <mat-form-field class="input">
+    <mat-label i18n>Point Radius Size (px)</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.pointSize"
+        (ngModelChange)="numberInputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label i18n>Font Size</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.fontSize"
+        (ngModelChange)="numberInputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="input">
+    <mat-label i18n>Label Max Character Width</mat-label>
+    <input matInput
+        type="number"
+        [(ngModel)]="authoringComponentContent.labelWidth"
+        (ngModelChange)="numberInputChange.next($event)"/>
+  </mat-form-field>
+</div>
+<div>
+  <div class="checkbox">
+    <mat-checkbox
+        color="primary"
+        [(ngModel)]="authoringComponentContent.canCreateLabels"
+        (change)="componentChanged()"
+        i18n>
+      Can Student Create Labels
+    </mat-checkbox>
+  </div>
+  <div class="checkbox">
+    <mat-checkbox
+        color="primary"
+        [(ngModel)]="authoringComponentContent.enableCircles"
+        (ngModelChange)="componentChanged()"
+        i18n>
+      Enable Dots
+    </mat-checkbox>
+  </div>
+  <div class="checkbox">
+    <mat-checkbox
+        color="primary"
+        [(ngModel)]="authoringComponentContent.enableStudentUploadBackground"
+        (ngModelChange)="componentChanged()"
+        i18n>
+      Allow Student to Upload Image for Background
+    </mat-checkbox>
+  </div>
+</div>
+<div>
+  <div layout="row" class="starter-labels-button-container">
+    <span i18n class="starter-labels-button-label">Starter Labels</span>
+    <button mat-raised-button
+        color="primary"
+        (click)="addLabel()"
+        matTooltip="Add Starter Label"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="add"
+        i18n-aria-label>
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div *ngIf="authoringComponentContent.labels == null || authoringComponentContent.labels.length === 0"
+      class="info-block"
+      i18n>
+    There are no starter labels. Click the "Add Label" button to add a starter label.
+  </div>
+  <div *ngFor="let label of authoringComponentContent.labels; index as labelIndex"
+      class="starter-label-container">
+    <div>
+      <mat-form-field class="input label-input">
+        <mat-label i18n>Text</mat-label>
+        <input matInput
+            [(ngModel)]="label.text"
+            (ngModelChange)="textInputChange.next($event)"
+            placeholder="Enter Label Text Here"
+            i18n-placeholder/>
+      </mat-form-field>
+      <mat-form-field class="input color-input">
+        <mat-label i18n>Color</mat-label>
+        <input matInput
+            [(ngModel)]="label.color"
+            (ngModelChange)="textInputChange.next($event)"
+            ng-model-options="{ debounce: 1000 }"/>
+      </mat-form-field>
+      <button mat-raised-button
+          color="primary"
+          (click)="openColorViewer()"
+          matTooltip="View Colors"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Color Palette"
+          i18n-aria-label>
+        <mat-icon>palette</mat-icon>
+      </button>
+    </div>
+    <div>
+      <div class="checkbox">
+      <mat-checkbox
+          color="primary"
+          [(ngModel)]="label.canEdit"
+          (ngModelChange)="componentChanged()"
+          i18n>
+        Can Student Edit Label
+      </mat-checkbox>
+      </div>
+      <div class="checkbox">
+      <mat-checkbox
+          color="primary"
+          [(ngModel)]="label.canDelete"
+          (ngModelChange)="componentChanged()"
+          i18n>
+        Can Student Delete Label
+      </mat-checkbox>
+      </div>
+    </div>
+    <div *ngIf="authoringComponentContent.enableCircles"
+        fxLayout="row wrap" fxLayoutAlign="start center">
+      <span class="coordinate-location-label" i18n>Point Location</span>
+      <mat-form-field class="input coordinate-input">
+        <mat-label i18n>X</mat-label>
+        <input matInput
+            type="number"
+            [(ngModel)]="label.pointX"
+            (ngModelChange)="numberInputChange.next($event)"/>
+      </mat-form-field>
+      <mat-form-field class="input coordinate-input">
+        <mat-label i18n>Y</mat-label>
+        <input matInput
+            type="number"
+            [(ngModel)]="label.pointY"
+            (ngModelChange)="numberInputChange.next($event)"/>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="start center">
+      <span class="coordinate-location-label" i18n>Text Location</span>
+      <mat-form-field class="input coordinate-input">
+        <mat-label i18n>X</mat-label>
+        <input matInput
+            type="number"
+            [(ngModel)]="label.textX"
+            (ngModelChange)="numberInputChange.next($event)"/>
+      </mat-form-field>
+      <mat-form-field class="input coordinate-input">
+        <mat-label i18n>Y</mat-label>
+        <input matInput
+            type="number"
+            [(ngModel)]="label.textY"
+            (ngModelChange)="numberInputChange.next($event)"/>
+      </mat-form-field>
+      <span fxFlex></span>
+      <button mat-raised-button
+          color="primary"
+          (click)="deleteLabel(labelIndex, label)"
+          matTooltip="Delete Label"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Delete"
+          i18n-aria-label>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="starter-labels-buttons-container">
+  <button mat-raised-button
+      color="primary"
+      class="starter-labels-button"
+      (click)="saveStarterLabels()"
+      matTooltip="Save Starter Labels"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Save"
+      i18n-aria-label>
+    <mat-icon>create</mat-icon>
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="starter-labels-button"
+      (click)="deleteStarterLabels()"
+      matTooltip="Delete Starter Labels"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Delete"
+      i18n-aria-label>
+    <mat-icon>delete_sweep</mat-icon>
+  </button>
+</div>

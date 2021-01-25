@@ -51,6 +51,7 @@ import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoic
 import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component';
 import { DrawAuthoring } from '../../../wise5/components/draw/draw-authoring/draw-authoring.component';
 import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/match-authoring.component';
+import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
     HtmlAuthoring,
+    LabelAuthoring,
     ManageStudentsComponent,
     MatchAuthoring,
     MilestonesComponent,
