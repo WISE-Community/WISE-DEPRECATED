@@ -62,6 +62,11 @@ export abstract class ComponentAuthoring {
     );
   }
 
+  ngOnDestroy() {
+    this.componentChangedSubscription.unsubscribe();
+    this.starterStateResponseSubscription.unsubscribe();
+  }
+
   promptChanged(prompt: string): void {
     this.promptChange.next(prompt);
   }
