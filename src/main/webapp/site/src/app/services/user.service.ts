@@ -12,13 +12,14 @@ import { Student } from '../domain/student';
 export class UserService {
   private userUrl = '/api/user/info';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private checkGoogleUserExistsUrl = '/api/user/check-google-user-exists';
-  private checkGoogleUserMatchesUrl = '/api/user/check-google-user-matches';
-  private googleUserUrl = '/api/user/google-user';
+  private checkGoogleUserExistsUrl = '/api/google-user/check-user-exists';
+  private checkGoogleUserMatchesUrl = '/api/google-user/check-user-matches';
+  private googleUserUrl = '/api/google-user/get-user';
   private checkAuthenticationUrl = '/api/user/check-authentication';
   private changePasswordUrl = '/api/user/password';
   private languagesUrl = '/api/user/languages';
   private contactUrl = '/api/contact';
+  private unlinkGoogleAccountUrl = '/api/google-user/unlink-account';
   isAuthenticated = false;
   isRecaptchaRequired = false;
   redirectUrl: string; // redirect here after logging in
@@ -124,6 +125,17 @@ export class UserService {
     params = params.set('googleUserId', googleUserId);
     params = params.set('userId', userId);
     return this.http.get<User>(this.checkGoogleUserMatchesUrl, { params: params });
+  }
+
+  unlinkGoogleUser(newPassword: string) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('newPassword', newPassword);
+    return this.http
+      .post<any>(this.unlinkGoogleAccountUrl, body, { headers: headers })
+      .subscribe((user) => {
+        this.user$.next(user);
+      });
   }
 
   getUserByGoogleId(googleUserId: string) {

@@ -109,7 +109,9 @@
       </mat-form-field>
     </p>
   </div>
-  <div>
+  <div fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="8px">
     <button mat-raised-button
             color="primary"
             type="submit"
@@ -119,5 +121,15 @@
       <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
       <ng-container i18n>Save Changes</ng-container>
     </button>
+    <ng-container *ngIf="isGoogleUser">
+      <div i18n>This profile is linked to a Google account.</div>
+      <button mat-raised-button
+          type="button"
+          id="unlinkGoogleAccount"
+          (click)="unlinkGoogleAccount()">
+        <mat-icon>link_off</mat-icon>
+        <ng-container i18n>Unlink Google Account</ng-container>
+      </button>
+    </ng-container>
   </div>
 </form>

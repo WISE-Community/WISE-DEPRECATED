@@ -1,0 +1,17 @@
+<h2 class="mat-dialog-title" i18n>Unlink Google Account</h2>
+<mat-dialog-content>
+  <div class="info-block">
+    <p class="mat-subheading-2 accent-1" i18n>
+      If you remove the link to your Google account, you will be asked to create a WISE password. You will then need to sign in to WISE using your username and password in the future.
+    </p>
+    <p class='info-note' i18n>Note: You will no longer be able to sign in to this WISE account using Google. Do you want to continue?</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
+  <button mat-button mat-dialog-close i18n>Cancel</button>
+  <button mat-flat-button
+          color="primary"
+          (click)="continue()">
+    <ng-container i18n>Continue</ng-container>
+  </button>
+</mat-dialog-actions>
