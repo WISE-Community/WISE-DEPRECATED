@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -141,5 +141,9 @@ export class EditProfileComponent {
     } else {
       this.snackBar.open($localize`An error occurred. Please try again.`);
     }
+  }
+
+  unlinkGoogleAccount() {
+    this.dialog.open(UnlinkGoogleAccountConfirmComponent);
   }
 }
