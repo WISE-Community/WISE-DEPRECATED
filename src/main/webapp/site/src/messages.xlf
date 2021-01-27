@@ -6040,6 +6040,10 @@
           <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
         <source>Enter Prompt Here</source>
@@ -6066,6 +6070,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
           <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="818444ddcd112e756ab725357dcfb238b9257324">
@@ -6355,6 +6363,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">124</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e3b469b69eef004764c51b7a8b3efa761501ab73">
@@ -7287,6 +7303,113 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/rubric/rubric-authoring.component.html</context>
           <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b169576ab898458aa823e09c1e7f3397f8f011a0">
+        <source>Columns</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="79765b4b2ed87b05e0fd5d6937cec32d1995645f">
+        <source>Rows</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="aa22ffb76fc0555efcd54b896bff75a3e469982e">
+        <source>Global Cell Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="630090c98b3bf8c12d948c30ea150a25bc861fe9">
+        <source>Insert Column Before</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9634f970a787b967a6da5d3edcd6d6530012278c">
+        <source>Delete Column</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="97537cb70f46603f1ae244ad748fa2622fb5bf0b">
+        <source>Insert Column After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="897363afbaacb7374bb5e259129b76687b431671">
+        <source>Insert Row Before</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2ab75889a800e0e0fd14d0d63b8a003ee69519c6">
+        <source>Delete Row</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="75e10460c25b4a5f95b9d8077f0cb9b8968b47ce">
+        <source>Insert Row After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="13968818aa5f7771fe043f7d614f21c66b21e21a">
+        <source> Editable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5943b22e7e12f461de18c831b7cf94ddf4baf11a">
+        <source>Column Cell Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="8d3659d1c474ee37dde6c775445b585af3b79b56">
+        <source> Make All Cells Editable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="964c339de395a09a2ea31889d1f3b0e89ffd9107">
+        <source> Make All Cells Uneditable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">
