@@ -6025,6 +6025,10 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
@@ -6049,6 +6053,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
@@ -6651,6 +6659,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">285</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1037affb09c3a77f83838b47e805b78b82314e6c">
+        <source> Students can upload and use images in their posts </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4b10143a37c7361d1cc9c3ffc72e792e99ffebda">
+        <source> Students must create a post before viewing classmates' posts </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
