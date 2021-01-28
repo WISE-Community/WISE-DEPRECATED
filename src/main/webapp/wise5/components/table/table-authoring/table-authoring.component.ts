@@ -104,7 +104,7 @@ export class TableAuthoring extends ComponentAuthoring {
   isRowEmpty(rowIndex: number): boolean {
     const tableData = this.authoringComponentContent.tableData;
     for (const cell of tableData[rowIndex]) {
-      if (cell.text != null && cell.text != '') {
+      if (!this.isEmpty(cell.text)) {
         return false;
       }
     }
@@ -142,11 +142,15 @@ export class TableAuthoring extends ComponentAuthoring {
   isColumnEmpty(columnIndex: number): boolean {
     for (const row of this.authoringComponentContent.tableData) {
       const cell = row[columnIndex];
-      if (cell.text != null && cell.text != '') {
+      if (!this.isEmpty(cell.text)) {
         return false;
       }
     }
     return true;
+  }
+
+  isEmpty(txt: string): boolean {
+    return txt == null || txt == '';
   }
 
   tableSizeChanged(): void {
@@ -301,11 +305,8 @@ export class TableAuthoring extends ComponentAuthoring {
   }
 
   setAllCellsIsEditable(isEditable: boolean): void {
-    const tableData = this.authoringComponentContent.tableData;
-    for (let r = 0; r < tableData.length; r++) {
-      const row = tableData[r];
-      for (let c = 0; c < row.length; c++) {
-        const cell = row[c];
+    for (const row of this.authoringComponentContent.tableData) {
+      for (const cell of row) {
         cell.editable = isEditable;
       }
     }
