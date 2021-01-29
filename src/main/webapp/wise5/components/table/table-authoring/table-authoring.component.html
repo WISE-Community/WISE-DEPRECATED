@@ -1,0 +1,181 @@
+<mat-form-field class="prompt">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      placeholder="Enter Prompt Here"
+      i18n-placeholder
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<div>
+  <mat-form-field class="size-input">
+    <mat-label i18n>Columns</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.numColumns"
+        (ngModelChange)="numColumnsChange.next($event)">
+  </mat-form-field>
+  <mat-form-field class="size-input">
+    <mat-label i18n>Rows</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.numRows"
+        (ngModelChange)="numRowsChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="size-input">
+    <mat-label i18n>Global Cell Size</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.globalCellSize"
+        (ngModelChange)="globalCellSizeChange.next($event)"/>
+  </mat-form-field>
+</div>
+<table class="table">
+  <tr>
+    <td></td>
+    <td *ngFor="let x of [].constructor(getNumColumnsInTableData()); index as columnIndex; last as isLast"
+        class="outer-cell-container">
+      <div fxLayout="row wrap" fxLayoutAlign="space-between center">
+        <button mat-raised-button
+            color="primary"
+            class="column-buttons"
+            (click)="insertColumn(columnIndex)"
+            matTooltip="Insert Column Before"
+            matTooltipPosition="above"
+            i18n-matTooltip
+            aria-label="Insert Column Before"
+            i18n-aria-label>
+          <mat-icon class="rotate90">loupe</mat-icon>
+        </button>
+        <button mat-raised-button
+            color="primary"
+            class="column-buttons"
+            (click)="deleteColumn(columnIndex)"
+            matTooltip="Delete Column"
+            matTooltipPosition="above"
+            i18n-matTooltip
+            aria-label="Delete"
+            i18n-aria-label>
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-raised-button
+            color="primary"
+            class="column-buttons"
+            *ngIf="isLast"
+            (click)="insertColumn(columnIndex + 1)"
+            matTooltip="Insert Column After"
+            matTooltipPosition="above"
+            i18n-matTooltip
+            aria-label="Insert Column After"
+            i18n-aria-label>
+          <mat-icon>loupe</mat-icon>
+        </button>
+        <div *ngIf="!isLast" class="spacer">
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr *ngFor="let row of authoringComponentContent.tableData; index as rowIndex; last as isLast">
+    <td class="outer-cell-container" fxLayout="column" fxLayoutAlign="center center">
+      <button mat-raised-button
+          color="primary"
+          class="row-buttons"
+          (click)="insertRow(rowIndex)"
+          matTooltip="Insert Row Before"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Insert Row Before"
+          i18n-aria-label>
+        <mat-icon class="rotate270">loupe</mat-icon>
+      </button>
+      <button mat-raised-button
+          color="primary"
+          class="row-buttons"
+          (click)="deleteRow(rowIndex)"
+          matTooltip="Delete Row"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Delete"
+          i18n-aria-label>
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-raised-button
+          color="primary"
+          class="row-buttons"
+          *ngIf="isLast"
+          (click)="insertRow(rowIndex + 1)"
+          matTooltip="Insert Row After"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Insert Row After"
+          i18n-aria-label>
+        <mat-icon>loupe</mat-icon>
+      </button>
+    </td>
+    <td *ngFor="let cell of row"
+        class="inner-cell-container">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field class="cell-text">
+          <input matInput
+              [(ngModel)]="cell.text"
+              (ngModelChange)="inputChange.next($event)"
+              ng-model-options="{ debounce: 1000 }"
+              aria-label="Text"/>
+        </mat-form-field>
+        <mat-checkbox
+            color="primary"
+            [(ngModel)]="cell.editable"
+            (ngModelChange)="componentChanged()"
+            i18n>
+          Editable
+        </mat-checkbox>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td class="blank-row-cell"></td>
+    <td *ngFor="let x of [].constructor(getNumColumnsInTableData())"
+        class="blank-row-cell">
+    </td>
+  </tr>
+  <tr>
+    <td class="outer-cell-container">
+      <div fxLayoutAlign="center center">
+        Optional
+      </div>
+    </td>
+    <td *ngFor="let x of [].constructor(getNumColumnsInTableData()); index as cellIndex"
+        class="inner-cell-container">
+      <div fxLayoutAlign="center center">
+        <mat-form-field>
+          <mat-label i18n>Column Cell Size</mat-label>
+          <input matInput
+              type="number"
+              min="1"
+              [(ngModel)]="columnCellSizes[cellIndex]"
+              (ngModelChange)="columnSizeChanged(cellIndex)"/>
+        </mat-form-field>
+      </div>
+    </td>
+  </tr>
+</table>
+<div fxLayout="row">
+  <button mat-raised-button
+      color="primary"
+      class="make-all-cells-editable-buttons"
+      (click)="setAllCellsEditable()"
+      i18n>
+    Make All Cells Editable
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="make-all-cells-editable-buttons"
+      (click)="setAllCellsUneditable()"
+      i18n>
+    Make All Cells Uneditable
+  </button>
+</div>

@@ -13,6 +13,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { User } from '../../../domain/user';
 import { configureTestSuite } from 'ng-bullet';
+import { MatDialogModule } from '@angular/material/dialog';
 
 export class MockUserService {
   user: User;
@@ -89,6 +90,7 @@ describe('EditProfileComponent', () => {
       imports: [
         BrowserAnimationsModule,
         ReactiveFormsModule,
+        MatDialogModule,
         MatInputModule,
         MatSelectModule,
         MatSnackBarModule

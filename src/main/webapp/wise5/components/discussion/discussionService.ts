@@ -39,7 +39,7 @@ export class DiscussionService extends ComponentService {
   createComponent() {
     const component: any = super.createComponent();
     component.type = 'Discussion';
-    component.prompt = this.getTranslation('ENTER_PROMPT_HERE');
+    component.prompt = '';
     component.isStudentAttachmentEnabled = true;
     component.gateClassmateResponses = true;
     return component;

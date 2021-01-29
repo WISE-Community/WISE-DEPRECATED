@@ -62,6 +62,11 @@ export abstract class ComponentAuthoring {
     );
   }
 
+  ngOnDestroy() {
+    this.componentChangedSubscription.unsubscribe();
+    this.starterStateResponseSubscription.unsubscribe();
+  }
+
   promptChanged(prompt: string): void {
     this.promptChange.next(prompt);
   }
@@ -101,6 +106,16 @@ export abstract class ComponentAuthoring {
       componentId: this.componentId,
       showSubmitButton: show
     });
+  }
+
+  chooseBackgroundImage(): void {
+    const params = {
+      isPopup: true,
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      target: 'background'
+    };
+    this.openAssetChooser(params);
   }
 
   openAssetChooser(params: any): any {

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
@@ -62,6 +63,9 @@ public class UserAPIController {
 
   @Autowired
   protected IMailFacade mailService;
+
+  @Autowired
+  protected MessageSource messageSource;
 
   @Value("${google.clientId:}")
   protected String googleClientId = "";
@@ -187,33 +191,6 @@ public class UserAPIController {
       langs.add(localeAndLang);
     }
     return langs;
-  }
-
-  @GetMapping("/check-google-user-exists")
-  boolean isGoogleIdExist(@RequestParam String googleUserId) {
-    return userService.retrieveUserByGoogleUserId(googleUserId) != null;
-  }
-
-  @GetMapping("/check-google-user-matches")
-  boolean isGoogleIdMatches(@RequestParam String googleUserId, @RequestParam String userId) {
-    User user = userService.retrieveUserByGoogleUserId(googleUserId);
-    return user != null && user.getId().toString().equals(userId);
-  }
-
-  @GetMapping("/google-user")
-  HashMap<String, Object> getUserByGoogleId(@RequestParam String googleUserId) {
-    User user = userService.retrieveUserByGoogleUserId(googleUserId);
-    HashMap<String, Object> response = new HashMap<String, Object>();
-    if (user == null) {
-      response.put("status", "error");
-    } else {
-      response.put("status", "success");
-      response.put("userId", user.getId());
-      response.put("username", user.getUserDetails().getUsername());
-      response.put("firstName", user.getUserDetails().getFirstname());
-      response.put("lastName", user.getUserDetails().getLastname());
-    }
-    return response;
   }
 
   private String getLanguageName(String localeString) {

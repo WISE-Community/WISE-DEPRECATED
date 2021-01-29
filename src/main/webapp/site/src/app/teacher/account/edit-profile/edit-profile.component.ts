@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../services/user.service';
 import { Teacher } from '../../../domain/teacher';
 import { TeacherService } from '../../teacher.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UnlinkGoogleAccountConfirmComponent } from '../../../modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent {
   user: Teacher;
   schoolLevels: any[] = [
     { id: 'ELEMENTARY_SCHOOL', label: $localize`Elementary School` },
@@ -23,6 +26,8 @@ export class EditProfileComponent implements OnInit {
   languages: object[];
   changed: boolean = false;
   isSaving: boolean = false;
+  isGoogleUser: boolean = false;
+  userSubscription: Subscription;
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -41,6 +46,7 @@ export class EditProfileComponent implements OnInit {
     private fb: FormBuilder,
     private teacherService: TeacherService,
     private userService: UserService,
+    public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
     this.user = <Teacher>this.getUser().getValue();
@@ -57,10 +63,6 @@ export class EditProfileComponent implements OnInit {
     this.userService.getLanguages().subscribe((response) => {
       this.languages = <object[]>response;
     });
-
-    this.editProfileFormGroup.valueChanges.subscribe(() => {
-      this.changed = true;
-    });
   }
 
   getUser() {
@@ -71,7 +73,19 @@ export class EditProfileComponent implements OnInit {
     this.editProfileFormGroup.controls[name].setValue(value);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.editProfileFormGroup.valueChanges.subscribe(() => {
+      this.changed = true;
+    });
+
+    this.userSubscription = this.userService.getUser().subscribe((user) => {
+      this.isGoogleUser = user.isGoogleUser;
+    });
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
+  }
 
   saveChanges() {
     this.isSaving = true;
@@ -127,5 +141,11 @@ export class EditProfileComponent implements OnInit {
     } else {
       this.snackBar.open($localize`An error occurred. Please try again.`);
     }
+  }
+
+  unlinkGoogleAccount() {
+    this.dialog.open(UnlinkGoogleAccountConfirmComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
   }
 }

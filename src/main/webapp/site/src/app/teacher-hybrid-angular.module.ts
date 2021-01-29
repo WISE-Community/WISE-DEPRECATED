@@ -51,6 +51,9 @@ import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoic
 import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component';
 import { DrawAuthoring } from '../../../wise5/components/draw/draw-authoring/draw-authoring.component';
 import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/match-authoring.component';
+import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
+import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
+import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +67,7 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
     ComponentSelectComponent,
     ConceptMapAuthoring,
     DrawAuthoring,
+    DiscussionAuthoring,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
     EditComponentMaxScoreComponent,
@@ -72,6 +76,7 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
     HtmlAuthoring,
+    LabelAuthoring,
     ManageStudentsComponent,
     MatchAuthoring,
     MilestonesComponent,
@@ -85,6 +90,7 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
+    TableAuthoring,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     WorkgroupSelectAutocompleteComponent,
