@@ -92,7 +92,7 @@ function createComponent() {
   it('should create a discussion component', () => {
     const component = service.createComponent();
     expect(component.type).toEqual('Discussion');
-    expect(component.prompt).toEqual('Enter prompt here');
+    expect(component.prompt).toEqual('');
     expect(component.isStudentAttachmentEnabled).toEqual(true);
     expect(component.gateClassmateResponses).toEqual(true);
   });

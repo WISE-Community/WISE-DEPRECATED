@@ -1,56 +1,78 @@
 'use strict';
 
-import { Directive } from '@angular/core';
-import { EditComponentController } from '../../authoringTool/components/editComponentController';
+import { Component } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
+import { ComponentAuthoring } from '../../../authoringTool/components/component-authoring.component';
+import { ConfigService } from '../../../services/configService';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
+import { UtilService } from '../../../services/utilService';
+import { ConceptMapService } from '../../conceptMap/conceptMapService';
+import { MatchService } from '../../match/matchService';
+import { MultipleChoiceService } from '../../multipleChoice/multipleChoiceService';
+import { OpenResponseService } from '../../openResponse/openResponseService';
+import { SummaryService } from '../summaryService';
 
-@Directive()
-class SummaryAuthoringController extends EditComponentController {
+@Component({
+  selector: 'summary-authoring.component',
+  templateUrl: 'summary-authoring.component.html',
+  styleUrls: ['summary-authoring.component.scss']
+})
+export class SummaryAuthoring extends ComponentAuthoring {
   isResponsesOptionAvailable: boolean = false;
   isHighlightCorrectAnswerAvailable: boolean = false;
   isPieChartAllowed: boolean = true;
-
-  static $inject = [
-    '$filter',
-    '$injector',
-    'ConfigService',
-    'NodeService',
-    'NotificationService',
-    'ProjectAssetService',
-    'ProjectService',
-    'SummaryService',
-    'UtilService'
-  ];
+  stepNodesDetails: string[];
+  componentTypeToService: {};
+  inputChange: Subject<string> = new Subject<string>();
+  inputChangeSubscription: Subscription;
 
   constructor(
-    protected $filter,
-    protected $injector,
-    protected ConfigService,
-    protected NodeService,
-    protected NotificationService,
-    protected ProjectAssetService,
-    protected ProjectService,
-    protected SummaryService,
-    protected UtilService
+    private ConceptMapService: ConceptMapService,
+    protected ConfigService: ConfigService,
+    protected NodeService: NodeService,
+    private MatchService: MatchService,
+    private MultipleChoiceService: MultipleChoiceService,
+    private OpenResponseService: OpenResponseService,
+    protected ProjectAssetService: ProjectAssetService,
+    protected ProjectService: TeacherProjectService,
+    private SummaryService: SummaryService,
+    private UtilService: UtilService
   ) {
-    super(
-      $filter,
-      ConfigService,
-      NodeService,
-      NotificationService,
-      ProjectAssetService,
-      ProjectService,
-      UtilService
-    );
+    super(ConfigService, NodeService, ProjectAssetService, ProjectService);
+    this.stepNodesDetails = this.ProjectService.getStepNodesDetailsInOrder();
+    this.initializeComponentTypeToService();
+    this.inputChangeSubscription = this.inputChange
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe(() => {
+        this.componentChanged();
+      });
   }
 
-  $onInit() {
-    super.$onInit();
+  ngOnInit(): void {
+    super.ngOnInit();
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
   }
 
-  summaryNodeIdChanged() {
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.inputChangeSubscription.unsubscribe();
+  }
+
+  initializeComponentTypeToService(): void {
+    this.componentTypeToService = {
+      ConceptMap: this.ConceptMapService,
+      Match: this.MatchService,
+      MultipleChoice: this.MultipleChoiceService,
+      OpenResponse: this.OpenResponseService
+    };
+  }
+
+  summaryNodeIdChanged(): void {
     this.authoringComponentContent.summaryComponentId = null;
     const components = this.getComponentsByNodeId(this.authoringComponentContent.summaryNodeId);
     const allowedComponents = [];
@@ -66,29 +88,29 @@ class SummaryAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  isComponentTypeAllowed(componentType: string) {
+  isComponentTypeAllowed(componentType: string): boolean {
     return this.SummaryService.isComponentTypeAllowed(componentType);
   }
 
-  summaryComponentIdChanged() {
+  summaryComponentIdChanged(): void {
     this.performUpdatesIfNecessary();
     this.componentChanged();
   }
 
-  studentDataTypeChanged() {
+  studentDataTypeChanged(): void {
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
     this.componentChanged();
   }
 
-  performUpdatesIfNecessary() {
+  performUpdatesIfNecessary(): void {
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateStudentDataTypeIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
   }
 
-  updateStudentDataTypeOptionsIfNecessary() {
+  updateStudentDataTypeOptionsIfNecessary(): void {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
     this.isResponsesOptionAvailable = this.isStudentDataTypeAvailableForComponent(
@@ -98,12 +120,14 @@ class SummaryAuthoringController extends EditComponentController {
     );
   }
 
-  updateStudentDataTypeIfNecessary() {
+  updateStudentDataTypeIfNecessary(): void {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
     const studentDataType = this.authoringComponentContent.studentDataType;
     if (!this.isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType)) {
-      if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'scores')) {
+      if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'responses')) {
+        this.authoringComponentContent.studentDataType = 'responses';
+      } else if (this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'scores')) {
         this.authoringComponentContent.studentDataType = 'scores';
       } else {
         this.authoringComponentContent.studentDataType = null;
@@ -111,7 +135,7 @@ class SummaryAuthoringController extends EditComponentController {
     }
   }
 
-  updateHasCorrectAnswerIfNecessary() {
+  updateHasCorrectAnswerIfNecessary(): void {
     this.isHighlightCorrectAnswerAvailable =
       this.componentHasCorrectAnswer() &&
       this.authoringComponentContent.studentDataType === 'responses';
@@ -120,7 +144,7 @@ class SummaryAuthoringController extends EditComponentController {
     }
   }
 
-  updateChartTypeOptionsIfNecessary() {
+  updateChartTypeOptionsIfNecessary(): void {
     this.isPieChartAllowed =
       this.authoringComponentContent.studentDataType === 'scores' ||
       !this.componentAllowsMultipleResponses();
@@ -129,7 +153,11 @@ class SummaryAuthoringController extends EditComponentController {
     }
   }
 
-  isStudentDataTypeAvailableForComponent(nodeId, componentId, studentDataType) {
+  isStudentDataTypeAvailableForComponent(
+    nodeId: string,
+    componentId: string,
+    studentDataType: string
+  ): boolean {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null) {
       if (studentDataType === 'scores') {
@@ -141,24 +169,34 @@ class SummaryAuthoringController extends EditComponentController {
     return false;
   }
 
-  showPromptFromOtherComponentChanged() {
+  showPromptFromOtherComponentChanged(): void {
     this.componentChanged();
   }
 
-  componentHasCorrectAnswer() {
+  componentHasCorrectAnswer(): boolean {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
     if (nodeId != null && componentId != null) {
       const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
       if (component != null) {
-        const componentService = this.$injector.get(component.type + 'Service');
+        const componentService = this.getComponentService(component.type);
         return componentService.componentHasCorrectAnswer(component);
       }
     }
     return false;
   }
 
-  componentAllowsMultipleResponses() {
+  getComponentService(componentType: string): any {
+    const service = this.componentTypeToService[componentType];
+    if (service == null) {
+      return (component: any) => {
+        return false;
+      };
+    } else {
+      return service;
+    }
+  }
+  componentAllowsMultipleResponses(): boolean {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
     if (nodeId != null && componentId != null) {
@@ -170,7 +208,7 @@ class SummaryAuthoringController extends EditComponentController {
     return false;
   }
 
-  addCustomLabelColor() {
+  addCustomLabelColor(): void {
     if (this.authoringComponentContent.customLabelColors == null) {
       this.authoringComponentContent.customLabelColors = [];
     }
@@ -178,47 +216,24 @@ class SummaryAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  deleteCustomLabelColor(index: number) {
-    if (confirm(this.$translate('summary.areYouSureYouWantToDeleteThisCustomLabelColor'))) {
+  deleteCustomLabelColor(index: number): void {
+    if (confirm($localize`Are you sure you want to delete this custom label color?`)) {
       this.authoringComponentContent.customLabelColors.splice(index, 1);
-      this.triggerCustomLabelColorChange();
       this.componentChanged();
     }
   }
 
-  customLabelColorChanged() {
-    this.triggerCustomLabelColorChange();
-    this.componentChanged();
-  }
-
-  moveCustomLabelColorUp(index: number) {
+  moveCustomLabelColorUp(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.customLabelColors, index);
     this.componentChanged();
   }
 
-  moveCustomLabelColorDown(index: number) {
+  moveCustomLabelColorDown(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.customLabelColors, index);
     this.componentChanged();
   }
 
-  triggerCustomLabelColorChange() {
-    /*
-     * AngularJS doesn't detect a change on arrays when an array's content changes. We need to
-     * create a new array using concat() to actually trigger a change so the SummaryDisplay will
-     * update when a custom label color is changed in the authoring view.
-     */
-    this.authoringComponentContent.customLabelColors = this.authoringComponentContent.customLabelColors.concat();
+  getComponentsByNodeId(nodeId: string): any[] {
+    return this.ProjectService.getComponentsByNodeId(nodeId);
   }
 }
-
-const SummaryAuthoring = {
-  bindings: {
-    nodeId: '@',
-    componentId: '@'
-  },
-  controller: SummaryAuthoringController,
-  controllerAs: 'summaryController',
-  templateUrl: 'wise5/components/summary/authoring.html'
-};
-
-export default SummaryAuthoring;

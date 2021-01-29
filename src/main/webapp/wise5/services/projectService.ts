@@ -3233,4 +3233,28 @@ export class ProjectService {
   broadcastSnipImage(args: any) {
     this.snipImageSource.next(args);
   }
+
+  getStepNodesDetailsInOrder(): any[] {
+    const stepNodeDetails: any[] = [];
+    Object.entries(this.idToOrder).forEach(([nodeId, objectWithOrder]: [string, any]) => {
+      if (this.isApplicationNode(nodeId)) {
+        stepNodeDetails.push({
+          nodeId: nodeId,
+          order: objectWithOrder.order,
+          nodePositionAndTitle: this.getNodePositionAndTitleByNodeId(nodeId)
+        });
+      }
+    });
+    return stepNodeDetails.sort(this.sortByOrder);
+  }
+
+  sortByOrder(a: any, b: any): number {
+    if (a.order < b.order) {
+      return -1;
+    } else if (a.order > b.order) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 }

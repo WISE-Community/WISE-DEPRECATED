@@ -1,15 +1,18 @@
 'use strict';
 
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { SummaryService } from './summaryService';
-import SummaryAuthoring from './summaryAuthoring';
 import { EditSummaryAdvancedComponent } from './edit-summary-advanced/edit-summary-advanced.component';
+import { SummaryAuthoring } from './summary-authoring/summary-authoring.component';
 
 const summaryAuthoringComponentModule = angular
   .module('summaryAuthoringComponentModule', ['pascalprecht.translate'])
   .service('SummaryService', downgradeInjectable(SummaryService))
-  .component('summaryAuthoring', SummaryAuthoring)
+  .directive(
+    'summaryAuthoring',
+    downgradeComponent({ component: SummaryAuthoring }) as angular.IDirectiveFactory
+  )
   .component('editSummaryAdvanced', EditSummaryAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',

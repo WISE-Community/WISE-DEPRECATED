@@ -1241,6 +1241,10 @@
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="c04678929731aad2662284b7ce56c5c75b410df5">
         <source>The unit has been successfully added to the following Google Classroom classes:</source>
@@ -6044,6 +6048,10 @@
           <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
         <source>Enter Prompt Here</source>
@@ -6074,6 +6082,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
           <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="818444ddcd112e756ab725357dcfb238b9257324">
@@ -6270,6 +6282,10 @@
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="3a12bd96093f8972cbd9d52a68fb9178aaee4388">
         <source>Move Down</source>
@@ -6304,6 +6320,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="826b25211922a1b46436589233cb6f1a163d89b7">
@@ -6364,6 +6384,14 @@
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">124</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e3b469b69eef004764c51b7a8b3efa761501ab73">
         <source> Show Node Labels </source>
@@ -6413,6 +6441,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
           <context context-type="linenumber">128</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">148</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="9fae747b3706d7f4d6b694ae273d7df2799a732c">
@@ -6609,6 +6641,10 @@
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="029590c3a6ac353df3f0f8a2dfe7272a871656fe">
         <source>above</source>
@@ -6634,6 +6670,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">113</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="bcfc99153c2c0d547f3af6670ddfaae5e6ffb429">
@@ -6665,14 +6705,14 @@
         <source> Students can upload and use images in their posts </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="4b10143a37c7361d1cc9c3ffc72e792e99ffebda">
         <source> Students must create a post before viewing classmates' posts </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
@@ -7309,6 +7349,174 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/rubric/rubric-authoring.component.html</context>
           <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b7476b3f8bc67f93405690b807d8751371cdf7ed">
+        <source> Choose the step and component to show the summary data for: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="041620337eaebda87971d345d05697639dfe78e4">
+        <source>Step</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e78170d2eb79d84d7927b8df23950715263ae478">
+        <source>Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5d2007bc11d50873e2e87582f6c13c80f37b65e5">
+        <source>(This Component)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3d006728779cde004e96bdf2b109867406d32683">
+        <source>Student Data Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a0a2a44bfb782424826e21b4361cf4d693e437da">
+        <source> Responses </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9bd483162147ddefafa38957e88179e48c45e00e">
+        <source> Scores </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6834fa6b43d1ecbdf147c48dd9c4d72f1484571d">
+        <source>Source</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="25bbefddef8e93c7ad74f4bc436d55f253e38f96">
+        <source> Only Self </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="fb9e03e0413c4814ab2301982f5f8d181018f63a">
+        <source> Only Students In Period </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b5feea20d2251b5c6f0ad1add9ab76df9fe68273">
+        <source> Students In All Periods </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f2102c0b996b067ab2a46c7743fe5931fa47f16d">
+        <source>Chart Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a329e4b5f2d94e592dea582612ccedd868fb979f">
+        <source> Bar </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b71b92de2038584a5494ef50396896d5ef514be5">
+        <source> Pie </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="728d28a16684461da6666aa5148c2869c10635ff">
+        <source>Required to View Summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="05463462f9740346ca0d4b76b8b224ac451ada4c">
+        <source> Complete Component </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="542e72ac67ba8c1c00b9445903eda922b05d5946">
+        <source> Submit Work </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="dbf561f1b7892028b28920b369d28e8c960de354">
+        <source> None </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="84125df9a0fb34ce56ec38f53126e5077e8b25f1">
+        <source> Highlight Correct Answer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b14b4fa6fb606d7b5216151ec737f07aa49e7e72">
+        <source> Show Prompt From Source Component </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3c3ffcdd91fa7feea37b52f96ca81b546d4f7813">
+        <source>Custom Label Colors (Optional)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="afc198ee1cec1ef7e33e16bf9f06342a54383cba">
+        <source>Add Custom Label Color</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="8caf178921de01ad9f9452a00711e08cfd3c6ea2">
+        <source> There are no custom label colors. Click the "Add Custom Label Color" button to give a label a specific color. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="863226cffd5b66a6fee9810a9282a5006d6ef576">
+        <source>Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">
