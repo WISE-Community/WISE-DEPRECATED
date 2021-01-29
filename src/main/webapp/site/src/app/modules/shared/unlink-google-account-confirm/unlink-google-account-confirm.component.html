@@ -1,0 +1,16 @@
+<h2 class="mat-dialog-title" fxLayoutAlign="start center" fxLayoutGap="8px">
+  <img class="google-icon" src="assets/img/icons/g-logo.png" i18n-alt alt="Google logo" />
+  <span i18n>Unlink Google Account</span>
+  <span fxFlex></span>
+  <mat-icon color="warn" i18n-aria-label aria-label="Warning">warning</mat-icon>
+</h2>
+<mat-dialog-content>
+  <div class="info-block">
+    <p i18n>To remove the link to your Google account, you will be asked to create a WISE password. In the future, you'll sign in to WISE using your username and password.</p>
+    <p><strong i18n>You will no longer be able to sign in to WISE using Google. Would you like to continue?</strong></p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
+  <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
+  <a mat-button color="warn" (click)="continue()" i18n>Continue</a>
+</mat-dialog-actions>
