@@ -105,31 +105,36 @@
           </mat-option>
         </mat-select>
         <mat-hint i18n>Help us translate WISE! Visit <a href="https://crowdin.com/project/wise" target="_blank">https://crowdin.com/project/wise</a>.</mat-hint>
-        <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')" i18n>Language required</mat-error>
+        <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')" i18n>
+          Language required
+        </mat-error>
       </mat-form-field>
     </p>
   </div>
-  <div fxLayout="row"
-      fxLayoutAlign="start center"
-      fxLayoutGap="8px">
+  <div class="actions"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      fxLayoutAlign="center start"
+      fxLayoutAlign.gt-sm="start center"
+      fxLayoutGap="24px">
     <button mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="!editProfileFormGroup.valid || !changed || isSaving"
-            fxFlex
-            fxFlex.gt-xs="0 0 auto">
+            [disabled]="!editProfileFormGroup.valid || !changed || isSaving">
       <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
       <ng-container i18n>Save Changes</ng-container>
     </button>
-    <ng-container *ngIf="isGoogleUser">
-      <div i18n>This profile is linked to a Google account.</div>
-      <button mat-raised-button
-          type="button"
-          id="unlinkGoogleAccount"
-          (click)="unlinkGoogleAccount()">
-        <mat-icon>link_off</mat-icon>
-        <ng-container i18n>Unlink Google Account</ng-container>
+    <div *ngIf="isGoogleUser" 
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
+        fxLayoutGap="8px">
+      <div fxLayoutAlign="start center" fxLayoutGap="8px">
+        <img class="google-icon" src="assets/img/icons/g-logo.png" i18n-alt alt="Google logo" />
+        <span i18n>This profile is linked to a Google account.</span>
+      </div>
+      <button class="unlink" type="button" mat-raised-button (click)="unlinkGoogleAccount()">
+        <span class="warn" i18n>Unlink Google Account</span>
       </button>
-    </ng-container>
+    </div>
   </div>
 </form>

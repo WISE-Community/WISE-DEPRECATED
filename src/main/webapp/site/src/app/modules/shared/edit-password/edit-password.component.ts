@@ -83,7 +83,9 @@ export class EditPasswordComponent {
   }
 
   unlinkGoogleAccount() {
-    this.dialog.open(UnlinkGoogleAccountConfirmComponent);
+    this.dialog.open(UnlinkGoogleAccountConfirmComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
   }
 
   resetForm() {

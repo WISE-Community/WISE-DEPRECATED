@@ -11,6 +11,8 @@ export class UnlinkGoogleAccountConfirmComponent {
 
   continue() {
     this.dialog.closeAll();
-    this.dialog.open(UnlinkGoogleAccountPasswordComponent);
+    this.dialog.open(UnlinkGoogleAccountPasswordComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
   }
 }

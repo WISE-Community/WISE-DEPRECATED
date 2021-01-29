@@ -236,23 +236,47 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="47c3500e23cf10b4e86b3c495687d5045fd2305c">
-        <source>Unlink Google Account</source>
+      <trans-unit datatype="html" id="692e665f8177ee9150169dca0ff15418616cb3cb">
+        <source>Google logo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
@@ -260,28 +284,55 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">132</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="2f576415d91ffa4e0d7228bcb11d24d0bd39af6d">
-        <source> Success! You have unlinked your Google account from WISE. To sign in to WISE in the future, please use your username and password you just created. </source>
+      <trans-unit datatype="html" id="47c3500e23cf10b4e86b3c495687d5045fd2305c">
+        <source>Unlink Google Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="bf62cb0d6eee6ef512c900e5e3661233d931be38">
-        <source>Your username is: <x equiv-text="{{username}}" id="INTERPOLATION"/></source>
+      <trans-unit datatype="html" id="09031a48e6666b30516536554bd71ec9073bc906">
+        <source>Success! You have unlinked your Google account from WISE. To sign in to WISE in the future, please use your username and the password you just created.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
           <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b3062cd2df40541e781d0e69c02c670cf3c38fa9">
+        <source>Your username is: <x ctype="x-span" equiv-text="&lt;span&gt;" id="START_TAG_SPAN"/><x equiv-text="{{ username }}" id="INTERPOLATION"/><x ctype="x-span" equiv-text="&lt;/span&gt;" id="CLOSE_TAG_SPAN"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="8dd413cee2228118c536f503709329a4d1a395e2">
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
@@ -308,14 +359,14 @@
         <source>Create a WISE password:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="c7014c6360e94b236286b869c3fe0ea9911c0387">
         <source>New Password</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
@@ -326,7 +377,7 @@
         <source>New Password required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
@@ -337,7 +388,7 @@
         <source>Confirm New Password</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
@@ -348,7 +399,7 @@
         <source>Confirm Password required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
@@ -375,7 +426,7 @@
         <source>Passwords do not match</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
@@ -386,11 +437,11 @@
         <source>Cancel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
@@ -445,7 +496,7 @@
         <source>Submit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
@@ -480,18 +531,33 @@
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="dda42349db05eb9d7974af22e6923404d1613fed">
-        <source> If you remove the link to your Google account, you will be asked to create a WISE password. You will then need to sign in to WISE using your username and password in the future. </source>
+      <trans-unit datatype="html" id="a8059e31694578c1b0344a76a345357dd60e8f01">
+        <source>Warning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="3917c36094605496e0f2de91efef9c35dd8b1f9c">
-        <source>Note: You will no longer be able to sign in to this WISE account using Google. Do you want to continue?</source>
+      <trans-unit datatype="html" id="5d9fa1b5819208cfbc678e570f4bd34144bcfe81">
+        <source>To remove the link to your Google account, you will be asked to create a WISE password. In the future, you'll sign in to WISE using your username and password.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f021455ae88703603db9bb34ea44ab9170f37920">
+        <source>You will no longer be able to sign in to WISE using Google. Would you like to continue?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ac10a3d9b59575640797c1a8e6aea642cf5d5e77">
@@ -537,8 +603,8 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="d5a4847fca71b32d9a29901631e8c1f7ab8fd83b">
-        <source>This account was created using Google and doesn't use a WISE password.</source>
+      <trans-unit datatype="html" id="8454739bcb4cf4debfd509a35e466a828ea11363">
+        <source><x ctype="image" equiv-text="&lt;img/&gt;" id="TAG_IMG"/><x ctype="x-span" equiv-text="&lt;span&gt;" id="START_TAG_SPAN"/>This account was created using Google and doesn't use a WISE password.<x ctype="x-span" equiv-text="&lt;/span&gt;" id="CLOSE_TAG_SPAN"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
@@ -3943,13 +4009,6 @@
           <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="a8059e31694578c1b0344a76a345357dd60e8f01">
-        <source>Warning</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="4ad84d4f3bbc9a37b27cd1ff908aea5fa83dccf3">
         <source>If you move a student to a different period, they will lose all of their work.</source>
         <context-group purpose="location">
@@ -4675,33 +4734,6 @@
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="692e665f8177ee9150169dca0ff15418616cb3cb">
-        <source>Google logo</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="49ddce3277c9c81865f8d2278255426cdc9e94f2">
         <source>Sign up with Google</source>
         <context-group purpose="location">
@@ -5383,31 +5415,27 @@
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="afa960379d26eb20fd22e6e10537c1c5ec74c5d1">
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="edb53ba7560c1571d41ff16d93805243e5264d70">
         <source>This profile is linked to a Google account.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2e1aeaf8d183e6846a0463a08c784f472184fcf0">
@@ -5906,6 +5934,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2b2f9f56dbfbfb71056a8da8c94e8011d837766e">
+        <source> Language required </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
