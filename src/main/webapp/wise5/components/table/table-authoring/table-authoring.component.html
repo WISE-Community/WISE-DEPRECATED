@@ -13,6 +13,7 @@
     <mat-label i18n>Columns</mat-label>
     <input matInput
         type="number"
+        min="1"
         [(ngModel)]="authoringComponentContent.numColumns"
         (ngModelChange)="numColumnsChange.next($event)">
   </mat-form-field>
@@ -20,6 +21,7 @@
     <mat-label i18n>Rows</mat-label>
     <input matInput
         type="number"
+        min="1"
         [(ngModel)]="authoringComponentContent.numRows"
         (ngModelChange)="numRowsChange.next($event)"/>
   </mat-form-field>
@@ -27,6 +29,7 @@
     <mat-label i18n>Global Cell Size</mat-label>
     <input matInput
         type="number"
+        min="1"
         [(ngModel)]="authoringComponentContent.globalCellSize"
         (ngModelChange)="globalCellSizeChange.next($event)"/>
   </mat-form-field>
@@ -152,6 +155,7 @@
           <mat-label i18n>Column Cell Size</mat-label>
           <input matInput
               type="number"
+              min="1"
               [(ngModel)]="columnCellSizes[cellIndex]"
               (ngModelChange)="columnSizeChanged(cellIndex)"/>
         </mat-form-field>

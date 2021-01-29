@@ -209,7 +209,7 @@ export class TableAuthoring extends ComponentAuthoring {
     };
   }
 
-  insertRow(y: number): void {
+  insertRow(rowIndex: number): void {
     const tableData = this.authoringComponentContent.tableData;
     const newRow = [];
     const numColumns = this.authoringComponentContent.numColumns;
@@ -221,46 +221,42 @@ export class TableAuthoring extends ComponentAuthoring {
       }
       newRow.push(newCell);
     }
-    tableData.splice(y, 0, newRow);
+    tableData.splice(rowIndex, 0, newRow);
     this.authoringComponentContent.numRows++;
     this.componentChanged();
   }
 
-  deleteRow(y: number): void {
+  deleteRow(rowIndex: number): void {
     if (confirm($localize`Are you sure you want to delete this row?`)) {
       const tableData = this.authoringComponentContent.tableData;
       if (tableData != null) {
-        tableData.splice(y, 1);
+        tableData.splice(rowIndex, 1);
         this.authoringComponentContent.numRows--;
       }
       this.componentChanged();
     }
   }
 
-  insertColumn(x: number): void {
+  insertColumn(columnIndex: number): void {
     const tableData = this.authoringComponentContent.tableData;
     const numRows = this.authoringComponentContent.numRows;
     for (let r = 0; r < numRows; r++) {
-      const tempRow = tableData[r];
-      if (tempRow != null) {
-        const newCell = this.createEmptyCell();
-        tempRow.splice(x, 0, newCell);
-      }
+      const row = tableData[r];
+      const newCell = this.createEmptyCell();
+      row.splice(columnIndex, 0, newCell);
     }
     this.authoringComponentContent.numColumns++;
     this.parseColumnCellSizes(this.authoringComponentContent);
     this.componentChanged();
   }
 
-  deleteColumn(x: number): void {
+  deleteColumn(columnIndex: number): void {
     if (confirm($localize`Are you sure you want to delete this column?`)) {
       const tableData = this.authoringComponentContent.tableData;
       const numRows = this.authoringComponentContent.numRows;
       for (let r = 0; r < numRows; r++) {
-        const tempRow = tableData[r];
-        if (tempRow != null) {
-          tempRow.splice(x, 1);
-        }
+        const row = tableData[r];
+        row.splice(columnIndex, 1);
       }
       this.authoringComponentContent.numColumns--;
       this.parseColumnCellSizes(this.authoringComponentContent);
