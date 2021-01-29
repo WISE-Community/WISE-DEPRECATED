@@ -52,6 +52,7 @@ import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concep
 import { DrawAuthoring } from '../../../wise5/components/draw/draw-authoring/draw-authoring.component';
 import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/match-authoring.component';
 import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
+import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
 
 @NgModule({
@@ -89,6 +90,7 @@ import { DiscussionAuthoring } from '../../../wise5/components/discussion/discus
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
+    TableAuthoring,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     WorkgroupSelectAutocompleteComponent,
