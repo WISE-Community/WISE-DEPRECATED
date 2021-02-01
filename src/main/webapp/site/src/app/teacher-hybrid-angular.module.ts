@@ -54,6 +54,7 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
 import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
 import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
+import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { DiscussionAuthoring } from '../../../wise5/components/discussion/discus
     EditComponentWidthComponent,
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
+    EmbeddedAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
     ManageStudentsComponent,
