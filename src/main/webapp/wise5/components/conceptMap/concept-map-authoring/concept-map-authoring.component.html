@@ -19,7 +19,7 @@
       </mat-form-field>
       <button mat-raised-button
           color="primary"
-          (click)="chooseBackgroundImage()"
+          (click)="chooseAsset('background')"
           matTooltip="Choose an Image"
           matTooltipPosition="above"
           i18n-matTooltip>
@@ -91,7 +91,7 @@
           </mat-form-field>
           <button mat-raised-button
               color="primary"
-              (click)="chooseNodeImage(node.id)"
+              (click)="chooseAsset(node.id)"
               matTooltip="Choose an Image"
               matTooltipPosition="above"
               i18n-matTooltip

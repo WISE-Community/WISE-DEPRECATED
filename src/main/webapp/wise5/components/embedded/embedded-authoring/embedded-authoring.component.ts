@@ -43,16 +43,6 @@ export class EmbeddedAuthoring extends ComponentAuthoring {
     this.inputChangeSubscription.unsubscribe();
   }
 
-  showModelFileChooserPopup(): void {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'modelFile'
-    };
-    this.openAssetChooser(params);
-  }
-
   assetSelected({ nodeId, componentId, assetItem, target }): void {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'modelFile') {
