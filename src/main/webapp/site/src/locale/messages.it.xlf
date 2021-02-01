@@ -7566,7 +7566,7 @@
         <source> Students can upload and use images in their posts </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <target state="needs-translation"> Students can upload and use images in their posts </target>
       </trans-unit>
@@ -7574,7 +7574,7 @@
         <source> Students must create a post before viewing classmates' posts </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <target state="needs-translation"> Students must create a post before viewing classmates' posts </target>
       </trans-unit>
@@ -7657,6 +7657,58 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <target state="needs-translation">Component Width</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1d3911009f4b8bea155d7d4f87812066abaa614b">
+        <source>Model File Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">Model File Name</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="83813fc16c9097856819be3462a0f06ccf97f525">
+        <source>Choose Model File</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target state="needs-translation">Choose Model File</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a6b43c2ea6f759a9be7fab85583d99fb03f439ca">
+        <source>Width (px) (optional)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <target state="needs-translation">Width (px) (optional)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="76c3a64124d99226fd7dead89a4f84638eee1f3e">
+        <source>Height (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <target state="needs-translation">Height (px)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b2a497bce327b6c20cc9969b0bad0b1470fcccd5">
+        <source>Reload Model</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <target state="needs-translation">Reload Model</target>
       </trans-unit>
       <trans-unit datatype="html" id="b8c5c01ab5965f003ba27c1aad429045431ba260">
         <source>Background Image</source>
@@ -8265,22 +8317,6 @@
           <context context-type="linenumber">95</context>
         </context-group>
         <target state="needs-translation">Enter URL Here</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="a6b43c2ea6f759a9be7fab85583d99fb03f439ca">
-        <source>Width (px) (optional)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
-          <context context-type="linenumber">101</context>
-        </context-group>
-        <target state="needs-translation">Width (px) (optional)</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="76c3a64124d99226fd7dead89a4f84638eee1f3e">
-        <source>Height (px)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
-        <target state="needs-translation">Height (px)</target>
       </trans-unit>
       <trans-unit datatype="html" id="75944c5e5644a82cee3eddd89975ca1c3054e2d2">
         <source>Reload resource</source>
