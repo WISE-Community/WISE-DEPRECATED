@@ -108,12 +108,12 @@ export abstract class ComponentAuthoring {
     });
   }
 
-  chooseBackgroundImage(): void {
+  chooseAsset(target: string): void {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
       componentId: this.componentId,
-      target: 'background'
+      target: target
     };
     this.openAssetChooser(params);
   }

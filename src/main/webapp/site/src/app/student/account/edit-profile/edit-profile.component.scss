@@ -3,10 +3,19 @@
   '~style/abstracts/functions',
   '~style/abstracts/mixins';
 
-form {
+.inputs {
   max-width: breakpoint('sm.min');
+}
 
-  @media (max-width: breakpoint('sm.max')) {
-    margin: 0 auto;
-  }
+.actions {
+  margin-top: 8px;
+}
+
+.google-icon {
+  height: 1.8em;
+  width: auto;
+}
+
+.unlink {
+  margin: 8px 0;
 }

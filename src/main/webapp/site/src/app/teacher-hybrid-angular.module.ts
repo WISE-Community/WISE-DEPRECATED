@@ -52,8 +52,10 @@ import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concep
 import { DrawAuthoring } from '../../../wise5/components/draw/draw-authoring/draw-authoring.component';
 import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/match-authoring.component';
 import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
+import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
 import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
+import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +77,7 @@ import { SummaryAuthoring } from '../../../wise5/components/summary/summary-auth
     EditComponentWidthComponent,
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
+    EmbeddedAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
     ManageStudentsComponent,
@@ -91,6 +94,7 @@ import { SummaryAuthoring } from '../../../wise5/components/summary/summary-auth
     StatusIconComponent,
     StepInfoComponent,
     SummaryAuthoring,
+    TableAuthoring,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     WorkgroupSelectAutocompleteComponent,

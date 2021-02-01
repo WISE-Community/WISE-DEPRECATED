@@ -236,29 +236,138 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d">
-        <source>Current Password</source>
+      <trans-unit datatype="html" id="692e665f8177ee9150169dca0ff15418616cb3cb">
+        <source>Google logo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="47c3500e23cf10b4e86b3c495687d5045fd2305c">
+        <source>Unlink Google Account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="09031a48e6666b30516536554bd71ec9073bc906">
+        <source>Success! You have unlinked your Google account from WISE. To sign in to WISE in the future, please use your username and the password you just created.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b3062cd2df40541e781d0e69c02c670cf3c38fa9">
+        <source>Your username is: <x ctype="x-span" equiv-text="&lt;span&gt;" id="START_TAG_SPAN"/><x equiv-text="{{ username }}" id="INTERPOLATION"/><x ctype="x-span" equiv-text="&lt;/span&gt;" id="CLOSE_TAG_SPAN"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="9b79b69a1ba8ba29e68a45acd0829da17da704ce">
-        <source>Current Password required</source>
+      <trans-unit datatype="html" id="8dd413cee2228118c536f503709329a4d1a395e2">
+        <source>Done</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-success/unlink-google-account-success.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="0315d84608647a2d4a2b2e7e509d10ad0ec78536">
-        <source>Current Password is incorrect</source>
+      <trans-unit datatype="html" id="31874c167522896bc9ac326873703ffde25ede7f">
+        <source>Create a WISE password:</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="c7014c6360e94b236286b869c3fe0ea9911c0387">
         <source>New Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">22</context>
@@ -267,6 +376,10 @@
       <trans-unit datatype="html" id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa">
         <source>New Password required</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
@@ -274,12 +387,20 @@
       <trans-unit datatype="html" id="b81fbd1b5d0723eba41870071d02065674bdd565">
         <source>Confirm New Password</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="4b4b336ca43da85eee55391d95fbc03d921353b5">
         <source>Confirm Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">41</context>
@@ -304,8 +425,167 @@
       <trans-unit datatype="html" id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af">
         <source>Passwords do not match</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d7b35c384aecd25a516200d6921836374613dfe7">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="71c77bb8cecdf11ec3eead24dd1ba506573fa9cd">
+        <source>Submit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-password/unlink-google-account-password.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/student/forgot-student-password/forgot-student-password.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a8059e31694578c1b0344a76a345357dd60e8f01">
+        <source>Warning</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5d9fa1b5819208cfbc678e570f4bd34144bcfe81">
+        <source>To remove the link to your Google account, you will be asked to create a WISE password. In the future, you'll sign in to WISE using your username and password.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f021455ae88703603db9bb34ea44ab9170f37920">
+        <source>You will no longer be able to sign in to WISE using Google. Would you like to continue?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ac10a3d9b59575640797c1a8e6aea642cf5d5e77">
+        <source>Continue</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d">
+        <source>Current Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9b79b69a1ba8ba29e68a45acd0829da17da704ce">
+        <source>Current Password required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0315d84608647a2d4a2b2e7e509d10ad0ec78536">
+        <source>Current Password is incorrect</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="5edf054f14aa57bc25a28cb7db01956fee53dac8">
@@ -323,8 +603,8 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="1622b67543d6f79dc5e9730e121f7e21b3d034b1">
-        <source>This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>contact us<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</source>
+      <trans-unit datatype="html" id="8454739bcb4cf4debfd509a35e466a828ea11363">
+        <source><x ctype="image" equiv-text="&lt;img/&gt;" id="TAG_IMG"/><x ctype="x-span" equiv-text="&lt;span&gt;" id="START_TAG_SPAN"/>This account was created using Google and doesn't use a WISE password.<x ctype="x-span" equiv-text="&lt;/span&gt;" id="CLOSE_TAG_SPAN"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
@@ -1068,57 +1348,6 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="d7b35c384aecd25a516200d6921836374613dfe7">
-        <source>Cancel</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">100</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="1979da7460819153e11d2078244645d94291b69c">
         <source>Copy</source>
         <context-group purpose="location">
@@ -1258,29 +1487,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="8dd413cee2228118c536f503709329a4d1a395e2">
-        <source>Done</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="053c99466a9288207400b49f2ca907192b5bd44d">
@@ -2296,41 +2502,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">104</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="71c77bb8cecdf11ec3eead24dd1ba506573fa9cd">
-        <source>Submit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
-          <context context-type="linenumber">112</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/student/forgot-student-password/forgot-student-password.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
-          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="abc0c762d328168e523abf84749240e43593f8df">
@@ -3854,13 +4025,6 @@
           <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="a8059e31694578c1b0344a76a345357dd60e8f01">
-        <source>Warning</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="4ad84d4f3bbc9a37b27cd1ff908aea5fa83dccf3">
         <source>If you move a student to a different period, they will lose all of their work.</source>
         <context-group purpose="location">
@@ -4586,33 +4750,6 @@
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="692e665f8177ee9150169dca0ff15418616cb3cb">
-        <source>Google logo</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-teacher-complete/register-teacher-complete.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="49ddce3277c9c81865f8d2278255426cdc9e94f2">
         <source>Sign up with Google</source>
         <context-group purpose="location">
@@ -5294,20 +5431,27 @@
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="afa960379d26eb20fd22e6e10537c1c5ec74c5d1">
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="edb53ba7560c1571d41ff16d93805243e5264d70">
+        <source>This profile is linked to a Google account.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2e1aeaf8d183e6846a0463a08c784f472184fcf0">
@@ -5808,6 +5952,13 @@
           <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="2b2f9f56dbfbfb71056a8da8c94e8011d837766e">
+        <source> Language required </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
         <source>Back to Unit Plan</source>
         <context-group purpose="location">
@@ -6052,6 +6203,10 @@
           <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
         <source>Enter Prompt Here</source>
@@ -6085,6 +6240,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
@@ -6391,6 +6550,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
           <context context-type="linenumber">185</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e3b469b69eef004764c51b7a8b3efa761501ab73">
@@ -6783,6 +6950,53 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-width/edit-component-width.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1d3911009f4b8bea155d7d4f87812066abaa614b">
+        <source>Model File Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="83813fc16c9097856819be3462a0f06ccf97f525">
+        <source>Choose Model File</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a6b43c2ea6f759a9be7fab85583d99fb03f439ca">
+        <source>Width (px) (optional)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="76c3a64124d99226fd7dead89a4f84638eee1f3e">
+        <source>Height (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b2a497bce327b6c20cc9969b0bad0b1470fcccd5">
+        <source>Reload Model</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/embedded/embedded-authoring/embedded-authoring.component.html</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="b8c5c01ab5965f003ba27c1aad429045431ba260">
@@ -7319,20 +7533,6 @@
           <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="a6b43c2ea6f759a9be7fab85583d99fb03f439ca">
-        <source>Width (px) (optional)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
-          <context context-type="linenumber">101</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="76c3a64124d99226fd7dead89a4f84638eee1f3e">
-        <source>Height (px)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="75944c5e5644a82cee3eddd89975ca1c3054e2d2">
         <source>Reload resource</source>
         <context-group purpose="location">
@@ -7517,6 +7717,113 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
           <context context-type="linenumber">142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b169576ab898458aa823e09c1e7f3397f8f011a0">
+        <source>Columns</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="79765b4b2ed87b05e0fd5d6937cec32d1995645f">
+        <source>Rows</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="aa22ffb76fc0555efcd54b896bff75a3e469982e">
+        <source>Global Cell Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="630090c98b3bf8c12d948c30ea150a25bc861fe9">
+        <source>Insert Column Before</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9634f970a787b967a6da5d3edcd6d6530012278c">
+        <source>Delete Column</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="97537cb70f46603f1ae244ad748fa2622fb5bf0b">
+        <source>Insert Column After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="897363afbaacb7374bb5e259129b76687b431671">
+        <source>Insert Row Before</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2ab75889a800e0e0fd14d0d63b8a003ee69519c6">
+        <source>Delete Row</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="75e10460c25b4a5f95b9d8077f0cb9b8968b47ce">
+        <source>Insert Row After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="13968818aa5f7771fe043f7d614f21c66b21e21a">
+        <source> Editable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5943b22e7e12f461de18c831b7cf94ddf4baf11a">
+        <source>Column Cell Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="8d3659d1c474ee37dde6c775445b585af3b79b56">
+        <source> Make All Cells Editable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="964c339de395a09a2ea31889d1f3b0e89ffd9107">
+        <source> Make All Cells Uneditable </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">

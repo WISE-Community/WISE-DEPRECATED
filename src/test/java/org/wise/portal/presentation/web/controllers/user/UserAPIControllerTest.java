@@ -144,68 +144,6 @@ public class UserAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void isGoogleIdExist_GoogleUserExists_ReturnTrue() {
-    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(student1);
-    replay(userService);
-    assertTrue(userAPIController.isGoogleIdExist(STUDENT1_GOOGLE_ID));
-    verify(userService);
-  }
-
-  @Test
-  public void isGoogleIdExist_InvalidGoogleUserId_ReturnFalse() {
-    String invalidGoogleId = "google-id-not-exists-in-db";
-    expect(userService.retrieveUserByGoogleUserId(invalidGoogleId)).andReturn(null);
-    replay(userService);
-    assertFalse(userAPIController.isGoogleIdExist(invalidGoogleId));
-    verify(userService);
-  }
-
-  @Test
-  public void isGoogleIdMatches_GoogleUserIdAndUserIdMatch_ReturnTrue() {
-    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(student1);
-    replay(userService);
-    assertTrue(userAPIController.isGoogleIdMatches(STUDENT1_GOOGLE_ID, student1Id.toString()));
-    verify(userService);
-  }
-
-  @Test
-  public void isGoogleIdMatches_InvalidGoogleUserId_ReturnFalse() {
-    String invalidGoogleId = "google-id-not-exists-in-db";
-    expect(userService.retrieveUserByGoogleUserId(invalidGoogleId)).andReturn(null);
-    replay(userService);
-    assertFalse(userAPIController.isGoogleIdMatches(invalidGoogleId, student1Id.toString()));
-    verify(userService);
-  }
-
-  @Test
-  public void isGoogleIdMatches_GoogleUserIdAndUserIdDoNotMatch_ReturnFalse() {
-    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(teacher1);
-    replay(userService);
-    assertFalse(userAPIController.isGoogleIdMatches(STUDENT1_GOOGLE_ID, teacher1.toString()));
-    verify(userService);
-  }
-
-  @Test
-  public void getUserByGoogleId_GoogleUserExists_ReturnSuccessResponse() {
-    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(student1);
-    replay(userService);
-    HashMap<String, Object> response = userAPIController.getUserByGoogleId(STUDENT1_GOOGLE_ID);
-    assertEquals("success", response.get("status"));
-    assertEquals(student1.getId(), response.get("userId"));
-    verify(userService);
-  }
-
-  @Test
-  public void getUserByGoogleId_InvalidGoogleUserId_ReturnErrorResponse() {
-    String invalidGoogleId = "google-id-not-exists-in-db";
-    expect(userService.retrieveUserByGoogleUserId(invalidGoogleId)).andReturn(null);
-    replay(userService);
-    HashMap<String, Object> response = userAPIController.getUserByGoogleId(invalidGoogleId);
-    assertEquals("error", response.get("status"));
-    verify(userService);
-  }
-
-  @Test
   public void isNameValid_InvalidName_ReturnFalse() {
     assertFalse(userAPIController.isNameValid(""));
     assertFalse(userAPIController.isNameValid("Spongebob!"));

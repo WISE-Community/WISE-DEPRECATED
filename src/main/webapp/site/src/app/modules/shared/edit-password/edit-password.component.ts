@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../services/user.service';
+import { UnlinkGoogleAccountConfirmComponent } from '../unlink-google-account-confirm/unlink-google-account-confirm.component';
+import { passwordMatchValidator } from '../validators/password-match.validator';
 
 @Component({
   selector: 'app-edit-password',
   templateUrl: './edit-password.component.html',
   styleUrls: ['./edit-password.component.scss']
 })
-export class EditPasswordComponent implements OnInit {
+export class EditPasswordComponent {
   @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
   isSaving: boolean = false;
   isGoogleUser: boolean = false;
@@ -19,7 +22,7 @@ export class EditPasswordComponent implements OnInit {
       newPassword: new FormControl('', [Validators.required]),
       confirmNewPassword: new FormControl('', [Validators.required])
     },
-    { validator: this.passwordMatchValidator }
+    { validator: passwordMatchValidator }
   );
 
   changePasswordFormGroup: FormGroup = this.fb.group({
@@ -30,6 +33,7 @@ export class EditPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {}
 
@@ -37,18 +41,6 @@ export class EditPasswordComponent implements OnInit {
     this.userService.getUser().subscribe((user) => {
       this.isGoogleUser = user.isGoogleUser;
     });
-  }
-
-  passwordMatchValidator(passwordsFormGroup: FormGroup) {
-    const newPassword = passwordsFormGroup.get('newPassword').value;
-    const confirmNewPassword = passwordsFormGroup.get('confirmNewPassword').value;
-    if (newPassword === confirmNewPassword) {
-      return null;
-    } else {
-      const error = { passwordDoesNotMatch: true };
-      passwordsFormGroup.controls['confirmNewPassword'].setErrors(error);
-      return error;
-    }
   }
 
   saveChanges() {
@@ -88,6 +80,12 @@ export class EditPasswordComponent implements OnInit {
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);
     }
+  }
+
+  unlinkGoogleAccount() {
+    this.dialog.open(UnlinkGoogleAccountConfirmComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
   }
 
   resetForm() {

@@ -156,16 +156,6 @@ export class ConceptMapAuthoring extends ComponentAuthoring {
     }
   }
 
-  chooseNodeImage(conceptMapNodeId: string): void {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: conceptMapNodeId
-    };
-    this.openAssetChooser(params);
-  }
-
   assetSelected(args: any): void {
     super.assetSelected(args);
     const fileName = args.assetItem.fileName;

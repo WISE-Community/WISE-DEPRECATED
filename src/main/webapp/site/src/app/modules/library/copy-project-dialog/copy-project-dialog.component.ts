@@ -5,7 +5,6 @@ import { finalize } from 'rxjs/operators';
 import { LibraryProject } from '../libraryProject';
 import { LibraryService } from '../../../services/library.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-copy-project-dialog',
