@@ -14,8 +14,8 @@ class MilestonesAuthoringController {
   templateIds: any;
   templateSatisfyCriteriaIds: any;
   idToExpanded: any = {};
-  availableSatisfyCriteria: any;
-  availableSatisfyCriteriaFunctions: any;
+  availableSatisfyCriteria: any[] = [{ value: 'isCompleted', text: 'Is Completed' }];
+  availableSatisfyCriteriaFunctions: any[];
 
   milestoneIdPrefix: string = 'milestone-';
   milestoneSatisfyCriteriaIdPrefix: string = 'milestone-satisfy-criteria-';
@@ -29,15 +29,11 @@ class MilestonesAuthoringController {
   static $inject = ['$filter', 'ProjectService', 'UtilService'];
 
   constructor(
-    private $filter,
+    private $filter: any,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
-    this.$translate = $filter('translate');
-    this.project = this.ProjectService.project;
-    this.idToOrder = this.ProjectService.idToOrder;
-    this.nodeIds = this.getStepNodeIds();
-    this.availableSatisfyCriteria = [{ value: 'isCompleted', text: 'Is Completed' }];
+    this.$translate = this.$filter('translate');
     this.availableSatisfyCriteriaFunctions = [
       {
         value: 'percentOfScoresLessThan',
@@ -60,6 +56,12 @@ class MilestonesAuthoringController {
         text: this.$translate('percentOfScoresEqualTo')
       }
     ];
+  }
+
+  $onInit() {
+    this.project = this.ProjectService.project;
+    this.idToOrder = this.ProjectService.idToOrder;
+    this.nodeIds = this.getStepNodeIds();
     if (this.project.achievements == null) {
       this.initializeMilestones();
     }
@@ -131,19 +133,7 @@ class MilestonesAuthoringController {
   }
 
   generateUniqueMilestoneId() {
-    let id = this.generateMilestoneId();
-    while (!this.isUniqueMilestoneId(id)) {
-      id = this.generateMilestoneId();
-    }
-    return id;
-  }
-
-  generateMilestoneId() {
-    return this.milestoneIdPrefix + this.UtilService.generateKey(10);
-  }
-
-  isUniqueMilestoneId(id) {
-    return this.milestoneIds[id] == null;
+    return this.generateUniqueId(this.milestoneIdPrefix, this.milestoneIds);
   }
 
   addMilestone(index) {
@@ -191,11 +181,10 @@ class MilestonesAuthoringController {
   }
 
   generateUniqueMilestoneSatisfyCriteriaId() {
-    let id = this.generateMilestoneSatisfyCriteriaId();
-    while (!this.isUniqueMilestoneSatisfyCriteriaId(id)) {
-      id = this.generateMilestoneSatisfyCriteriaId();
-    }
-    return id;
+    return this.generateUniqueId(
+      this.milestoneSatisfyCriteriaIdPrefix,
+      this.milestoneSatisfyCriteriaIds
+    );
   }
 
   generateMilestoneSatisfyCriteriaId() {
@@ -229,22 +218,34 @@ class MilestonesAuthoringController {
     }
   }
 
-  copySatisfyCriteriaToMilestone(milestone, nodeId, componentId) {
+  copySatisfyCriteriaToMilestone(milestone: any, nodeId: string, componentId: string): void {
     const message = this.$translate(
       'areYouSureYouWantToCopyTheNodeIdAndComponentIdToTheRestOfThisMilestone'
     );
     if (confirm(message)) {
-      for (const template of milestone.report.templates) {
-        for (const satisfyCriteria of template.satisfyCriteria) {
-          satisfyCriteria.nodeId = nodeId;
-          satisfyCriteria.componentId = componentId;
-        }
-      }
-      for (const location of milestone.report.locations) {
-        location.nodeId = nodeId;
-        location.componentId = componentId;
-      }
+      this.setNodeIdAndComponentIdToAllSatisfyCriteria(milestone, nodeId, componentId);
+      this.setNodeIdAndComponentIdToAllLocations(milestone, nodeId, componentId);
       this.save();
+    }
+  }
+
+  setNodeIdAndComponentIdToAllSatisfyCriteria(
+    milestone: any,
+    nodeId: string,
+    componentId: string
+  ): void {
+    for (const template of milestone.report.templates) {
+      for (const satisfyCriteria of template.satisfyCriteria) {
+        satisfyCriteria.nodeId = nodeId;
+        satisfyCriteria.componentId = componentId;
+      }
+    }
+  }
+
+  setNodeIdAndComponentIdToAllLocations(milestone: any, nodeId: string, componentId: string): void {
+    for (const location of milestone.report.locations) {
+      location.nodeId = nodeId;
+      location.componentId = componentId;
     }
   }
 
@@ -275,9 +276,16 @@ class MilestonesAuthoringController {
   }
 
   generateUniqueReportId() {
-    let id = this.generateReportId();
-    while (!this.isUniqueReportId(id)) {
-      id = this.generateReportId();
+    return this.generateUniqueId(this.reportIdPrefix, this.reportIds);
+  }
+
+  generateUniqueId(prefix: string, existingIds: any): string {
+    const generateIdWithPrefix = () => {
+      return prefix + this.UtilService.generateKey(10);
+    };
+    let id = generateIdWithPrefix();
+    while (existingIds[id] != null) {
+      id = generateIdWithPrefix();
     }
     return id;
   }
@@ -383,19 +391,7 @@ class MilestonesAuthoringController {
   }
 
   generateUniqueTemplateId() {
-    let id = this.generateTemplateId();
-    while (!this.isUniqueReportId(id)) {
-      id = this.generateTemplateId();
-    }
-    return id;
-  }
-
-  generateTemplateId() {
-    return this.templateIdPrefix + this.UtilService.generateKey(10);
-  }
-
-  isUniqueTemplateId(id) {
-    return this.templateIds[id] == null;
+    return this.generateUniqueId(this.templateIdPrefix, this.templateIds);
   }
 
   addTemplate(report, index) {
@@ -449,19 +445,10 @@ class MilestonesAuthoringController {
   }
 
   generateUniqueTemplateSatisfyCriteriaId() {
-    let id = this.generateTemplateSatisfyCriteriaId();
-    while (!this.isUniqueTemplateSatisfyCriteriaId(id)) {
-      id = this.generateTemplateSatisfyCriteriaId();
-    }
-    return id;
-  }
-
-  generateTemplateSatisfyCriteriaId() {
-    return this.templateSatisfyCriteriaIdPrefix + this.UtilService.generateKey(10);
-  }
-
-  isUniqueTemplateSatisfyCriteriaId(id) {
-    return this.templateSatisfyCriteriaIds[id] == null;
+    return this.generateUniqueId(
+      this.templateSatisfyCriteriaIdPrefix,
+      this.templateSatisfyCriteriaIds
+    );
   }
 
   addTemplateSatisfyCriteria(template, index) {

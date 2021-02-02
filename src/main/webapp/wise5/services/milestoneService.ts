@@ -188,14 +188,11 @@ export class MilestoneService {
   }
 
   setWorkgroupsInCurrentPeriod() {
-    const workgroupIdsInRun = this.ConfigService.getClassmateWorkgroupIds();
     this.workgroupIds = [];
-    for (let i = 0; i < workgroupIdsInRun.length; i++) {
-      const currentId = workgroupIdsInRun[i];
-      const currentPeriodId = this.ConfigService.getPeriodIdByWorkgroupId(currentId);
-
+    for (const workgroupId of this.ConfigService.getClassmateWorkgroupIds()) {
+      const currentPeriodId = this.ConfigService.getPeriodIdByWorkgroupId(workgroupId);
       if (this.periodId === -1 || currentPeriodId === this.periodId) {
-        this.workgroupIds.push(currentId);
+        this.workgroupIds.push(workgroupId);
       }
     }
     this.numberOfStudentsInRun = this.workgroupIds.length;
@@ -317,7 +314,7 @@ export class MilestoneService {
     satisfyCriterion: any,
     aggregateAutoScores: any,
     comparator: any
-  ) {
+  ): boolean {
     const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
     const possibleScores = this.getPossibleScores(aggregateData);
     const sum = this.getComparatorSum(satisfyCriterion, aggregateData, possibleScores, comparator);
@@ -333,7 +330,7 @@ export class MilestoneService {
     return Object.keys(aggregateData.counts).map(Number).sort();
   }
 
-  isPercentThresholdSatisfied(satisfyCriterion: any, aggregateData: any, sum: number) {
+  isPercentThresholdSatisfied(satisfyCriterion: any, aggregateData: any, sum: number): boolean {
     const percentOfScores = (100 * sum) / aggregateData.scoreCount;
     return percentOfScores >= satisfyCriterion.percentThreshold;
   }
