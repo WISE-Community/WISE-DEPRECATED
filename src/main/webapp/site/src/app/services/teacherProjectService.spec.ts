@@ -103,6 +103,7 @@ describe('TeacherProjectService', () => {
   shouldHandleSaveProjectResponse();
   shouldNotSaveProjectWhenTheUserDoesNotHavePermissionToEditTheProject();
   shouldSaveProject();
+  getStepNodesDetailsInOrder();
 });
 
 function createNormalSpy() {
@@ -959,4 +960,42 @@ function shouldSaveProject() {
     expect(configService.getConfigParam).toHaveBeenCalledWith('saveProjectURL');
     http.expectOne(saveProjectURL);
   });
+}
+
+function getStepNodesDetailsInOrder() {
+  describe('getStepNodesDetailsInOrder', () => {
+    it('should get step nodes details in order', () => {
+      service.idToOrder = {
+        node1: { order: 2 },
+        node3: { order: 1 },
+        group1: { order: 0 },
+        node2: { order: 3 }
+      };
+      const nodeIdToPositionAndTitle = {
+        node1: '2. Step 2',
+        node2: '3. Step 3',
+        node3: '1. Step 1'
+      };
+      spyOn(service, 'isApplicationNode').and.callFake((nodeId: string): boolean => {
+        return nodeId.startsWith('node');
+      });
+      spyOn(service, 'getNodePositionAndTitleByNodeId').and.callFake((nodeId: string): string => {
+        return nodeIdToPositionAndTitle[nodeId];
+      });
+      const stepNodesDetailsInOrder = service.getStepNodesDetailsInOrder();
+      expectStepNodeDetail(stepNodesDetailsInOrder, 0, 'node3', nodeIdToPositionAndTitle['node3']);
+      expectStepNodeDetail(stepNodesDetailsInOrder, 1, 'node1', nodeIdToPositionAndTitle['node1']);
+      expectStepNodeDetail(stepNodesDetailsInOrder, 2, 'node2', nodeIdToPositionAndTitle['node2']);
+    });
+  });
+}
+
+function expectStepNodeDetail(
+  stepNodesDetailsInOrder: any[],
+  index: number,
+  expectedNodeId: string,
+  expectedPositionAndTitle: string
+) {
+  expect(stepNodesDetailsInOrder[index].nodeId).toEqual(expectedNodeId);
+  expect(stepNodesDetailsInOrder[index].nodePositionAndTitle).toEqual(expectedPositionAndTitle);
 }
