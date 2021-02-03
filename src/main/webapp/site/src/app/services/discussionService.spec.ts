@@ -36,11 +36,6 @@ describe('DiscussionService', () => {
     service = TestBed.get(DiscussionService);
     configService = TestBed.get(ConfigService);
     studentDataService = TestBed.get(StudentDataService);
-    spyOn(service, 'getTranslation').and.callFake((key: string) => {
-      if (key === 'ENTER_PROMPT_HERE') {
-        return 'Enter prompt here';
-      }
-    });
   });
   createComponent();
   isCompleted();

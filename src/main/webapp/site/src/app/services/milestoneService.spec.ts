@@ -52,6 +52,15 @@ const sampleAggregateData = {
   counts: createScoreCounts([10, 20, 30, 40, 50])
 };
 
+const aggregateAutoScores50 = {
+  component1: {
+    ki: {
+      counts: createScoreCounts([10, 10, 10, 10, 10]),
+      scoreCount: 50
+    }
+  }
+};
+
 const reportSettingsCustomScoreValuesSample = {
   customScoreValues: {
     ki: [1, 2, 3, 4]
@@ -464,41 +473,33 @@ function getReferencedComponent() {
 
 function isCompletionReached() {
   describe('isCompletionReached()', () => {
+    function expectIsCompletionReached(
+      percentageCompleted,
+      satisfyMinPercentage,
+      numberOfStudentsCompleted,
+      satisfyMinNumWorkgroups,
+      expectedResult
+    ) {
+      expect(
+        service.isCompletionReached({
+          percentageCompleted: percentageCompleted,
+          satisfyMinPercentage: satisfyMinPercentage,
+          numberOfStudentsCompleted: numberOfStudentsCompleted,
+          satisfyMinNumWorkgroups: satisfyMinNumWorkgroups
+        })
+      ).toEqual(expectedResult);
+    }
     it('should check is completion reached percent false and num students false', () => {
-      const projectAchievement = {
-        percentageCompleted: 25,
-        satisfyMinPercentage: 50,
-        numberOfStudentsCompleted: 2,
-        satisfyMinNumWorkgroups: 4
-      };
-      expect(service.isCompletionReached(projectAchievement)).toEqual(false);
+      expectIsCompletionReached(25, 50, 2, 4, false);
     });
     it('should check is completion reached percent true and num students false', () => {
-      const projectAchievement = {
-        percentageCompleted: 60,
-        satisfyMinPercentage: 50,
-        numberOfStudentsCompleted: 2,
-        satisfyMinNumWorkgroups: 4
-      };
-      expect(service.isCompletionReached(projectAchievement)).toEqual(false);
+      expectIsCompletionReached(60, 50, 2, 4, false);
     });
     it('should check is completion reached percent false and num students false', () => {
-      const projectAchievement = {
-        percentageCompleted: 25,
-        satisfyMinPercentage: 50,
-        numberOfStudentsCompleted: 6,
-        satisfyMinNumWorkgroups: 4
-      };
-      expect(service.isCompletionReached(projectAchievement)).toEqual(false);
+      expectIsCompletionReached(25, 50, 6, 4, false);
     });
     it('should check is completion reached perecent true and num students true', () => {
-      const projectAchievement = {
-        percentageCompleted: 60,
-        satisfyMinPercentage: 50,
-        numberOfStudentsCompleted: 6,
-        satisfyMinNumWorkgroups: 4
-      };
-      expect(service.isCompletionReached(projectAchievement)).toEqual(true);
+      expectIsCompletionReached(60, 50, 6, 4, true);
     });
   });
 }
@@ -564,19 +565,20 @@ function chooseTemplate() {
 
 function isTemplateMatch() {
   describe('isTemplateMatch()', () => {
+    const aggregateAutoScores = {};
+    const satisfyCriteria = [
+      {
+        id: 'satisfy-criteria-1'
+      },
+      {
+        id: 'satisfy-criteria-2'
+      }
+    ];
     it('should check is template match with all conditional false', () => {
       const template = {
         satisfyConditional: 'all',
-        satisfyCriteria: [
-          {
-            id: 'satisfy-criteria-1'
-          },
-          {
-            id: 'satisfy-criteria-2'
-          }
-        ]
+        satisfyCriteria: satisfyCriteria
       };
-      const aggregateAutoScores = {};
       spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
@@ -591,16 +593,8 @@ function isTemplateMatch() {
     it('should check is template match with all conditional true', () => {
       const template = {
         satisfyConditional: 'all',
-        satisfyCriteria: [
-          {
-            id: 'satisfy-criteria-1'
-          },
-          {
-            id: 'satisfy-criteria-2'
-          }
-        ]
+        satisfyCriteria: satisfyCriteria
       };
-      const aggregateAutoScores = {};
       spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
@@ -615,16 +609,8 @@ function isTemplateMatch() {
     it('should check is template match with any conditional false', () => {
       const template = {
         satisfyConditional: 'any',
-        satisfyCriteria: [
-          {
-            id: 'satisfy-criteria-1'
-          },
-          {
-            id: 'satisfy-criteria-2'
-          }
-        ]
+        satisfyCriteria: satisfyCriteria
       };
-      const aggregateAutoScores = {};
       spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
@@ -639,16 +625,8 @@ function isTemplateMatch() {
     it('should check is template match with any conditional true', () => {
       const template = {
         satisfyConditional: 'any',
-        satisfyCriteria: [
-          {
-            id: 'satisfy-criteria-1'
-          },
-          {
-            id: 'satisfy-criteria-2'
-          }
-        ]
+        satisfyCriteria: satisfyCriteria
       };
-      const aggregateAutoScores = {};
       spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
@@ -672,15 +650,7 @@ function isTemplateCriterionSatisfied() {
       value: 3,
       percentThreshold: 50
     };
-    const aggregateAutoScores = {
-      component1: {
-        ki: {
-          counts: createScoreCounts([10, 10, 10, 10, 10]),
-          scoreCount: 50
-        }
-      }
-    };
-    expect(service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)).toEqual(
+    expect(service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores50)).toEqual(
       false
     );
   });
@@ -693,15 +663,7 @@ function isTemplateCriterionSatisfied() {
       2,
       50
     );
-    const aggregateAutoScores = {
-      component1: {
-        ki: {
-          counts: createScoreCounts([10, 10, 10, 10, 10]),
-          scoreCount: 50
-        }
-      }
-    };
-    expect(service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)).toEqual(
+    expect(service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores50)).toEqual(
       true
     );
   });
@@ -719,14 +681,6 @@ function isPercentOfScoresSatisfiesComparator() {
 }
 
 function isPercentOfScoresGreaterThan() {
-  const aggregateAutoScores = {
-    component1: {
-      ki: {
-        counts: createScoreCounts([10, 10, 10, 10, 10]),
-        scoreCount: 50
-      }
-    }
-  };
   it('should check is percent of scores greater than false', () => {
     const satisfyCriterion = createSatisfyCriteria(
       'node1',
@@ -739,7 +693,7 @@ function isPercentOfScoresGreaterThan() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.greaterThan
       )
     ).toEqual(false);
@@ -756,7 +710,7 @@ function isPercentOfScoresGreaterThan() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.greaterThan
       )
     ).toEqual(true);
@@ -764,14 +718,6 @@ function isPercentOfScoresGreaterThan() {
 }
 
 function isPercentOfScoresGreaterThanOrEqualTo() {
-  const aggregateAutoScores = {
-    component1: {
-      ki: {
-        counts: createScoreCounts([10, 10, 10, 10, 10]),
-        scoreCount: 50
-      }
-    }
-  };
   it('should check is percent of scores greater than or equal to false', () => {
     const satisfyCriterion = createSatisfyCriteria(
       'node1',
@@ -784,7 +730,7 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.greaterThanEqualTo
       )
     ).toEqual(false);
@@ -801,7 +747,7 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.greaterThanEqualTo
       )
     ).toEqual(true);
@@ -809,14 +755,6 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
 }
 
 function isPercentOfScoresLessThan() {
-  const aggregateAutoScores = {
-    component1: {
-      ki: {
-        counts: createScoreCounts([10, 10, 10, 10, 10]),
-        scoreCount: 50
-      }
-    }
-  };
   it('should check is percent of scores less than false', () => {
     const satisfyCriterion = createSatisfyCriteria(
       'node1',
@@ -829,7 +767,7 @@ function isPercentOfScoresLessThan() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.lessThan
       )
     ).toEqual(false);
@@ -846,7 +784,7 @@ function isPercentOfScoresLessThan() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.lessThan
       )
     ).toEqual(true);
@@ -854,14 +792,6 @@ function isPercentOfScoresLessThan() {
 }
 
 function isPercentOfScoresLessThanOrEqualTo() {
-  const aggregateAutoScores = {
-    component1: {
-      ki: {
-        counts: createScoreCounts([10, 10, 10, 10, 10]),
-        scoreCount: 50
-      }
-    }
-  };
   it('should check is percent of scores less than or equal to false', () => {
     const satisfyCriterion = createSatisfyCriteria(
       'node1',
@@ -874,7 +804,7 @@ function isPercentOfScoresLessThanOrEqualTo() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.lessThanEqualTo
       )
     ).toEqual(false);
@@ -891,7 +821,7 @@ function isPercentOfScoresLessThanOrEqualTo() {
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.lessThanEqualTo
       )
     ).toEqual(true);
@@ -908,18 +838,10 @@ function isPercentOfScoresEqualTo() {
     50
   );
   it('should check is percent of scores equal to false', () => {
-    const aggregateAutoScores = {
-      component1: {
-        ki: {
-          counts: createScoreCounts([10, 10, 10, 10, 10]),
-          scoreCount: 50
-        }
-      }
-    };
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
-        aggregateAutoScores,
+        aggregateAutoScores50,
         utilService.equalTo
       )
     ).toEqual(false);
