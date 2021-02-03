@@ -54,6 +54,7 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
 import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
 import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
+import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
 import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
 
 @NgModule({
@@ -92,6 +93,7 @@ import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-a
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
+    SummaryAuthoring,
     TableAuthoring,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
