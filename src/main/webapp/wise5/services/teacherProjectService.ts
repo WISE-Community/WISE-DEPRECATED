@@ -3490,6 +3490,24 @@ export class TeacherProjectService extends ProjectService {
       });
   }
 
+  getStepNodesDetailsInOrder(): any[] {
+    const stepNodeDetails: any[] = [];
+    Object.entries(this.idToOrder).forEach(([nodeId, objectWithOrder]: [string, any]) => {
+      if (this.isApplicationNode(nodeId)) {
+        stepNodeDetails.push({
+          nodeId: nodeId,
+          order: objectWithOrder.order,
+          nodePositionAndTitle: this.getNodePositionAndTitleByNodeId(nodeId)
+        });
+      }
+    });
+    return stepNodeDetails.sort(this.sortByOrder);
+  }
+
+  sortByOrder(a: any, b: any): number {
+    return a.order - b.order;
+  }
+
   broadcastSavingProject() {
     this.savingProjectSource.next();
   }

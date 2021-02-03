@@ -9,10 +9,6 @@ import { ConfigService } from '../../../services/configService';
 import { NodeService } from '../../../services/nodeService';
 import { TeacherProjectService } from '../../../services/teacherProjectService';
 import { UtilService } from '../../../services/utilService';
-import { ConceptMapService } from '../../conceptMap/conceptMapService';
-import { MatchService } from '../../match/matchService';
-import { MultipleChoiceService } from '../../multipleChoice/multipleChoiceService';
-import { OpenResponseService } from '../../openResponse/openResponseService';
 import { SummaryService } from '../summaryService';
 
 @Component({
@@ -25,17 +21,12 @@ export class SummaryAuthoring extends ComponentAuthoring {
   isHighlightCorrectAnswerAvailable: boolean = false;
   isPieChartAllowed: boolean = true;
   stepNodesDetails: string[];
-  componentTypeToService: {};
   inputChange: Subject<string> = new Subject<string>();
   inputChangeSubscription: Subscription;
 
   constructor(
-    private ConceptMapService: ConceptMapService,
     protected ConfigService: ConfigService,
     protected NodeService: NodeService,
-    private MatchService: MatchService,
-    private MultipleChoiceService: MultipleChoiceService,
-    private OpenResponseService: OpenResponseService,
     protected ProjectAssetService: ProjectAssetService,
     protected ProjectService: TeacherProjectService,
     private SummaryService: SummaryService,
@@ -43,7 +34,6 @@ export class SummaryAuthoring extends ComponentAuthoring {
   ) {
     super(ConfigService, NodeService, ProjectAssetService, ProjectService);
     this.stepNodesDetails = this.ProjectService.getStepNodesDetailsInOrder();
-    this.initializeComponentTypeToService();
     this.inputChangeSubscription = this.inputChange
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(() => {
@@ -61,15 +51,6 @@ export class SummaryAuthoring extends ComponentAuthoring {
   ngOnDestroy(): void {
     super.ngOnDestroy();
     this.inputChangeSubscription.unsubscribe();
-  }
-
-  initializeComponentTypeToService(): void {
-    this.componentTypeToService = {
-      ConceptMap: this.ConceptMapService,
-      Match: this.MatchService,
-      MultipleChoice: this.MultipleChoiceService,
-      OpenResponse: this.OpenResponseService
-    };
   }
 
   summaryNodeIdChanged(): void {
@@ -179,23 +160,13 @@ export class SummaryAuthoring extends ComponentAuthoring {
     if (nodeId != null && componentId != null) {
       const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
       if (component != null) {
-        const componentService = this.getComponentService(component.type);
+        const componentService = this.ProjectService.getComponentService(component.type);
         return componentService.componentHasCorrectAnswer(component);
       }
     }
     return false;
   }
 
-  getComponentService(componentType: string): any {
-    const service = this.componentTypeToService[componentType];
-    if (service == null) {
-      return (component: any) => {
-        return false;
-      };
-    } else {
-      return service;
-    }
-  }
   componentAllowsMultipleResponses(): boolean {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
