@@ -150,10 +150,6 @@ export class SummaryAuthoring extends ComponentAuthoring {
     return false;
   }
 
-  showPromptFromOtherComponentChanged(): void {
-    this.componentChanged();
-  }
-
   componentHasCorrectAnswer(): boolean {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;

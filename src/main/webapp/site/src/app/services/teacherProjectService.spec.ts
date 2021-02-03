@@ -980,14 +980,7 @@ function getStepNodesDetailsInOrder() {
         return nodeId.startsWith('node');
       });
       spyOn(service, 'getNodePositionAndTitleByNodeId').and.callFake((nodeId: string): string => {
-        switch (nodeId) {
-          case 'node1':
-            return nodeIdToPositionAndTitle['node1'];
-          case 'node2':
-            return nodeIdToPositionAndTitle['node2'];
-          case 'node3':
-            return nodeIdToPositionAndTitle['node3'];
-        }
+        return nodeIdToPositionAndTitle[nodeId];
       });
       const stepNodesDetailsInOrder = service.getStepNodesDetailsInOrder();
       expectStepNodeDetail(stepNodesDetailsInOrder, 0, 'node3', nodeIdToPositionAndTitle['node3']);
