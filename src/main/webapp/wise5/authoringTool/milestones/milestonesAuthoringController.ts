@@ -107,7 +107,7 @@ class MilestonesAuthoringController {
 
   createMilestone() {
     const item = {
-      id: this.generateUniqueMilestoneId(),
+      id: this.generateUniqueId(this.milestoneIdPrefix, this.milestoneIds),
       isEnabled: true,
       type: 'milestoneReport',
       name: '',
@@ -130,10 +130,6 @@ class MilestonesAuthoringController {
       milestoneIds[milestone.id] = true;
     }
     return milestoneIds;
-  }
-
-  generateUniqueMilestoneId() {
-    return this.generateUniqueId(this.milestoneIdPrefix, this.milestoneIds);
   }
 
   addMilestone(index) {
@@ -163,7 +159,10 @@ class MilestonesAuthoringController {
 
   createMilestoneSatisfyCriteria() {
     return {
-      id: this.generateUniqueMilestoneSatisfyCriteriaId(),
+      id: this.generateUniqueId(
+        this.milestoneSatisfyCriteriaIdPrefix,
+        this.milestoneSatisfyCriteriaIds
+      ),
       nodeId: '',
       componentId: '',
       name: ''
@@ -178,13 +177,6 @@ class MilestonesAuthoringController {
       }
     }
     return milestoneSatisfyCriteriaIds;
-  }
-
-  generateUniqueMilestoneSatisfyCriteriaId() {
-    return this.generateUniqueId(
-      this.milestoneSatisfyCriteriaIdPrefix,
-      this.milestoneSatisfyCriteriaIds
-    );
   }
 
   generateMilestoneSatisfyCriteriaId() {
@@ -251,7 +243,7 @@ class MilestonesAuthoringController {
 
   createReport() {
     const report = {
-      id: this.generateUniqueReportId(),
+      id: this.generateUniqueId(this.reportIdPrefix, this.reportIds),
       title: '',
       isEnabled: true,
       audience: ['teacher'],
@@ -275,27 +267,12 @@ class MilestonesAuthoringController {
     return reportIds;
   }
 
-  generateUniqueReportId() {
-    return this.generateUniqueId(this.reportIdPrefix, this.reportIds);
-  }
-
-  generateUniqueId(prefix: string, existingIds: any): string {
-    const generateIdWithPrefix = () => {
-      return prefix + this.UtilService.generateKey(10);
-    };
-    let id = generateIdWithPrefix();
-    while (existingIds[id] != null) {
-      id = generateIdWithPrefix();
-    }
+  generateUniqueId(prefix: string, existingIds: any[]): string {
+    let id: string;
+    do {
+      id = prefix + this.UtilService.generateKey(10);
+    } while (existingIds[id] != null);
     return id;
-  }
-
-  generateReportId() {
-    return this.reportIdPrefix + this.UtilService.generateKey(10);
-  }
-
-  isUniqueReportId(id) {
-    return this.reportIds[id] == null;
   }
 
   createLocation() {
@@ -371,7 +348,7 @@ class MilestonesAuthoringController {
 
   createTemplate() {
     return {
-      id: this.generateUniqueTemplateId(),
+      id: this.generateUniqueId(this.templateIdPrefix, this.templateIds),
       description: '',
       recommendations: '',
       content: '',
@@ -388,10 +365,6 @@ class MilestonesAuthoringController {
       }
     }
     return templateIds;
-  }
-
-  generateUniqueTemplateId() {
-    return this.generateUniqueId(this.templateIdPrefix, this.templateIds);
   }
 
   addTemplate(report, index) {
@@ -421,7 +394,10 @@ class MilestonesAuthoringController {
 
   createTemplateSatisfyCriteria() {
     return {
-      id: this.generateUniqueTemplateSatisfyCriteriaId(),
+      id: this.generateUniqueId(
+        this.templateSatisfyCriteriaIdPrefix,
+        this.templateSatisfyCriteriaIds
+      ),
       nodeId: '',
       componentId: '',
       percentThreshold: 50,
@@ -442,13 +418,6 @@ class MilestonesAuthoringController {
       }
     }
     return templateSatisfyCriteriaIds;
-  }
-
-  generateUniqueTemplateSatisfyCriteriaId() {
-    return this.generateUniqueId(
-      this.templateSatisfyCriteriaIdPrefix,
-      this.templateSatisfyCriteriaIds
-    );
   }
 
   addTemplateSatisfyCriteria(template, index) {
