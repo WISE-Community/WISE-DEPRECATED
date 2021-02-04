@@ -56,6 +56,7 @@ import { TableAuthoring } from '../../../wise5/components/table/table-authoring/
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
 import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
 import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
+import { GraphAuthoring } from '../../../wise5/components/graph/graph-authoring/graph-authoring.component';
 import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscillator/audo-oscillator-authoring/audio-oscillator-authoring.component';
 
 @NgModule({
@@ -80,6 +81,7 @@ import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscilla
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
     EmbeddedAuthoring,
+    GraphAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
     ManageStudentsComponent,

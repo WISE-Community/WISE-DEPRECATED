@@ -1,178 +1,171 @@
 'use strict';
 
-import { Directive } from '@angular/core';
-import { EditComponentController } from '../../authoringTool/components/editComponentController';
+import { Component } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
+import { ComponentAuthoring } from '../../../authoringTool/components/component-authoring.component';
+import { ConfigService } from '../../../services/configService';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
+import { UtilService } from '../../../services/utilService';
+import { GraphService } from '../graphService';
 
-@Directive()
-class GraphAuthoringController extends EditComponentController {
-  availableGraphTypes: any[];
-  availableRoundingOptions: any[];
-  availableSymbols: any[];
-  availableSeriesTypes: any[];
-  availableLineTypes: any[];
-  availableXAxisTypes: any[];
+@Component({
+  selector: 'graph-authoring',
+  templateUrl: 'graph-authoring.component.html',
+  styleUrls: ['graph-authoring.component.scss']
+})
+export class GraphAuthoring extends ComponentAuthoring {
+  availableGraphTypes = [
+    {
+      value: 'line',
+      text: $localize`Line Plot`
+    },
+    {
+      value: 'column',
+      text: $localize`Column Plot`
+    },
+    {
+      value: 'scatter',
+      text: $localize`Scatter Plot`
+    }
+  ];
+
+  availableRoundingOptions = [
+    {
+      value: null,
+      text: $localize`No Rounding`
+    },
+    {
+      value: 'integer',
+      text: $localize`Integer (example 1)`
+    },
+    {
+      value: 'tenth',
+      text: $localize`Tenth (exapmle 0.1)`
+    },
+    {
+      value: 'hundredth',
+      text: $localize`Hundredth (example 0.01)`
+    }
+  ];
+
+  availableSymbols = [
+    {
+      value: 'circle',
+      text: $localize`Circle`
+    },
+    {
+      value: 'square',
+      text: $localize`Square`
+    },
+    {
+      value: 'triangle',
+      text: $localize`Triangle`
+    },
+    {
+      value: 'triangle-down',
+      text: $localize`Triangle Down`
+    },
+    {
+      value: 'diamond',
+      text: $localize`Diamond`
+    }
+  ];
+
+  availableSeriesTypes = [
+    {
+      value: 'line',
+      text: $localize`Line`
+    },
+    {
+      value: 'scatter',
+      text: $localize`Point`
+    }
+  ];
+
+  availableLineTypes = [
+    {
+      value: 'Solid',
+      text: $localize`Solid`
+    },
+    {
+      value: 'Dash',
+      text: $localize`Dash`
+    },
+    {
+      value: 'Dot',
+      text: $localize`Dot`
+    },
+    {
+      value: 'ShortDash',
+      text: $localize`Short Dash`
+    },
+    {
+      value: 'ShortDot',
+      text: $localize`Short Dot`
+    }
+  ];
+
+  availableXAxisTypes = [
+    {
+      value: 'limits',
+      text: $localize`Limits`
+    },
+    {
+      value: 'categories',
+      text: $localize`Categories`
+    }
+  ];
+
+  plotTypeToLimitType = {
+    line: 'limits',
+    scatter: 'limits',
+    column: 'categories'
+  };
+
   defaultDashStyle: string = 'Solid';
   enableMultipleYAxes: boolean = false;
   numYAxes: number = 0;
-  plotTypeToLimitType: any;
-
-  static $inject = [
-    '$filter',
-    'ConfigService',
-    'GraphService',
-    'NodeService',
-    'NotificationService',
-    'ProjectAssetService',
-    'ProjectService',
-    'UtilService'
-  ];
+  inputChange: Subject<string> = new Subject<string>();
+  inputChangeSubscription: Subscription;
 
   constructor(
-    $filter,
-    ConfigService,
-    private GraphService,
-    NodeService,
-    NotificationService,
-    ProjectAssetService,
-    ProjectService,
-    UtilService
+    protected ConfigService: ConfigService,
+    private GraphService: GraphService,
+    protected NodeService: NodeService,
+    protected ProjectAssetService: ProjectAssetService,
+    protected ProjectService: TeacherProjectService,
+    protected UtilService: UtilService
   ) {
-    super(
-      $filter,
-      ConfigService,
-      NodeService,
-      NotificationService,
-      ProjectAssetService,
-      ProjectService,
-      UtilService
-    );
+    super(ConfigService, NodeService, ProjectAssetService, ProjectService);
   }
 
-  $onInit() {
-    super.$onInit();
-    this.availableGraphTypes = [
-      {
-        value: 'line',
-        text: this.$translate('graph.linePlot')
-      },
-      {
-        value: 'column',
-        text: this.$translate('graph.columnPlot')
-      },
-      {
-        value: 'scatter',
-        text: this.$translate('graph.scatterPlot')
-      }
-    ];
-
-    this.availableRoundingOptions = [
-      {
-        value: null,
-        text: this.$translate('graph.noRounding')
-      },
-      {
-        value: 'integer',
-        text: this.$translate('graph.roundToInteger')
-      },
-      {
-        value: 'tenth',
-        text: this.$translate('graph.roundToTenth')
-      },
-      {
-        value: 'hundredth',
-        text: this.$translate('graph.roundToHundredth')
-      }
-    ];
-
-    this.availableSymbols = [
-      {
-        value: 'circle',
-        text: this.$translate('graph.circle')
-      },
-      {
-        value: 'square',
-        text: this.$translate('graph.square')
-      },
-      {
-        value: 'triangle',
-        text: this.$translate('graph.triangle')
-      },
-      {
-        value: 'triangle-down',
-        text: this.$translate('graph.triangleDown')
-      },
-      {
-        value: 'diamond',
-        text: this.$translate('graph.diamond')
-      }
-    ];
-
-    this.availableSeriesTypes = [
-      {
-        value: 'line',
-        text: this.$translate('graph.line')
-      },
-      {
-        value: 'scatter',
-        text: this.$translate('graph.point')
-      }
-    ];
-
-    this.availableLineTypes = [
-      {
-        value: 'Solid',
-        text: this.$translate('graph.solid')
-      },
-      {
-        value: 'Dash',
-        text: this.$translate('graph.dash')
-      },
-      {
-        value: 'Dot',
-        text: this.$translate('graph.dot')
-      },
-      {
-        value: 'ShortDash',
-        text: this.$translate('graph.shortDash')
-      },
-      {
-        value: 'ShortDot',
-        text: this.$translate('graph.shortDot')
-      }
-    ];
-
-    this.availableXAxisTypes = [
-      {
-        value: 'limits',
-        text: 'Limits'
-      },
-      {
-        value: 'categories',
-        text: 'Categories'
-      }
-    ];
-
-    this.plotTypeToLimitType = {
-      line: 'limits',
-      scatter: 'limits',
-      column: 'categories'
-    };
-
+  ngOnInit(): void {
+    super.ngOnInit();
     this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
     if (this.enableMultipleYAxes) {
       this.numYAxes = this.authoringComponentContent.yAxis.length;
     }
     this.addAnyMissingYAxisFieldsToAllYAxes(this.authoringComponentContent.yAxis);
+    this.inputChangeSubscription = this.inputChange
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe(() => {
+        this.componentChanged();
+      });
   }
 
-  isMultipleYAxesEnabled() {
-    if (Array.isArray(this.authoringComponentContent.yAxis)) {
-      return true;
-    }
-    return false;
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.inputChangeSubscription.unsubscribe();
   }
 
-  addSeriesClicked() {
+  isMultipleYAxesEnabled(): boolean {
+    return Array.isArray(this.authoringComponentContent.yAxis);
+  }
+
+  addSeriesClicked(): void {
     const newSeries: any = this.createNewSeries();
     if (this.authoringComponentContent.graphType === 'line') {
       newSeries.type = 'line';
@@ -188,7 +181,7 @@ class GraphAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  createNewSeries() {
+  createNewSeries(): any {
     return {
       name: '',
       data: [],
@@ -199,7 +192,7 @@ class GraphAuthoringController extends EditComponentController {
     };
   }
 
-  deleteSeriesClicked(index) {
+  deleteSeriesClicked(index: number): void {
     let message = '';
     let seriesName = '';
     if (this.authoringComponentContent.series != null) {
@@ -209,11 +202,9 @@ class GraphAuthoringController extends EditComponentController {
       }
     }
     if (seriesName == null || seriesName === '') {
-      message = this.$translate('graph.areYouSureYouWantToDeleteTheSeries');
+      message = $localize`Are you sure you want to delete the series?`;
     } else {
-      message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', {
-        seriesName: seriesName
-      });
+      message = $localize`Are you sure you want to delete the "${seriesName}" series?`;
     }
     if (confirm(message)) {
       this.authoringComponentContent.series.splice(index, 1);
@@ -221,7 +212,7 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  enableTrialsClicked() {
+  enableTrialsClicked(): void {
     if (this.authoringComponentContent.enableTrials) {
       this.authoringComponentContent.canCreateNewTrials = true;
       this.authoringComponentContent.canDeleteTrials = true;
@@ -233,17 +224,7 @@ class GraphAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  showChooseBackgroundImagePopup() {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'background'
-    };
-    this.openAssetChooser(params);
-  }
-
-  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'background') {
       this.authoringComponentContent.backgroundImage = assetItem.fileName;
@@ -251,12 +232,12 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  addXAxisCategory() {
+  addXAxisCategory(): void {
     this.authoringComponentContent.xAxis.categories.push('');
     this.componentChanged();
   }
 
-  deleteXAxisCategory(index) {
+  deleteXAxisCategory(index: number): void {
     let confirmMessage = '';
     let categoryName = '';
     if (
@@ -266,11 +247,9 @@ class GraphAuthoringController extends EditComponentController {
       categoryName = this.authoringComponentContent.xAxis.categories[index];
     }
     if (categoryName == null || categoryName === '') {
-      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
+      confirmMessage = $localize`Are you sure you want to delete the category?`;
     } else {
-      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', {
-        categoryName: categoryName
-      });
+      confirmMessage = $localize`Are you sure you want to delete the "${categoryName}" category?`;
     }
     if (confirm(confirmMessage)) {
       this.authoringComponentContent.xAxis.categories.splice(index, 1);
@@ -278,7 +257,7 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  addSeriesDataPoint(series) {
+  addSeriesDataPoint(series: any): void {
     if (series != null && series.data != null) {
       if (
         this.authoringComponentContent.xAxis.type == null ||
@@ -292,16 +271,16 @@ class GraphAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  deleteSeriesDataPoint(series, index) {
+  deleteSeriesDataPoint(series: any, index: number): void {
     if (series != null && series.data != null) {
-      if (confirm(this.$translate('graph.areYouSureYouWantToDeleteTheDataPoint'))) {
+      if (confirm($localize`Are you sure you want to delete the data point?`)) {
         series.data.splice(index, 1);
         this.componentChanged();
       }
     }
   }
 
-  moveSeriesDataPointUp(series, index) {
+  moveSeriesDataPointUp(series: any, index: number): void {
     if (index > 0) {
       const dataPoint = series.data[index];
       series.data.splice(index, 1);
@@ -310,7 +289,7 @@ class GraphAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  moveSeriesDataPointDown(series, index) {
+  moveSeriesDataPointDown(series: any, index: number): void {
     if (index < series.data.length - 1) {
       const dataPoint = series.data[index];
       series.data.splice(index, 1);
@@ -319,7 +298,7 @@ class GraphAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  xAxisTypeChanged(newValue: string, oldValue: string): void {
+  xAxisTypeChanged(newValue: any, oldValue: string): void {
     if (oldValue === 'categories' && newValue === 'limits') {
       delete this.authoringComponentContent.xAxis.categories;
       this.authoringComponentContent.xAxis.min = 0;
@@ -334,27 +313,22 @@ class GraphAuthoringController extends EditComponentController {
       delete this.authoringComponentContent.xAxis.units;
       delete this.authoringComponentContent.yAxis.units;
       this.authoringComponentContent.xAxis.categories = [
-        this.$translate('graph.categoryOne'),
-        this.$translate('graph.categoryTwo')
+        $localize`Category One`,
+        $localize`Category Two`
       ];
       this.convertAllSeriesDataPoints(newValue);
     }
     this.componentChanged();
   }
 
-  convertAllSeriesDataPoints(xAxisType) {
+  convertAllSeriesDataPoints(xAxisType: string): void {
     const series = this.authoringComponentContent.series;
     for (const singleSeries of series) {
       this.convertSeriesDataPoints(singleSeries, xAxisType);
     }
   }
 
-  /**
-   * Convert all the data points in the series
-   * @param series convert the data points in the series
-   * @param xAxisType the new x axis type to convert to
-   */
-  convertSeriesDataPoints(series, xAxisType) {
+  convertSeriesDataPoints(series: any, xAxisType: string): void {
     const data = series.data;
     const convertedData = [];
     for (let d = 0; d < data.length; d++) {
@@ -376,7 +350,7 @@ class GraphAuthoringController extends EditComponentController {
     series.data = convertedData;
   }
 
-  enableMultipleYAxesChanged() {
+  enableMultipleYAxesChanged(): void {
     if (this.enableMultipleYAxes) {
       this.convertSingleYAxisToMultipleYAxes();
       this.numYAxes = this.authoringComponentContent.yAxis.length;
@@ -385,7 +359,7 @@ class GraphAuthoringController extends EditComponentController {
       this.addColorToSeries();
       this.componentChanged();
     } else {
-      if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
+      if (confirm($localize`Are you sure you want to remove multiple Y axes?`)) {
         this.convertMultipleYAxesToSingleYAxis();
         this.numYAxes = this.authoringComponentContent.yAxis.length;
         this.removeYAxisFromAllSeries();
@@ -396,7 +370,7 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  convertSingleYAxisToMultipleYAxes() {
+  convertSingleYAxisToMultipleYAxes(): void {
     const firstYAxis = this.authoringComponentContent.yAxis;
     this.addAnyMissingYAxisFields(firstYAxis);
     const secondYAxis = this.createYAxisObject();
@@ -404,7 +378,7 @@ class GraphAuthoringController extends EditComponentController {
     this.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
   }
 
-  createYAxisObject() {
+  createYAxisObject(): any {
     return {
       title: {
         text: '',
@@ -427,55 +401,58 @@ class GraphAuthoringController extends EditComponentController {
     };
   }
 
-  convertMultipleYAxesToSingleYAxis() {
+  convertMultipleYAxesToSingleYAxis(): void {
     this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis[0];
   }
 
-  addYAxisToAllSeries() {
+  addYAxisToAllSeries(): void {
     for (const singleSeries of this.authoringComponentContent.series) {
       singleSeries.yAxis = 0;
     }
   }
 
-  removeYAxisFromAllSeries() {
+  removeYAxisFromAllSeries(): void {
     for (const singleSeries of this.authoringComponentContent.series) {
       delete singleSeries.yAxis;
     }
   }
 
-  addColorToYAxes() {
+  addColorToYAxes(): void {
     for (let index = 0; index < this.authoringComponentContent.yAxis.length; index++) {
       const yAxis = this.authoringComponentContent.yAxis[index];
-      if (yAxis.title.style.color == null || yAxis.title.style.color === '') {
-        yAxis.title.style.color = this.GraphService.getSeriesColor(index);
-      }
-      if (yAxis.labels.style.color == null || yAxis.labels.style.color === '') {
-        yAxis.labels.style.color = this.GraphService.getSeriesColor(index);
-      }
+      const color = this.GraphService.getSeriesColor(index);
+      this.addColorToField(yAxis.title.style, color);
+      this.addColorToField(yAxis.labels.style, color);
     }
   }
 
-  addColorToSeries() {
+  addColorToField(field: any, color: string): void {
+    if (field.color == null || field.color === '') {
+      field.color = color;
+    }
+  }
+
+  addColorToSeries(): void {
     for (const singleSeries of this.authoringComponentContent.series) {
       this.setSeriesColorToMatchYAxisColor(singleSeries);
     }
   }
 
-  setSeriesColorToMatchYAxisColor(series) {
+  setSeriesColorToMatchYAxisColor(series: any): void {
     series.color = this.getYAxisColor(series.yAxis);
   }
 
-  getYAxisColor(index) {
+  getYAxisColor(index: number): string {
     return this.authoringComponentContent.yAxis[index].labels.style.color;
   }
 
-  numYAxesChanged(newValue, oldValue) {
+  numYAxesChanged(newValue: number, oldValue: number): void {
     if (newValue > oldValue) {
       this.increaseYAxes(newValue);
       this.addColorToYAxes();
       this.componentChanged();
     } else if (newValue < oldValue) {
-      if (confirm(this.$translate('graph.areYouSureYouWantToDecreaseTheNumberOfYAxes'))) {
+      if (confirm($localize`Are you sure you want to decrease the number of Y Axes?`)) {
         this.decreaseYAxes(newValue);
         this.updateSeriesYAxesIfNecessary();
         this.componentChanged();
@@ -485,7 +462,7 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  increaseYAxes(newNumYAxes) {
+  increaseYAxes(newNumYAxes: number): void {
     const oldNumYAxes = this.authoringComponentContent.yAxis.length;
     const numYAxesToAdd = newNumYAxes - oldNumYAxes;
     for (let n = 0; n < numYAxesToAdd; n++) {
@@ -493,14 +470,14 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  decreaseYAxes(newNumYAxes) {
+  decreaseYAxes(newNumYAxes: number): void {
     this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis.slice(
       0,
       newNumYAxes
     );
   }
 
-  updateSeriesYAxesIfNecessary() {
+  updateSeriesYAxesIfNecessary(): void {
     for (const singleSeries of this.authoringComponentContent.series) {
       if (!this.isYAxisIndexExists(singleSeries.yAxis)) {
         singleSeries.yAxis = 0;
@@ -509,11 +486,11 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  isYAxisIndexExists(yAxisIndex) {
+  isYAxisIndexExists(yAxisIndex: number): boolean {
     return this.authoringComponentContent.yAxis[yAxisIndex] != null;
   }
 
-  yAxisColorChanged(yAxisIndex) {
+  yAxisColorChanged(yAxisIndex: number): void {
     const yAxis = this.authoringComponentContent.yAxis[yAxisIndex];
     const color = yAxis.labels.style.color;
     yAxis.title.style.color = color;
@@ -521,7 +498,7 @@ class GraphAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  updateSeriesColors(yAxisIndex, color) {
+  updateSeriesColors(yAxisIndex: number, color: string): void {
     for (const singleSeries of this.authoringComponentContent.series) {
       if (singleSeries.yAxis === yAxisIndex) {
         singleSeries.color = color;
@@ -529,7 +506,7 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
+  addAnyMissingYAxisFieldsToAllYAxes(yAxis: any): void {
     if (this.GraphService.isMultipleYAxes(yAxis)) {
       yAxis.forEach((yAxis) => this.addAnyMissingYAxisFields(yAxis));
     } else {
@@ -537,7 +514,7 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  addAnyMissingYAxisFields(yAxis) {
+  addAnyMissingYAxisFields(yAxis: any): void {
     if (yAxis.title == null) {
       yAxis.title = {};
     }
@@ -564,7 +541,8 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 
-  seriesYAxisChanged(series) {
+  seriesYAxisChanged(series: any): void {
+    series.yAxis = parseInt(series.yAxis);
     this.setSeriesColorToMatchYAxisColor(series);
     this.componentChanged();
   }
@@ -606,15 +584,3 @@ class GraphAuthoringController extends EditComponentController {
     }
   }
 }
-
-const GraphAuthoring = {
-  bindings: {
-    nodeId: '@',
-    componentId: '@'
-  },
-  controller: GraphAuthoringController,
-  controllerAs: 'graphController',
-  templateUrl: 'wise5/components/graph/authoring.html'
-};
-
-export default GraphAuthoring;
