@@ -1459,6 +1459,18 @@
           <context context-type="linenumber">204</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">342</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">432</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
@@ -1886,6 +1898,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">355</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="53ea2772322e7d4d21515bb0c6dead283f8e18a5">
@@ -6184,6 +6200,10 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
@@ -6257,6 +6277,10 @@
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">246</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ac7627de4d6171adbfba4d934025c8c39debc469">
         <source>Choose an Image</source>
@@ -6291,6 +6315,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">228</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">254</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
@@ -6430,6 +6462,14 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">471</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">474</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
@@ -6467,6 +6507,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">483</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">486</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
@@ -6518,6 +6566,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">497</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">510</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
@@ -6604,6 +6664,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">195</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">361</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
@@ -6999,6 +7071,360 @@
           <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="650a3523bea71be4f81a70e915e09dcea7181b00">
+        <source>Graph Title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="91351439041dca5f5b124145517a9302f901e49f">
+        <source>Plot Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="98731d53a5b4a2f497d59766741b94edebd43e61">
+        <source>Graph Width</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7233346d3a5c3561fa315aa88a49d9e995d77a8b">
+        <source>Graph Height</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="52e2e5fb7c867108f84e802ca66150ec24438e79">
+        <source>X Axis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="fdf7cbdc140d0aab0f0b6c06065a0fd448ed6a2e">
+        <source>Title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="709667b73f9b5edd1e02c71c7aebb4ca4820ae91">
+        <source>Axis Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="be537f4ddb09e1a2856314f2cbe84063ab6b4170">
+        <source>Units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9abcd7c82643d60c22733470463f74e4a54bc069">
+        <source>Min</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c3ced4d162a0a55ee233a187ce7208ba5e922418">
+        <source>Max</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="97a50d727afd9926957096c30bc144712aa88088">
+        <source> Locked </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="04201f9d27abd7d6f58a4328ab98063ce1072006">
+        <source>Categories</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9c72729d40dd75b9ca2776c9bda3fba672ded2c6">
+        <source>Add Category</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="67203c1c76c8e357c9a3ad6274221f700d1d7f3c">
+        <source>Category Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e9902c7e6ea85423e851fff848a85ea83272edc2">
+        <source>Delete Category</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1140522c8f6da2bc67495ea06dcf0980889900b5">
+        <source> Enable Multiple Y Axes </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="fe9f80a8a82586443c3abefdec8dcb1af34c4921">
+        <source>Y Axis</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">412</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b5c8a1277af930044b7d1af51c1dd255330c8d2">
+        <source> Locked </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="faae7d3155b6f12b514d5ef9e05cbd0798d770ae">
+        <source>Left Side</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5ff3082b219b7b482432ce63e660bfb4bd85fb73">
+        <source>Right Side</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e4fe651bb5c044f7907fbdb25883bb5fda5cc49a">
+        <source>Round Values To</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">264</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="598a70ca8c56e07fe142d486e5967c381033bd2d">
+        <source> Enable Trials </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">280</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6de440998607d387a8127203c7bd317c3b18774a">
+        <source> Can Student Create Trials </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">289</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="62d6ece64d93b79ed76cdd1b9c62b209eb55c2f5">
+        <source> Can Student Delete Trials </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">297</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f4311517ccf49c52c4213779d595296f8e743788">
+        <source> Hide Existing Trials On New Trial </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">305</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1935002a5c6de8f0413a4cd23d423d8e1c90ccaa">
+        <source> Can Student Hide Series By Clicking On Legend </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">313</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="971a5a2e9c89378e6aa5f26c09c419d90230bdb7">
+        <source> Enable File Upload </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">321</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a188ee3850ef639d88bf669b5a9e164c34ab679b">
+        <source> Hide Legend </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">329</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f2602159bf76864fa86ee0cd8e1ce2370f27c88b">
+        <source>Series</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">335</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="27b8269966699afa5c5535400e1c2166d43c2d3b">
+        <source>Add Series</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">339</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d3997c27f2617426387b789af9e65af2f0b5b126">
+        <source> There are no series. Click the "Add Series" button to add a series. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">349</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7cd2168068d1fd50772c493d493f83e4e412ebc8">
+        <source>Symbol</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">368</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f61c6867295f3b53d23557021f2f4e0aa1d0b8fc">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">380</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e99698b8a300ae8dd85ec28d4ccd17ae70991ef2">
+        <source>Line Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">392</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="92dcd55cf1de2c32982b17bc68e28e338744c2ce">
+        <source> Can Student Edit </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">407</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="719b7390e171d9a797cacf692498409ce1811b5c">
+        <source> Y Axis <x equiv-text="{{yAxisIndex + 1}}" id="INTERPOLATION"/>: <x equiv-text="{{yAxis.title.text}}" id="INTERPOLATION_1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">418</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b6227dc3e17d5f8b796e21e712f8c55ebc9a1046">
+        <source>Data Points</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">425</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b5c5ea7ee14b645e592707054ca5b727bd985ad0">
+        <source>Add Data Point</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">429</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="eb652ec6e5b2ef867985722c158224053cca15ab">
+        <source>X</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">443</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5f735468df8e1a39a74409adff2c9a9a5f29ead8">
+        <source>Y</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">450</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="60868526620ee92a59b32a059834511e5ec8b6b8">
+        <source>Delete Data Point</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">494</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ecb2e91e2775870da0ea8e51b4951994493672fb">
+        <source>Delete Series</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">507</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="b8c5c01ab5965f003ba27c1aad429045431ba260">
         <source>Background Image</source>
         <context-group purpose="location">
@@ -7137,28 +7563,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
           <context context-type="linenumber">167</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="eb652ec6e5b2ef867985722c158224053cca15ab">
-        <source>X</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">169</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">186</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="5f735468df8e1a39a74409adff2c9a9a5f29ead8">
-        <source>Y</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">176</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">193</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="054b7124def3fc0eacfb779c0d98a6dc4dec2ae3">

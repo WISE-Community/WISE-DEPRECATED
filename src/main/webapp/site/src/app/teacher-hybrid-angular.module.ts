@@ -56,6 +56,7 @@ import { TableAuthoring } from '../../../wise5/components/table/table-authoring/
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
 import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
 import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
+import { GraphAuthoring } from '../../../wise5/components/graph/graph-authoring/graph-authoring.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-a
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
     EmbeddedAuthoring,
+    GraphAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
     ManageStudentsComponent,
