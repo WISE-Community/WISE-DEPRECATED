@@ -1,0 +1,84 @@
+<mat-form-field class="prompt">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<span i18n>Oscillator Types</span>
+<span *ngIf="authoringComponentContent.oscillatorTypes == null || authoringComponentContent.oscillatorTypes.length === 0"
+    class="no-oscillator-type-message"
+    i18n>
+  (There are no oscillator types selected. Please select at least one oscillator type.)
+</span>
+<div class="oscillator-types-container">
+  <mat-checkbox
+      color="primary"
+      class="oscillator-type"
+      [(ngModel)]="sineChecked"
+      (ngModelChange)="oscillatorTypeClicked()"
+      i18n>
+    Sine
+  </mat-checkbox>
+  <br/>
+  <mat-checkbox
+      color="primary"
+      class="oscillator-type"
+      [(ngModel)]="squareChecked"
+      (ngModelChange)="oscillatorTypeClicked()"
+      i18n>
+    Square
+  </mat-checkbox>
+  <br/>
+  <mat-checkbox
+      color="primary"
+      class="oscillator-type"
+      [(ngModel)]="triangleChecked"
+      (ngModelChange)="oscillatorTypeClicked()"
+      i18n>
+    Triangle
+  </mat-checkbox>
+  <br/>
+  <mat-checkbox
+      color="primary"
+      class="oscillator-type"
+      [(ngModel)]="sawtoothChecked"
+      (ngModelChange)="oscillatorTypeClicked()"
+      i18n>
+    Sawtooth
+  </mat-checkbox>
+</div>
+<mat-form-field class="number-input">
+  <mat-label i18n>Starting Frequencey</mat-label>
+  <input matInput
+      type="number"
+      min="1"
+      [(ngModel)]="authoringComponentContent.startingFrequency"
+      (ngModelChange)="inputChange.next($event)"/>
+</mat-form-field>
+<br/>
+<mat-form-field class="number-input">
+  <mat-label i18n>Oscillator Width (Pixels)</mat-label>
+  <input matInput
+      type="number"
+      min="1"
+      [(ngModel)]="authoringComponentContent.oscilloscopeWidth"
+      (ngModelChange)="inputChange.next($event)"/>
+</mat-form-field>
+<mat-form-field class="number-input">
+  <mat-label i18n>Oscillator Height (Pixels)</mat-label>
+  <input matInput
+      type="number"
+      min="1"
+      [(ngModel)]="authoringComponentContent.oscilloscopeHeight"
+      (ngModelChange)="inputChange.next($event)"/>
+</mat-form-field>
+<mat-form-field class="number-input">
+  <mat-label i18n>Oscillator Grid Size (Pixels)</mat-label>
+  <input matInput
+      type="number"
+      min="1"
+      [(ngModel)]="authoringComponentContent.gridCellSize"
+      (ngModelChange)="inputChange.next($event)"/>
+</mat-form-field>
