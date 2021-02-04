@@ -161,7 +161,7 @@
   </mat-form-field>
   <mat-form-field class="axis-units">
     <mat-label i18n>Units</mat-label>
-    <input matInput 
+    <input matInput
         [(ngModel)]="authoringComponentContent.yAxis.units"
         (ngModelChange)="inputChange.next($event)"/>
   </mat-form-field>
@@ -250,7 +250,7 @@
   </mat-form-field>
   <button mat-raised-button
       color="primary"
-      (click)="showChooseBackgroundImagePopup()"
+      (click)="chooseAsset('background')"
       matTooltip="Choose an Image"
       matTooltipPosition="above"
       i18n-matTooltip

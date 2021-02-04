@@ -158,18 +158,11 @@ export class GraphAuthoring extends ComponentAuthoring {
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-    this.unsubscribeAll();
-  }
-
-  unsubscribeAll() {
     this.inputChangeSubscription.unsubscribe();
   }
 
   isMultipleYAxesEnabled(): boolean {
-    if (Array.isArray(this.authoringComponentContent.yAxis)) {
-      return true;
-    }
-    return false;
+    return Array.isArray(this.authoringComponentContent.yAxis);
   }
 
   addSeriesClicked(): void {
@@ -229,16 +222,6 @@ export class GraphAuthoring extends ComponentAuthoring {
       this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
     }
     this.componentChanged();
-  }
-
-  showChooseBackgroundImagePopup(): void {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'background'
-    };
-    this.openAssetChooser(params);
   }
 
   assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
@@ -437,12 +420,15 @@ export class GraphAuthoring extends ComponentAuthoring {
   addColorToYAxes(): void {
     for (let index = 0; index < this.authoringComponentContent.yAxis.length; index++) {
       const yAxis = this.authoringComponentContent.yAxis[index];
-      if (yAxis.title.style.color == null || yAxis.title.style.color === '') {
-        yAxis.title.style.color = this.GraphService.getSeriesColor(index);
-      }
-      if (yAxis.labels.style.color == null || yAxis.labels.style.color === '') {
-        yAxis.labels.style.color = this.GraphService.getSeriesColor(index);
-      }
+      const color = this.GraphService.getSeriesColor(index);
+      this.addColorToField(yAxis.title.style, color);
+      this.addColorToField(yAxis.labels.style, color);
+    }
+  }
+
+  addColorToField(field: any, color: string): void {
+    if (field.color == null || field.color === '') {
+      field.color = color;
     }
   }
 
