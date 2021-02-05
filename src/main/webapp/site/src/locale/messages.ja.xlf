@@ -6710,6 +6710,134 @@
         </context-group>
         <target state="needs-translation">Open Unit URL in New Tab</target>
       </trans-unit>
+      <trans-unit datatype="html" id="6bc7f2c14cb3141e690735b278591defe07c68fb">
+        <source>Prompt</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Prompt</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="4ef67b5c60d20815a15d316e469e88c0ca9b6950">
+        <source>Oscillator Types</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <target state="needs-translation">Oscillator Types</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3332b3737aa91e0e1af6e4c2e93b09228e870362">
+        <source> (There are no oscillator types selected. Please select at least one oscillator type.) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target state="needs-translation"> (There are no oscillator types selected. Please select at least one oscillator type.) </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="4915e52ceb9f848948be8fd512147930175f7324">
+        <source> Sine </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <target state="needs-translation"> Sine </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e35f9b368be2bef8b2ff368a025f099d1b7b4a7e">
+        <source> Square </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target state="needs-translation"> Square </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d23bd1f7fd1a0e7da21fe90f754dc5080973f0e9">
+        <source> Triangle </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <target state="needs-translation"> Triangle </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="2621fc6a642df197d678dd4121769581de70f385">
+        <source> Sawtooth </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <target state="needs-translation"> Sawtooth </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="6f911a6432e479c1a50aefedbf94e480d7067def">
+        <source>Starting Frequencey</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <target state="needs-translation">Starting Frequencey</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="584114dd79e680cb2262384fe8fc40c40149e9b3">
+        <source>Oscillator Width (Pixels)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <target state="needs-translation">Oscillator Width (Pixels)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="dd7074cd090ce1bc8c04b82d5e86dc19e550819c">
+        <source>Oscillator Height (Pixels)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <target state="needs-translation">Oscillator Height (Pixels)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="45565845bc7e8f7999ef848f155e2c7d5dbb248e">
+        <source>Oscillator Grid Size (Pixels)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <target state="needs-translation">Oscillator Grid Size (Pixels)</target>
+      </trans-unit>
       <trans-unit datatype="html" id="64216e7ef99605d9f05614beb1919360ee012177">
         <source>Import Step(s)</source>
         <context-group purpose="location">
@@ -6865,50 +6993,6 @@
           <context context-type="linenumber">19</context>
         </context-group>
         <target state="needs-translation"> 1 assessment item </target>
-      </trans-unit>
-      <trans-unit datatype="html" id="6bc7f2c14cb3141e690735b278591defe07c68fb">
-        <source>Prompt</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/discussion/discussion-authoring/discussion-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/graph/graph-authoring/graph-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/summary/summary-authoring/summary-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/table/table-authoring/table-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <target state="needs-translation">Prompt</target>
       </trans-unit>
       <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
         <source>Enter Prompt Here</source>
