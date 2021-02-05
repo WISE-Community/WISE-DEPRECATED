@@ -4,7 +4,7 @@ import * as angular from 'angular';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { AudioOscillatorService } from './audioOscillatorService';
 import { EditAudioOscillatorAdvancedComponent } from './edit-audio-oscillator-advanced/edit-audio-oscillator-advanced.component';
-import { AudioOscillatorAuthoring } from './audo-oscillator-authoring/audio-oscillator-authoring.component';
+import { AudioOscillatorAuthoring } from './audio-oscillator-authoring/audio-oscillator-authoring.component';
 
 const audioOscillatorAuthoringComponentModule = angular
   .module('audioOscillatorAuthoringComponentModule', ['pascalprecht.translate'])

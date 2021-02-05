@@ -49,18 +49,10 @@ export class AudioOscillatorAuthoring extends ComponentAuthoring {
   }
 
   populateCheckedOscillatorTypes(): void {
-    if (this.authoringComponentContent.oscillatorTypes.includes('sine')) {
-      this.sineChecked = true;
-    }
-    if (this.authoringComponentContent.oscillatorTypes.includes('square')) {
-      this.squareChecked = true;
-    }
-    if (this.authoringComponentContent.oscillatorTypes.includes('triangle')) {
-      this.triangleChecked = true;
-    }
-    if (this.authoringComponentContent.oscillatorTypes.includes('sawtooth')) {
-      this.sawtoothChecked = true;
-    }
+    this.sineChecked = this.authoringComponentContent.oscillatorTypes.includes('sine');
+    this.squareChecked = this.authoringComponentContent.oscillatorTypes.includes('square');
+    this.triangleChecked = this.authoringComponentContent.oscillatorTypes.includes('triangle');
+    this.sawtoothChecked = this.authoringComponentContent.oscillatorTypes.includes('sawtooth');
   }
 
   oscillatorTypeClicked(): void {
