@@ -57,11 +57,13 @@ import { DiscussionAuthoring } from '../../../wise5/components/discussion/discus
 import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
 import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
 import { GraphAuthoring } from '../../../wise5/components/graph/graph-authoring/graph-authoring.component';
+import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component';
 
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
     AlertStatusCornerComponent,
+    AudioOscillatorAuthoring,
     ChooseImportStepComponent,
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
