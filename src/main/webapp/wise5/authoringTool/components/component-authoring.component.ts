@@ -125,4 +125,12 @@ export abstract class ComponentAuthoring {
   }
 
   assetSelected({ nodeId, componentId, assetItem, target }): void {}
+
+  getComponentsByNodeId(nodeId: string): any[] {
+    return this.ProjectService.getComponentsByNodeId(nodeId);
+  }
+
+  getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
+    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+  }
 }

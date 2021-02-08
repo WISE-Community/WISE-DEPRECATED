@@ -1,0 +1,467 @@
+<mat-form-field class="prompt">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<div fxLayout="row">
+  <mat-form-field class="dimension-input">
+    <mat-label i18n>Width (Pixels)</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.widthInPixels"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="dimension-input">
+    <mat-label i18n>Height (Pixels)</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.heightInPixels"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+</div>
+<div fxLayout="row">
+  <mat-form-field class="dimension-input">
+    <mat-label i18n>Width (Units)</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.widthInUnits"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="dimension-input">
+    <mat-label i18n>Height (Units)</mat-label>
+    <input matInput
+        type="number"
+        min="1"
+        [(ngModel)]="authoringComponentContent.heightInUnits"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+</div>
+<div fxLayout="row">
+  <mat-form-field class="data-origin-input">
+    <mat-label i18n>Data Origin X (Pixels)</mat-label>
+    <input matInput
+        type="number"
+        min="0"
+        [(ngModel)]="authoringComponentContent.dataXOriginInPixels"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="data-origin-input">
+    <mat-label i18n>Data Origin Y (Pixels)</mat-label>
+    <input matInput
+        type="number"
+        min="0"
+        [(ngModel)]="authoringComponentContent.dataYOriginInPixels"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+</div>
+<div>
+  <mat-radio-group
+      [(ngModel)]="authoringComponentContent.coordinateSystem"
+      (ngModelChange)="componentChanged()"
+      fxLayout="column">
+    <mat-radio-button
+        color="primary"
+        class="radio-button"
+        value="screen"
+        i18n>
+      Screen
+    </mat-radio-button>
+    <mat-radio-button
+        color="primary"
+        class="radio-button"
+        value="cartesian"
+        i18n>
+      Cartesian
+    </mat-radio-button>
+  </mat-radio-group>
+</div>
+<div class="add-button-container">
+  <span class="add-button-label" i18n>Objects</span>
+  <button mat-raised-button
+      color="primary"
+      (click)="addObject()"
+      matTooltip="Add Object"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Add"
+      i18n-aria-label>
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div *ngFor="let object of authoringComponentContent.objects; index as objectIndex; first as isFirst; last as isLast"
+    class="object-container">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <div>
+      <mat-radio-group
+          [(ngModel)]="object.type"
+          (ngModelChange)="authoredObjectTypeChanged(object)"
+          fxLayout="column">
+        <mat-radio-button
+            color="primary"
+            class="radio-button"
+            value="image"
+            i18n>
+          Image
+        </mat-radio-button>
+        <mat-radio-button
+            color="primary"
+            class="radio-button"
+            value="text"
+            i18n>
+          Text
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div *ngIf="object.type === 'image'"
+         fxLayout="row" fxLayoutAlign="start center" class="object-image-input-container">
+      <mat-form-field class="object-image-input">
+        <mat-label i18n>Image</mat-label>
+        <input matInput
+            [(ngModel)]="object.image"
+            (ngModelChange)="inputChange.next($event)"/>
+      </mat-form-field>
+      <button mat-raised-button
+          color="primary"
+          class="button"
+          (click)="chooseImage(object)"
+          matTooltip="Choose an Image"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Image"
+          i18n-aria-label>
+        <mat-icon>insert_photo</mat-icon>
+      </button>
+    </div>
+    <mat-form-field *ngIf="object.type === 'text'" class="object-text-input">
+      <mat-label i18n>Text</mat-label>
+      <input matInput
+          [(ngModel)]="object.text"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <span fxFlex></span>
+    <button mat-raised-button
+        color="primary"
+        class="button"
+        [disabled]="isFirst"
+        (click)="moveAuthoredObjectUp(objectIndex)"
+        matTooltip="Move Object Up"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Up"
+        i18n-aria-label>
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+    <button mat-raised-button
+        color="primary"
+        class="button"
+        [disabled]="isLast"
+        (click)="moveAuthoredObjectDown(objectIndex)"
+        matTooltip="Move Object Down"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Down"
+        i18n-aria-label>
+      <mat-icon>arrow_downward</mat-icon>
+    </button>
+    <button mat-raised-button
+        color="primary"
+        class="button"
+        (click)="confirmDeleteAnimationObject(objectIndex)"
+        matTooltip="Delete Object"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Delete"
+        i18n-aria-label>
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  <div fxLayout="row"
+       *ngIf="object.type === 'image'">
+    <mat-form-field class="image-dimension">
+      <mat-label i18n>Image Width (Pixels)</mat-label>
+      <input matInput
+          type="number"
+          min="1"
+          [(ngModel)]="object.width"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <mat-form-field class="image-dimension">
+      <mat-label i18n>Image Height (Pixels)</mat-label>
+      <input matInput
+          type="number"
+          min="1"
+          [(ngModel)]="object.height"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+  </div>
+  <div *ngIf="object.type === 'image'" fxLayout="row" fxLayoutAlign="start center">
+    <mat-form-field class="image-moving-input">
+      <mat-label i18n>Image Moving Left</mat-label>
+      <input matInput
+          [(ngModel)]="object.imageMovingLeft"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <button mat-raised-button
+        color="primary"
+        class="image-button"
+        (click)="chooseImageMovingLeft(object)"
+        matTooltip="Choose an Image"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Choose an Image"
+        i18n-aria-label>
+      <mat-icon>insert_photo</mat-icon>
+    </button>
+    <mat-form-field class="image-moving-input">
+      <mat-label i18n>Image Moving Right</mat-label>
+      <input matInput
+          [(ngModel)]="object.imageMovingRight"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <button mat-raised-button
+        color="primary"
+        class="image-button"
+        (click)="chooseImageMovingRight(object)"
+        matTooltip="Choose an Image"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Choose an Image"
+        i18n-aria-label>
+      <mat-icon>insert_photo</mat-icon>
+    </button>
+  </div>
+  <div fxLayout="row">
+    <mat-form-field class="image-location">
+      <mat-label i18n>Location X (Pixels)</mat-label>
+      <input matInput
+          type="number"
+          min="0"
+          [(ngModel)]="object.pixelX"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <mat-form-field class="image-location">
+      <mat-label i18n>Location Y (Pixels)</mat-label>
+      <input matInput
+          type="number"
+          min="0"
+          [(ngModel)]="object.pixelY"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <mat-form-field class="image-data">
+      <mat-label i18n>Data X (Units)</mat-label>
+      <input matInput
+          type="number"
+          min="0"
+          [(ngModel)]="object.dataX"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+    <mat-form-field class="image-data">
+      <mat-label i18n>Data Y (Units)</mat-label>
+      <input matInput
+          type="number"
+          min="0"
+          [(ngModel)]="object.dataY"
+          (ngModelChange)="inputChange.next($event)"/>
+    </mat-form-field>
+  </div>
+  <div class="add-button-container">
+    <span class="add-button-label" i18n>Data Points</span>
+    <button mat-raised-button
+        color="primary"
+        class="button"
+        (click)="addDataPointToObject(object)"
+        matTooltip="Add Data Point"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Add"
+        i18n-aria-label>
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div>
+    <div *ngFor="let dataPoint of object.data; index as dataPointIndex; first as isFirst; last as isLast"
+         fxLayout="row wrap"
+         fxLayoutAlign="start center"
+         class="data-point-container">
+      <mat-form-field class="data-point-input">
+        <mat-label i18n>Time</mat-label>
+        <input matInput
+            type="number"
+            min="0"
+            [(ngModel)]="dataPoint.t"
+            (ngModelChange)="inputChange.next($event)"/>
+      </mat-form-field>
+      <mat-form-field class="data-point-input">
+        <mat-label i18n>X</mat-label>
+        <input matInput
+            type="number"
+            min="0"
+            [(ngModel)]="dataPoint.x"
+            (ngModelChange)="inputChange.next($event)"/>
+      </mat-form-field>
+      <mat-form-field class="data-point-input">
+        <mat-label i18n>Y</mat-label>
+        <input matInput
+            type="number"
+            min="0"
+            [(ngModel)]="dataPoint.y"
+            (ngModelChange)="inputChange.next($event)"/>
+      </mat-form-field>
+      <mat-form-field class="data-point-image">
+        <mat-label i18n>Change to Image (Optional)</mat-label>
+        <input matInput
+            [(ngModel)]="dataPoint.image"
+            (ngModelChange)="inputChange.next($event)"/>
+      </mat-form-field>
+      <button mat-raised-button
+          color="primary"
+          class="image-button"
+          (click)="chooseImage(dataPoint)"
+          matTooltip="Choose an Image"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          aria-label="Choose an Image"
+          i18n-aria-label>
+        <mat-icon>insert_photo</mat-icon>
+      </button>
+      <div>
+        <button mat-raised-button
+            color="primary"
+            class="button"
+            [disabled]="isFirst"
+            (click)="moveAuthoredObjectDataPointUp(object, dataPointIndex)"
+            matTooltip="Move Up"
+            matTooltipPosition="above"
+            i18n-matTooltip
+            aria-label="Up"
+            i18n-aria-label>
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-raised-button
+            color="primary"
+            class="button"
+            [disabled]="isLast"
+            (click)="moveAuthoredObjectDataPointDown(object, dataPointIndex)"
+            matTooltip="Move Down"
+            matTooltipPosition="above"
+            i18n-matTooltip
+            aria-label="Down"
+            i18n-aria-label>
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+        <button mat-raised-button
+            color="primary"
+            class="button"
+            (click)="confirmDeleteAnimationObjectDataPoint(object, dataPointIndex)"
+            matTooltip="Delete Data Point"
+            matTooltipPosition="above"
+            i18n-matTooltip
+            aria-label="Delete"
+            i18n-aria-label>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="add-button-container">
+    <span class="add-button-label" i18n>Data Source</span>
+    <button mat-raised-button
+        color="primary"
+        class="button"
+        *ngIf="object.dataSource == null"
+        (click)="addDataSource(object)"
+        matTooltip="Add Data Source"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Add"
+        i18n-aria-label>
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-raised-button
+        color="primary"
+        *ngIf="object.dataSource != null"
+        (click)="confirmDeleteDataSource(object)"
+        matTooltip="Delete Data Source"
+        matTooltipPosition="above"
+        i18n-matTooltip
+        aria-label="Delete"
+        i18n-aria-label>
+      <mat-icon>delete</mat-icon>
+    </button>
+    <br/>
+    <div *ngIf="object.dataSource != null">
+      <mat-form-field class="choose-step">
+        <mat-label i18n>Step</mat-label>
+        <mat-select
+            [(ngModel)]="object.dataSource.nodeId"
+            (ngModelChange)="dataSourceNodeChanged(object)">
+          <mat-option *ngFor="let stepNodeDetails of stepNodesDetails"
+                     value="{{stepNodeDetails.nodeId}}">
+            {{ stepNodeDetails.nodePositionAndTitle }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="choose-component">
+        <mat-label i18n>Component</mat-label>
+        <mat-select
+            [(ngModel)]="object.dataSource.componentId"
+            (ngModelChange)="dataSourceComponentChanged(object)">
+          <mat-option *ngFor="let component of getComponentsByNodeId(object.dataSource.nodeId); index as componentIndex"
+              value="{{component.id}}"
+              [disabled]="!isAvailableDataSourceComponentType(component.type)">
+            {{componentIndex + 1}}. {{component.type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div *ngIf="getComponentByNodeIdAndComponentId(object.dataSource.nodeId, object.dataSource.componentId).type === 'Graph'"
+           fxLayout="row wrap">
+        <mat-form-field class="index-input">
+          <mat-label i18n>Trial Index</mat-label>
+          <input matInput
+              type="number"
+              min="0"
+              [(ngModel)]="object.dataSource.trialIndex"
+              (ngModelChange)="inputChange.next($event)"/>
+        </mat-form-field>
+        <mat-form-field class="index-input">
+          <mat-label i18n>Series Index</mat-label>
+          <input matInput
+              type="number"
+              min="0"
+              [(ngModel)]="object.dataSource.seriesIndex"
+              (ngModelChange)="inputChange.next($event)"/>
+        </mat-form-field>
+        <mat-form-field class="index-input">
+          <mat-label i18n>Time Column Index</mat-label>
+          <input matInput
+              type="number"
+              min="0"
+              [(ngModel)]="object.dataSource.tColumnIndex"
+              (ngModelChange)="inputChange.next($event)"/>
+        </mat-form-field>
+        <mat-form-field class="index-input">
+          <mat-label i18n>X Column Index</mat-label>
+          <input matInput
+              type="number"
+              min="0"
+              [(ngModel)]="object.dataSource.xColumnIndex"
+              (ngModelChange)="inputChange.next($event)"/>
+        </mat-form-field>
+        <mat-form-field class="index-input">
+          <mat-label i18n>Y Column Index</mat-label>
+          <input matInput
+              type="number"
+              min="0"
+              [(ngModel)]="object.dataSource.yColumnIndex"
+              (ngModelChange)="inputChange.next($event)"/>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>

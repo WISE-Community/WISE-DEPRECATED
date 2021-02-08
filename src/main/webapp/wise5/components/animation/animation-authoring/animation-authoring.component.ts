@@ -1,41 +1,43 @@
 'use strict';
 
-import { Directive } from '@angular/core';
-import { EditComponentController } from '../../authoringTool/components/editComponentController';
+import { Component } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
+import { ComponentAuthoring } from '../../../authoringTool/components/component-authoring.component';
+import { ConfigService } from '../../../services/configService';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
+import { UtilService } from '../../../services/utilService';
 
-@Directive()
-class AnimationAuthoringController extends EditComponentController {
-  static $inject = [
-    '$filter',
-    'ConfigService',
-    'NodeService',
-    'NotificationService',
-    'ProjectAssetService',
-    'ProjectService',
-    'UtilService'
-  ];
+@Component({
+  selector: 'animation-authoring',
+  templateUrl: 'animation-authoring.component.html',
+  styleUrls: ['animation-authoring.component.scss']
+})
+export class AnimationAuthoring extends ComponentAuthoring {
+  stepNodesDetails: string[];
+  availableDataSourceComponentTypes = ['Graph'];
+  inputChange: Subject<string> = new Subject<string>();
+  inputChangeSubscription: Subscription;
 
   constructor(
-    $filter,
-    ConfigService,
-    NodeService,
-    NotificationService,
-    ProjectAssetService,
-    ProjectService,
-    UtilService
+    protected ConfigService: ConfigService,
+    protected NodeService: NodeService,
+    protected ProjectAssetService: ProjectAssetService,
+    protected ProjectService: TeacherProjectService,
+    protected UtilService: UtilService
   ) {
-    super(
-      $filter,
-      ConfigService,
-      NodeService,
-      NotificationService,
-      ProjectAssetService,
-      ProjectService,
-      UtilService
-    );
+    super(ConfigService, NodeService, ProjectAssetService, ProjectService);
+    this.stepNodesDetails = this.ProjectService.getStepNodesDetailsInOrder();
+    this.inputChangeSubscription = this.inputChange
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe(() => {
+        this.componentChanged();
+      });
   }
 
-  addObject() {
+  addObject(): void {
     if (this.authoringComponentContent.objects == null) {
       this.authoringComponentContent.objects = [];
     }
@@ -47,7 +49,7 @@ class AnimationAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  addDataPointToObject(authoredObject) {
+  addDataPointToObject(authoredObject: any): void {
     if (this.authoredObjectHasDataSource(authoredObject)) {
       if (this.askIfWantToDeleteDataSource()) {
         delete authoredObject.dataSource;
@@ -59,38 +61,40 @@ class AnimationAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  authoredObjectHasDataSource(authoredObject) {
+  authoredObjectHasDataSource(authoredObject: any): boolean {
     return authoredObject.dataSource != null;
   }
 
-  askIfWantToDeleteDataSource() {
-    return confirm(this.$translate('animation.areYouSureYouWantToAddADataPoint'));
+  askIfWantToDeleteDataSource(): boolean {
+    return confirm(
+      $localize`You can only have Data Points or a Data Source. If you add a Data Point, the Data Source will be deleted. Are you sure you want to add a Data Point?`
+    );
   }
 
-  initializeAuthoredObjectDataIfNecessary(authoredObject) {
+  initializeAuthoredObjectDataIfNecessary(authoredObject: any): void {
     if (authoredObject.data == null) {
       authoredObject.data = [];
     }
   }
 
-  addNewDataPoint(authoredObject) {
+  addNewDataPoint(authoredObject: any): void {
     this.initializeAuthoredObjectDataIfNecessary(authoredObject);
     const newDataPoint = {};
     authoredObject.data.push(newDataPoint);
   }
 
-  confirmDeleteAnimationObjectDataPoint(animationObject, index) {
-    if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'))) {
+  confirmDeleteAnimationObjectDataPoint(animationObject: any, index: number): void {
+    if (confirm($localize`Are you sure you want to delete this data point?`)) {
       this.deleteAnimationObjectDataPoint(animationObject, index);
     }
   }
 
-  deleteAnimationObjectDataPoint(animationObject, index) {
+  deleteAnimationObjectDataPoint(animationObject: any, index: number): void {
     animationObject.data.splice(index, 1);
     this.componentChanged();
   }
 
-  authoringMoveAnimationObjectDataPointUp(object, index) {
+  authoringMoveAnimationObjectDataPointUp(object: any, index: number): void {
     if (this.canMoveUp(index)) {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
@@ -99,7 +103,7 @@ class AnimationAuthoringController extends EditComponentController {
     }
   }
 
-  moveAuthoredObjectDataPointUp(object, index) {
+  moveAuthoredObjectDataPointUp(object: any, index: number): void {
     if (this.canMoveUp(index)) {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
@@ -108,7 +112,7 @@ class AnimationAuthoringController extends EditComponentController {
     }
   }
 
-  moveAuthoredObjectDataPointDown(object, index) {
+  moveAuthoredObjectDataPointDown(object: any, index: number): void {
     if (this.canMoveDown(index, object.data.length)) {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
@@ -117,7 +121,7 @@ class AnimationAuthoringController extends EditComponentController {
     }
   }
 
-  moveAuthoredObjectUp(index) {
+  moveAuthoredObjectUp(index: number): void {
     if (this.canMoveUp(index)) {
       const objects = this.authoringComponentContent.objects;
       const object = objects[index];
@@ -127,7 +131,7 @@ class AnimationAuthoringController extends EditComponentController {
     }
   }
 
-  moveAuthoredObjectDown(index) {
+  moveAuthoredObjectDown(index: number): void {
     const objects = this.authoringComponentContent.objects;
     if (this.canMoveDown(index, objects.length)) {
       const object = objects[index];
@@ -137,28 +141,32 @@ class AnimationAuthoringController extends EditComponentController {
     }
   }
 
-  canMoveUp(index) {
+  canMoveUp(index: number): boolean {
     return index > 0;
   }
 
-  canMoveDown(index, length) {
+  canMoveDown(index: number, length: number): boolean {
     return index < length - 1;
   }
 
-  confirmDeleteAnimationObject(index) {
-    if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'))) {
+  confirmDeleteAnimationObject(index: number): void {
+    if (confirm($localize`Are you sure you want to delete this object?`)) {
       this.deleteAnimationObject(index);
     }
   }
 
-  deleteAnimationObject(index) {
+  deleteAnimationObject(index: number): void {
     this.authoringComponentContent.objects.splice(index, 1);
     this.componentChanged();
   }
 
-  addDataSource(authoredObject) {
+  addDataSource(authoredObject: any): void {
     if (this.authoredObjectHasData(authoredObject)) {
-      if (confirm(this.$translate('animation.areYouSureYouWantToAddADataSource'))) {
+      if (
+        confirm(
+          $localize`You can only have Data Points or a Data Source. If you add a Data Source, the Data Points will be deleted. Are you sure you want to add a Data Source?`
+        )
+      ) {
         this.deleteDataAndAddDataSource(authoredObject);
       }
     } else {
@@ -167,43 +175,52 @@ class AnimationAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  authoredObjectHasData(authoredObject) {
+  authoredObjectHasData(authoredObject: any): boolean {
     return authoredObject.data != null && authoredObject.data.length > 0;
   }
 
-  deleteDataAndAddDataSource(authoredObject) {
+  deleteDataAndAddDataSource(authoredObject: any): void {
     this.deleteDataFromAuthoredObject(authoredObject);
     this.addDataSourceToAuthoredObject(authoredObject);
   }
 
-  deleteDataFromAuthoredObject(authoredObject) {
+  deleteDataFromAuthoredObject(authoredObject: any): void {
     delete authoredObject.data;
   }
 
-  addDataSourceToAuthoredObject(authoredObject) {
+  addDataSourceToAuthoredObject(authoredObject: any): void {
     authoredObject.dataSource = {};
   }
 
-  confirmDeleteDataSource(animationObject) {
-    if (confirm(this.$translate('animation.areYouSureYouWantToDeleteTheDataSource'))) {
+  confirmDeleteDataSource(animationObject: any): void {
+    if (confirm($localize`Are you sure you want to delete the Data Source?`)) {
       this.authoringDeleteDataSource(animationObject);
     }
   }
 
-  authoringDeleteDataSource(animationObject) {
+  authoringDeleteDataSource(animationObject: any): void {
     delete animationObject.dataSource;
     this.componentChanged();
   }
 
-  dataSourceNodeChanged(authoredObject) {
+  dataSourceNodeChanged(authoredObject: any): void {
     const nodeId = authoredObject.dataSource.nodeId;
     authoredObject.dataSource = {
       nodeId: nodeId
     };
-    this.componentChanged();
+    const components = this.getComponentsByNodeId(nodeId);
+    const availableDataSourceComponents = components.filter((component) => {
+      return this.availableDataSourceComponentTypes.includes(component.type);
+    });
+    if (availableDataSourceComponents.length === 1) {
+      authoredObject.dataSource.componentId = availableDataSourceComponents[0].id;
+      this.dataSourceComponentChanged(authoredObject);
+    } else {
+      this.componentChanged();
+    }
   }
 
-  dataSourceComponentChanged(authoredObject) {
+  dataSourceComponentChanged(authoredObject: any): void {
     const nodeId = authoredObject.dataSource.nodeId;
     const componentId = authoredObject.dataSource.componentId;
     const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
@@ -211,32 +228,36 @@ class AnimationAuthoringController extends EditComponentController {
       nodeId: nodeId,
       componentId: componentId
     };
-    if (component.type === 'Graph') {
+    if (this.isAvailableDataSourceComponentType(component.type)) {
       this.setDefaultParamsForGraphDataSource(authoredObject);
     }
     this.componentChanged();
   }
 
-  setDefaultParamsForGraphDataSource(authoredObject) {
+  isAvailableDataSourceComponentType(componentType: string) {
+    return this.availableDataSourceComponentTypes.includes(componentType);
+  }
+
+  setDefaultParamsForGraphDataSource(authoredObject: any): void {
     authoredObject.dataSource.trialIndex = 0;
     authoredObject.dataSource.seriesIndex = 0;
     authoredObject.dataSource.tColumnIndex = 0;
     authoredObject.dataSource.xColumnIndex = 1;
   }
 
-  chooseImage(authoredObject) {
+  chooseImage(authoredObject: any): void {
     const targetString = 'image';
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.openAssetChooser(params);
   }
 
-  chooseImageMovingLeft(authoredObject) {
+  chooseImageMovingLeft(authoredObject: any): void {
     const targetString = 'imageMovingLeft';
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.openAssetChooser(params);
   }
 
-  chooseImageMovingRight(authoredObject) {
+  chooseImageMovingRight(authoredObject: any): void {
     const targetString = 'imageMovingRight';
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.openAssetChooser(params);
@@ -247,7 +268,7 @@ class AnimationAuthoringController extends EditComponentController {
    * @param {object} authoredObject
    * @returns {object}
    */
-  createOpenAssetChooserParamsObject(targetString, authoredObject) {
+  createOpenAssetChooserParamsObject(targetString: string, authoredObject: any): any {
     return {
       isPopup: true,
       nodeId: this.nodeId,
@@ -257,7 +278,7 @@ class AnimationAuthoringController extends EditComponentController {
     };
   }
 
-  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'image') {
       targetObject.image = assetItem.fileName;
@@ -269,7 +290,7 @@ class AnimationAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  authoredObjectTypeChanged(authoredObject) {
+  authoredObjectTypeChanged(authoredObject: any): void {
     if (authoredObject.type === 'image') {
       this.removeTextFromAuthoredObject(authoredObject);
     } else if (authoredObject.type === 'text') {
@@ -278,11 +299,11 @@ class AnimationAuthoringController extends EditComponentController {
     this.componentChanged();
   }
 
-  removeTextFromAuthoredObject(authoredObject) {
+  removeTextFromAuthoredObject(authoredObject: any): void {
     delete authoredObject.text;
   }
 
-  removeImageFromAuthoredObject(authoredObject) {
+  removeImageFromAuthoredObject(authoredObject: any): void {
     delete authoredObject.image;
     delete authoredObject.width;
     delete authoredObject.height;
@@ -292,19 +313,13 @@ class AnimationAuthoringController extends EditComponentController {
     delete authoredObject.imageMovingDown;
   }
 
-  getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
-    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+  getComponentByNodeIdAndComponentId(nodeId: string, componentId: string): any {
+    if (nodeId != null && componentId != null) {
+      const component = super.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      if (component != null) {
+        return component;
+      }
+    }
+    return {};
   }
 }
-
-const AnimationAuthoring = {
-  bindings: {
-    nodeId: '@',
-    componentId: '@'
-  },
-  controller: AnimationAuthoringController,
-  controllerAs: 'animationController',
-  templateUrl: 'wise5/components/animation/authoring.html'
-};
-
-export default AnimationAuthoring;
