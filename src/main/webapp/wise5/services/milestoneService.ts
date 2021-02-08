@@ -21,42 +21,42 @@ export class MilestoneService {
   workgroupIds: any[];
   workgroupsStorage: any[] = [];
   satisfyCriteriaFuncNameToFunc = {
-    percentOfScoresGreaterThan: (satisfyCriterion: any, aggregateAutoScores: any) => {
+    percentOfScoresGreaterThan: (satisfyCriterion: any, aggregateAutoScores: any[]) => {
       return this.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
         aggregateAutoScores,
         this.UtilService.greaterThan
       );
     },
-    percentOfScoresGreaterThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+    percentOfScoresGreaterThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any[]) => {
       return this.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
         aggregateAutoScores,
         this.UtilService.greaterThanEqualTo
       );
     },
-    percentOfScoresLessThan: (satisfyCriterion: any, aggregateAutoScores: any) => {
+    percentOfScoresLessThan: (satisfyCriterion: any, aggregateAutoScores: any[]) => {
       return this.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
         aggregateAutoScores,
         this.UtilService.lessThan
       );
     },
-    percentOfScoresLessThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+    percentOfScoresLessThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any[]) => {
       return this.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
         aggregateAutoScores,
         this.UtilService.lessThanEqualTo
       );
     },
-    percentOfScoresEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+    percentOfScoresEqualTo: (satisfyCriterion: any, aggregateAutoScores: any[]) => {
       return this.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
         aggregateAutoScores,
         this.UtilService.equalTo
       );
     },
-    percentOfScoresNotEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+    percentOfScoresNotEqualTo: (satisfyCriterion: any, aggregateAutoScores: any[]) => {
       return this.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
         aggregateAutoScores,
@@ -231,36 +231,57 @@ export class MilestoneService {
   }
 
   generateReport(projectAchievement: any) {
-    const referencedComponents = this.getSatisfyCriteriaReferencedComponents(projectAchievement);
-    const aggregateAutoScores = {};
-    let nodeId = null;
-    let componentId = null;
-    const referencedComponentValues: any[] = Object.values(referencedComponents);
-    for (const referencedComponent of referencedComponentValues) {
-      nodeId = referencedComponent.nodeId;
-      componentId = referencedComponent.componentId;
-      aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(
-        nodeId,
-        componentId,
-        this.periodId,
-        projectAchievement.report
-      );
-    }
-    const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
+    const componentAggregateAutoScores = this.getComponentAggregateAutoScores(projectAchievement);
+    const template = this.chooseTemplate(
+      projectAchievement.report.templates,
+      componentAggregateAutoScores
+    );
     let content = template.content ? template.content : '';
     if (content) {
-      content = this.processMilestoneGraphsAndData(content, aggregateAutoScores);
+      content = this.processMilestoneGraphsAndData(content, componentAggregateAutoScores);
     }
     const recommendations = template.recommendations ? template.recommendations : '';
     return {
       content: content,
-      recommendations: recommendations,
-      nodeId: nodeId,
-      componentId: componentId
+      recommendations: recommendations
     };
   }
 
-  chooseTemplate(templates: any[], aggregateAutoScores: any) {
+  getComponentAggregateAutoScores(projectAchievement: any): any[] {
+    const componentAggregateAutoScores = [];
+    for (const referencedComponent of projectAchievement.report.locations) {
+      const componentAggregateAutoScore = this.getComponentAggregateAutoScore(
+        referencedComponent.nodeId,
+        referencedComponent.componentId,
+        this.periodId,
+        projectAchievement.report
+      );
+      componentAggregateAutoScores.push(componentAggregateAutoScore);
+    }
+    return componentAggregateAutoScores;
+  }
+
+  getComponentAggregateAutoScore(
+    nodeId: string,
+    componentId: string,
+    periodId: number,
+    report: any
+  ) {
+    const aggregateAutoScore: any = this.calculateAggregateAutoScores(
+      nodeId,
+      componentId,
+      periodId,
+      report
+    );
+    return {
+      nodeId: nodeId,
+      componentId: componentId,
+      stepTitle: this.ProjectService.getNodePositionAndTitleByNodeId(nodeId),
+      aggregateAutoScore: aggregateAutoScore
+    };
+  }
+
+  chooseTemplate(templates: any[], aggregateAutoScores: any[]) {
     for (const template of templates) {
       if (this.isTemplateMatch(template, aggregateAutoScores)) {
         return template;
@@ -271,7 +292,7 @@ export class MilestoneService {
     };
   }
 
-  isTemplateMatch(template: any, aggregateAutoScores: any) {
+  isTemplateMatch(template: any, aggregateAutoScores: any[]) {
     const matchedCriteria = [];
     for (const satisfyCriterion of template.satisfyCriteria) {
       if (this.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)) {
@@ -285,7 +306,7 @@ export class MilestoneService {
     }
   }
 
-  isTemplateCriterionSatisfied(satisfyCriterion: any, aggregateAutoScores: any) {
+  isTemplateCriterionSatisfied(satisfyCriterion: any, aggregateAutoScores: any[]) {
     if (satisfyCriterion.function === 'default') {
       return true;
     }
@@ -312,7 +333,7 @@ export class MilestoneService {
 
   isPercentOfScoresSatisfiesComparator(
     satisfyCriterion: any,
-    aggregateAutoScores: any,
+    aggregateAutoScores: any[],
     comparator: any
   ): boolean {
     const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
@@ -321,9 +342,13 @@ export class MilestoneService {
     return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
   }
 
-  getAggregateData(satisfyCriterion: any, aggregateAutoScores: any) {
-    const component = aggregateAutoScores[satisfyCriterion.componentId];
-    return component[satisfyCriterion.targetVariable];
+  getAggregateData(satisfyCriterion: any, aggregateAutoScores: any[]) {
+    for (const aggregateAutoScore of aggregateAutoScores) {
+      if (aggregateAutoScore.componentId === satisfyCriterion.componentId) {
+        return aggregateAutoScore.aggregateAutoScore[satisfyCriterion.targetVariable];
+      }
+    }
+    throw new Error(`Aggregate data not found for component ${satisfyCriterion.componentId}`);
   }
 
   getPossibleScores(aggregateData: any) {
@@ -485,23 +510,64 @@ export class MilestoneService {
     }
   }
 
-  processMilestoneGraphsAndData(content: any, aggregateAutoScores: any) {
-    for (const componentAggregate of Object.values(aggregateAutoScores)) {
-      let subScoreIndex = 0;
-      for (let [subScoreId, aggregateData] of Object.entries(componentAggregate)) {
-        let index = 0;
-        if (subScoreId !== 'ki') {
-          subScoreIndex++;
-          index = subScoreIndex;
-        }
-        const data = JSON.stringify(aggregateData).replace(/\"/g, "'");
-        const graphRegex = new RegExp(`milestone-report-graph{1,} id="(${subScoreId})"`, 'g');
-        content = content.replace(graphRegex, `$& data=\"${data}\"`);
-        const dataRegex = new RegExp(`milestone-report-data{1,} score-id="(${subScoreId})"`, 'g');
-        content = content.replace(dataRegex, `$& data=\"${data}\"`);
-      }
+  processMilestoneGraphsAndData(content: any, componentAggregateAutoScores: any): string {
+    const aggregateDataBySubScoreId = this.getAggregateDataBySubScoreId(
+      componentAggregateAutoScores
+    );
+    for (const [subScoreId, subScoreData] of Object.entries(aggregateDataBySubScoreId)) {
+      const data = JSON.stringify(subScoreData).replace(/\"/g, "'");
+      const graphRegex = new RegExp(`milestone-report-graph{1,} id="(${subScoreId})"`, 'g');
+      content = content.replace(graphRegex, `$& data=\"${data}\"`);
+      const dataRegex = new RegExp(`milestone-report-data{1,} score-id="(${subScoreId})"`, 'g');
+      content = content.replace(dataRegex, `$& data=\"${data}\"`);
     }
     return content;
+  }
+
+  getAggregateDataBySubScoreId(componentAggregateAutoScores: any[]): any {
+    const aggregateDataBySubScoreId = {};
+    for (const componentAggregateAutoScore of componentAggregateAutoScores) {
+      const aggregateAutoScore = componentAggregateAutoScore.aggregateAutoScore;
+      for (const subScoreId of Object.keys(aggregateAutoScore)) {
+        const aggregateData = aggregateAutoScore[subScoreId];
+        this.addAggregateDataBySubScoreId(
+          aggregateDataBySubScoreId,
+          subScoreId,
+          aggregateData,
+          componentAggregateAutoScore.nodeId,
+          componentAggregateAutoScore.componentId,
+          componentAggregateAutoScore.stepTitle
+        );
+      }
+    }
+    return aggregateDataBySubScoreId;
+  }
+
+  addAggregateDataBySubScoreId(
+    aggregateDataBySubScoreId: any,
+    subScoreId: string,
+    aggregateData: any,
+    nodeId: string,
+    componentId: string,
+    stepTitle: string
+  ): void {
+    if (aggregateDataBySubScoreId[subScoreId] == null) {
+      aggregateDataBySubScoreId[subScoreId] = [];
+    }
+    this.injectAdditionalFieldsIntoAggregateData(aggregateData, nodeId, componentId, stepTitle);
+    aggregateDataBySubScoreId[subScoreId].push(aggregateData);
+  }
+
+  injectAdditionalFieldsIntoAggregateData(
+    aggregateData: any,
+    nodeId: string,
+    componentId: string,
+    stepTitle: string
+  ): any {
+    aggregateData.nodeId = nodeId;
+    aggregateData.componentId = componentId;
+    aggregateData.stepTitle = stepTitle;
+    return aggregateData;
   }
 
   setReportAvailable(projectAchievement: any, reportAvailable: boolean) {

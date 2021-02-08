@@ -35,16 +35,21 @@ const satisfyCriterionSample = {
   value: 3
 };
 
-const aggregateAutoScoresSample = {
-  xfns1g7pga: {
-    ki: {
-      counts: { 1: 2, 2: 0, 3: 1, 4: 0, 5: 0 },
-      scoreSum: 5,
-      scoreCount: 3,
-      average: 1.67
+const aggregateAutoScoresSample = [
+  {
+    nodeId: 'node1',
+    componentId: 'xfns1g7pga',
+    stepTitle: 'Step 1.1: Hello',
+    aggregateAutoScore: {
+      ki: {
+        counts: { 1: 2, 2: 0, 3: 1, 4: 0, 5: 0 },
+        scoreSum: 5,
+        scoreCount: 3,
+        average: 1.67
+      }
     }
   }
-};
+];
 
 const possibleScoresKi = [1, 2, 3, 4, 5];
 
@@ -52,14 +57,19 @@ const sampleAggregateData = {
   counts: createScoreCounts([10, 20, 30, 40, 50])
 };
 
-const aggregateAutoScores50 = {
-  component1: {
-    ki: {
-      counts: createScoreCounts([10, 10, 10, 10, 10]),
-      scoreCount: 50
+const aggregateAutoScores50 = [
+  {
+    nodeId: 'node1',
+    componentId: 'component1',
+    stepTitle: 'Step 1.2: World',
+    aggregateAutoScore: {
+      ki: {
+        counts: createScoreCounts([10, 10, 10, 10, 10]),
+        scoreCount: 50
+      }
     }
   }
-};
+];
 
 const reportSettingsCustomScoreValuesSample = {
   customScoreValues: {
@@ -392,6 +402,12 @@ function insertMilestoneReport() {
       const content = 'template1Content';
       const milestone: any = {
         report: {
+          locations: [
+            {
+              nodeId: 'node1',
+              componentId: 'component1'
+            }
+          ],
           templates: [
             {
               id: 'template1',
@@ -509,6 +525,12 @@ function generateReport() {
     const content = 'template1Content';
     const projectAchievement = {
       report: {
+        locations: [
+          {
+            nodeId: 'node1',
+            componentId: 'component1'
+          }
+        ],
         templates: [
           {
             id: 'template1',
@@ -550,7 +572,7 @@ function chooseTemplate() {
         id: 'template-2'
       };
       const templates = [template1, template2];
-      const aggregateAutoScores = {};
+      const aggregateAutoScores = [];
       spyOn(service, 'isTemplateMatch').and.callFake((template, aggregateAutoScores) => {
         if (template.id === 'template-1') {
           return false;
@@ -565,7 +587,7 @@ function chooseTemplate() {
 
 function isTemplateMatch() {
   describe('isTemplateMatch()', () => {
-    const aggregateAutoScores = {};
+    const aggregateAutoScores = [];
     const satisfyCriteria = [
       {
         id: 'satisfy-criteria-1'
@@ -847,14 +869,19 @@ function isPercentOfScoresEqualTo() {
     ).toEqual(false);
   });
   it('should check is percent of scores equal to true', () => {
-    const aggregateAutoScores = {
-      component1: {
-        ki: {
-          counts: createScoreCounts([10, 0, 10, 0, 0]),
-          scoreCount: 20
+    const aggregateAutoScores = [
+      {
+        nodeId: 'node1',
+        componentId: 'component1',
+        stepTitle: 'Step 1.1: Hello',
+        aggregateAutoScore: {
+          ki: {
+            counts: createScoreCounts([10, 0, 10, 0, 0]),
+            scoreCount: 20
+          }
         }
       }
-    };
+    ];
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterion,
@@ -877,7 +904,7 @@ function isPercentOfScoresNotEqualTo() {
   });
   it('should return true when percent of scores equal to value meet threshold', () => {
     const aggregateAutoScores = angular.copy(aggregateAutoScoresSample);
-    aggregateAutoScores.xfns1g7pga.ki.counts = { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 };
+    aggregateAutoScores[0].aggregateAutoScore.ki.counts = { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 };
     expect(
       service.isPercentOfScoresSatisfiesComparator(
         satisfyCriterionSample,
@@ -954,11 +981,15 @@ function getPossibleScores() {
 function isPercentThresholdSatisfied() {
   describe('isPercentThresholdSatisfied()', () => {
     it('should return true when percent threshold is satisfied', () => {
-      const aggregateAutoScores = {
-        xfns1g7pga: {
-          ki: { counts: { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 }, scoreCount: 3 }
+      const aggregateAutoScores = [
+        {
+          nodeId: 'node1',
+          componentId: 'xfns1g7pga',
+          aggregateAutoScore: {
+            ki: { counts: { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 }, scoreCount: 3 }
+          }
         }
-      };
+      ];
       const aggregateData = service.getAggregateData(satisfyCriterionSample, aggregateAutoScores);
       const sum = service.getComparatorSum(
         satisfyCriterionSample,
@@ -1062,7 +1093,7 @@ function addDataToAggregate() {
           ]
         }
       };
-      const aggregateAutoScore = angular.copy(aggregateAutoScoresSample).xfns1g7pga;
+      const aggregateAutoScore = angular.copy(aggregateAutoScoresSample)[0].aggregateAutoScore;
       const result = service.addDataToAggregate(
         aggregateAutoScore,
         annotation,
@@ -1144,40 +1175,27 @@ function processMilestoneGraphsAndData() {
   describe('processMilestoneGraphsAndData()', () => {
     it('should process milestone report graph', () => {
       let content = '<milestone-report-graph id="ki"></milestone-report-graph>';
-      const aggregateAutoScores = {
-        component1: {
-          ki: {
-            scoreSum: 4,
-            scoreCount: 2,
-            average: 2,
-            counts: createScoreCounts([1, 0, 1, 0, 0])
+      const componentAggregateAutoScores = [
+        {
+          nodeId: 'node1',
+          componentId: 'component1',
+          aggregateAutoScore: {
+            ki: {
+              scoreSum: 4,
+              scoreCount: 2,
+              average: 2,
+              counts: createScoreCounts([1, 0, 1, 0, 0])
+            }
           }
         }
-      };
-      content = service.processMilestoneGraphsAndData(content, aggregateAutoScores);
+      ];
+      content = service.processMilestoneGraphsAndData(content, componentAggregateAutoScores);
       expect(
         content.includes(
-          `data="{'scoreSum':4,'scoreCount':2,'average':2,'counts':{'1':1,'2':0,'3':1,'4':0,'5':0}}"`
-        )
-      ).toEqual(true);
-    });
-    it('should process milestone report data', () => {
-      let content = '<milestone-report-data score-id="ki"></milestone-report-data>';
-      const aggregateAutoScores = {
-        component1: {
-          ki: {
-            scoreSum: 4,
-            scoreCount: 2,
-            average: 2,
-            counts: createScoreCounts([1, 0, 1, 0, 0])
-          }
-        }
-      };
-      content = service.processMilestoneGraphsAndData(content, aggregateAutoScores);
-      expect(
-        content.includes(
-          `data="{'scoreSum':4,'scoreCount':2,'average':2,` +
-            `'counts':{'1':1,'2':0,'3':1,'4':0,'5':0}}"`
+          `data="[{` +
+            `'scoreSum':4,'scoreCount':2,'average':2,'counts':{'1':1,'2':0,'3':1,'4':0,'5':0},` +
+            `'nodeId':'node1','componentId':'component1'` +
+            `}]"`
         )
       ).toEqual(true);
     });
