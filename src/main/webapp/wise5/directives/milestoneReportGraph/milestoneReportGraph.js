@@ -42,12 +42,18 @@ class MilestoneReportGraphController {
               enabled: true,
               format: '{y}%'
             }
+          },
+          column: {
+            dataLabels: {
+              style: {
+                fontSize: '10px'
+              }
+            }
           }
         },
-        legend: { symbolHeight: '0px' },
         tooltip: {
           formatter: function() {
-            return `<b>${teamLabel}: ${this.point.count}</b>`;
+            return `<b>${this.series.name}<br/>${teamLabel}: ${this.point.count}</b>`;
           }
         }
       },
@@ -62,12 +68,7 @@ class MilestoneReportGraphController {
           enabled: false
         }
       },
-      series: [
-        {
-          showInLegend: false,
-          data: this.graphData
-        }
-      ],
+      series: this.series,
       func: function(chart) {
         // temporary fix to ensure graphs are correctly resized to fit their container width
         setTimeout(function() {
@@ -82,26 +83,45 @@ class MilestoneReportGraphController {
   }
 
   calculateGraphDataAndCategories() {
+    const series = [];
     const color = this.barColor ? this.barColor : this.defaultColor;
-    const scoreKeys = Object.keys(this.data.counts);
+    let opacity = 0;
+    for (const componentData of this.data) {
+      const step = 100 / this.data.length / 100;
+      opacity = opacity + step;
+      const seriesColor = this.UtilService.rgbToHex(color, opacity);
+      const singleSeries = {
+        name: this.trimStepTitle(componentData.stepTitle),
+        color: seriesColor,
+        data: this.getComponentSeriesData(componentData)
+      };
+      series.push(singleSeries);
+    }
+    this.series = series;
+  }
+
+  getComponentSeriesData(componentData) {
+    const seriesData = [];
+    const scoreKeys = Object.keys(componentData.counts);
     const scoreKeysSorted = scoreKeys.sort((a, b) => {
       return parseInt(a) - parseInt(b);
     });
-    const step = 100 / scoreKeysSorted.length / 100;
-    let opacity = 0;
     for (const scoreKey of scoreKeysSorted) {
       this.categories.push(scoreKey.toString());
-      opacity = opacity + step;
-      const scoreKeyCount = this.data.counts[scoreKey];
-      const scoreKeyPercentage = Math.floor((100 * scoreKeyCount) / this.data.scoreCount);
-      const scoreKeyColor = this.UtilService.rgbToHex(color, opacity);
+      const scoreKeyCount = componentData.counts[scoreKey];
+      const scoreKeyPercentage = Math.floor((100 * scoreKeyCount) / componentData.scoreCount);
       const scoreData = {
         y: scoreKeyPercentage,
-        color: scoreKeyColor,
         count: scoreKeyCount
       };
-      this.graphData.push(scoreData);
+      seriesData.push(scoreData);
     }
+    return seriesData;
+  }
+
+  trimStepTitle(title) {
+    const trimLength = 26;
+    return title.length > trimLength ? `${title.substring(0, trimLength - 3)}...` : title;
   }
 }
 
