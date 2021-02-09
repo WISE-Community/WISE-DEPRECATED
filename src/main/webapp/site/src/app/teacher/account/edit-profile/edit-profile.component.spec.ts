@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditProfileComponent } from './edit-profile.component';
 import { UserService } from '../../../services/user.service';
 import { Teacher } from '../../../domain/teacher';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -38,6 +38,7 @@ export class MockUserService {
     userBehaviorSubject.next(user);
     return userBehaviorSubject;
   }
+
   getLanguages() {
     return Observable.create((observer) => {
       observer.next([]);
@@ -120,6 +121,7 @@ describe('EditProfileComponent', () => {
 
   it('should disable submit button and validate form on initial state', () => {
     const submitButton = getSubmitButton();
+    expect(component.changed).toBe(false);
     expect(component.editProfileFormGroup.valid).toBeTruthy();
     expect(submitButton.disabled).toBe(true);
   });
@@ -145,5 +147,15 @@ describe('EditProfileComponent', () => {
     fixture.detectChanges();
     const testBedUserService = TestBed.get(UserService);
     expect(testBedUserService.user.language).toBe('Spanish');
+  });
+
+  it('should disable the email field if user has linked a Google account', async () => {
+    const testBedUserService = TestBed.get(UserService);
+    const user = component.user;
+    user.isGoogleUser = true;
+    spyOn(testBedUserService, 'getUser').and.returnValue(of(user))
+    component.getUser();
+    fixture.detectChanges();
+    expect(component.editProfileFormGroup.get('email').disabled).toBe(true);
   });
 });
