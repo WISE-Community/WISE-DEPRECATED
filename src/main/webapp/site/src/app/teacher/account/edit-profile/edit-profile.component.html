@@ -42,6 +42,7 @@
                id="email"
                name="email"
                formControlName="email" />
+        <mat-hint i18n *ngIf="user.isGoogleUser">If you want to change your email, unlink your Google account.</mat-hint>
         <mat-error *ngIf="editProfileFormGroup.controls['email'].hasError('required')" i18n>Email required</mat-error>
       </mat-form-field>
     </p>
@@ -124,7 +125,7 @@
       <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
       <ng-container i18n>Save Changes</ng-container>
     </button>
-    <div *ngIf="isGoogleUser" 
+    <div *ngIf="user.isGoogleUser" 
         fxLayout="row wrap"
         fxLayoutAlign="start center"
         fxLayoutGap="8px">

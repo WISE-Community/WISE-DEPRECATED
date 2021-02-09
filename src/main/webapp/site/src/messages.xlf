@@ -284,7 +284,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="47c3500e23cf10b4e86b3c495687d5045fd2305c">
@@ -311,7 +311,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="09031a48e6666b30516536554bd71ec9073bc906">
@@ -2413,7 +2413,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="234ce1f48e2e7c754873c9728092e878e08cf71d">
@@ -2432,7 +2432,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7a69cf8e716fe0458fffe8b8a67948dfeb2b3eb6">
@@ -2882,6 +2882,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="9a0d8c396fd0398b5d49f9b509f33dce97a4f35d">
@@ -4821,7 +4825,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="526394b14298e223b7e076e1b0cd15e54b03fe22">
@@ -4832,7 +4836,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="873b72903b1858a9cd6c8967521030b4d7d1435b">
@@ -4843,7 +4847,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1417d4b0e633084ccb2b0bdb43d119c17ac0cd01">
@@ -4854,7 +4858,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a43f25a9ac40e8e2441ff0be7a36b8e5d15534df">
@@ -4865,7 +4869,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ef20a8366401a5c10bb1b459b34d40d828dba200">
@@ -4876,7 +4880,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2f3ba3fa63119eb68067c64a34cf1ff37b8e790a">
@@ -4887,7 +4891,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="804ee3edbc2df4841b73e55dfee3f0a2217e09ce">
@@ -4898,7 +4902,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="bb50c6e4315c4b5991486747158cba2db8460886">
@@ -4909,7 +4913,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a3f4acdc98e1b9e7af0f27f1c4f420b8298e7f3e">
@@ -4920,7 +4924,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="da3b0dd33f2cb1c9b2d8a6a9cce5a4b59aaf6451">
@@ -5429,6 +5433,10 @@
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="fe46ccaae902ce974e2441abe752399288298619">
         <source>Language</source>
@@ -5438,7 +5446,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="cabad35c321f1c28ef7c11f848cd458bb934e304">
@@ -5456,7 +5464,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="edb53ba7560c1571d41ff16d93805243e5264d70">
@@ -5467,7 +5475,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2e1aeaf8d183e6846a0463a08c784f472184fcf0">
@@ -5944,35 +5952,42 @@
         <source>Display Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a46da4e5dedf077f8ee26fa4af926df0fc909e0c">
         <source>This is the name your students will see.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="8633775b7643de744fc8b916ccef6b1c8700e83e">
         <source>Display Name required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2aa96eeeec83f4277674e6fef712a255b683f7d0">
+        <source>If you want to change your email, unlink your Google account.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="5012e0b6a631d92c50ea27984998bdad9cdcbbbf">
         <source>Help us translate WISE! Visit <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>https://crowdin.com/project/wise<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2b2f9f56dbfbfb71056a8da8c94e8011d837766e">
         <source> Language required </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
