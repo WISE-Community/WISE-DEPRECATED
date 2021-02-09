@@ -94,15 +94,6 @@ export class AnimationAuthoring extends ComponentAuthoring {
     this.componentChanged();
   }
 
-  authoringMoveAnimationObjectDataPointUp(object: any, index: number): void {
-    if (this.canMoveUp(index)) {
-      const dataPoint = object.data[index];
-      object.data.splice(index, 1);
-      object.data.splice(index - 1, 0, dataPoint);
-      this.componentChanged();
-    }
-  }
-
   moveAuthoredObjectDataPointUp(object: any, index: number): void {
     if (this.canMoveUp(index)) {
       const dataPoint = object.data[index];
@@ -245,20 +236,7 @@ export class AnimationAuthoring extends ComponentAuthoring {
     authoredObject.dataSource.xColumnIndex = 1;
   }
 
-  chooseImage(authoredObject: any): void {
-    const targetString = 'image';
-    const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
-    this.openAssetChooser(params);
-  }
-
-  chooseImageMovingLeft(authoredObject: any): void {
-    const targetString = 'imageMovingLeft';
-    const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
-    this.openAssetChooser(params);
-  }
-
-  chooseImageMovingRight(authoredObject: any): void {
-    const targetString = 'imageMovingRight';
+  chooseImage(authoredObject: any, targetString: string = 'image'): void {
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.openAssetChooser(params);
   }
@@ -280,13 +258,7 @@ export class AnimationAuthoring extends ComponentAuthoring {
 
   assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
     super.assetSelected({ nodeId, componentId, assetItem, target });
-    if (target === 'image') {
-      targetObject.image = assetItem.fileName;
-    } else if (target === 'imageMovingLeft') {
-      targetObject.imageMovingLeft = assetItem.fileName;
-    } else if (target === 'imageMovingRight') {
-      targetObject.imageMovingRight = assetItem.fileName;
-    }
+    targetObject[target] = assetItem.fileName;
     this.componentChanged();
   }
 
@@ -304,13 +276,17 @@ export class AnimationAuthoring extends ComponentAuthoring {
   }
 
   removeImageFromAuthoredObject(authoredObject: any): void {
-    delete authoredObject.image;
-    delete authoredObject.width;
-    delete authoredObject.height;
-    delete authoredObject.imageMovingLeft;
-    delete authoredObject.imageMovingRight;
-    delete authoredObject.imageMovingUp;
-    delete authoredObject.imageMovingDown;
+    [
+      'image',
+      'width',
+      'height',
+      'imageMovingLeft',
+      'imageMovingRight',
+      'imageMovingUp',
+      'imageMovingDown'
+    ].forEach((field) => {
+      delete authoredObject[field];
+    });
   }
 
   getComponentByNodeIdAndComponentId(nodeId: string, componentId: string): any {
