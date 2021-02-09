@@ -605,10 +605,11 @@ export class StudentDataService extends DataService {
     return false;
   }
 
-  evaluateScoreCriteria(criteria) {
+  evaluateScoreCriteria(criteria: any): boolean {
     const params = criteria.params;
     const nodeId = params.nodeId;
     const componentId = params.componentId;
+    const scoreId = params.scoreId;
     const scores = params.scores;
     const workgroupId = this.ConfigService.getWorkgroupId();
     const scoreType = 'any';
@@ -619,14 +620,18 @@ export class StudentDataService extends DataService {
       scoreType
     );
     if (latestScoreAnnotation != null) {
-      const scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(
-        latestScoreAnnotation
-      );
-      if (this.isScoreInExpectedScores(scores, scoreValue)) {
-        return true;
-      }
+      const scoreValue = this.getScoreValueFromScoreAnnotation(latestScoreAnnotation, scoreId);
+      return this.isScoreInExpectedScores(scores, scoreValue);
     }
     return false;
+  }
+
+  getScoreValueFromScoreAnnotation(scoreAnnotation: any, scoreId: string): number {
+    if (scoreId == null) {
+      return this.AnnotationService.getScoreValueFromScoreAnnotation(scoreAnnotation);
+    } else {
+      return this.AnnotationService.getSubScoreValueFromScoreAnnotation(scoreAnnotation, scoreId);
+    }
   }
 
   evaluateTeacherRemovalCriteria(criteria: any) {

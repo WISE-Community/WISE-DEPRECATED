@@ -739,12 +739,14 @@ export class AnnotationService {
    * @param scoreAnnotation a score annotation
    * @returns the score value e.g. 5
    */
-  getScoreValueFromScoreAnnotation(scoreAnnotation) {
-    if (scoreAnnotation != null) {
-      const data = scoreAnnotation.data;
+  getScoreValueFromScoreAnnotation(scoreAnnotation: any): number {
+    return scoreAnnotation.data.value;
+  }
 
-      if (data != null) {
-        return data.value;
+  getSubScoreValueFromScoreAnnotation(scoreAnnotation: any, scoreId: string = ''): number {
+    for (const scoreObject of scoreAnnotation.data.scores) {
+      if (scoreObject.id === scoreId) {
+        return scoreObject.score;
       }
     }
     return null;
