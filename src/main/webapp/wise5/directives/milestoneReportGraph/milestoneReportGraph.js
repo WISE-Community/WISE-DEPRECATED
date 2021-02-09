@@ -33,7 +33,7 @@ class MilestoneReportGraphController {
           style: {
             fontSize: '14px',
             fontWeight: '500',
-            color: this.getTitleColor()
+            color: this.titleColor ? this.titleColor : this.defaultColor
           }
         },
         plotOptions: {
@@ -78,21 +78,16 @@ class MilestoneReportGraphController {
     };
   }
 
-  getTitleColor() {
-    return this.titleColor ? this.titleColor : this.defaultColor;
-  }
-
   calculateGraphDataAndCategories() {
     const series = [];
     const color = this.barColor ? this.barColor : this.defaultColor;
+    const step = 100 / this.data.length / 100;
     let opacity = 0;
     for (const componentData of this.data) {
-      const step = 100 / this.data.length / 100;
-      opacity = opacity + step;
-      const seriesColor = this.UtilService.rgbToHex(color, opacity);
+      opacity += step;
       const singleSeries = {
-        name: this.trimStepTitle(componentData.stepTitle),
-        color: seriesColor,
+        name: this.UtilService.trimToLength(componentData.stepTitle, 26),
+        color: this.UtilService.rgbToHex(color, opacity),
         data: this.getComponentSeriesData(componentData)
       };
       series.push(singleSeries);
@@ -117,11 +112,6 @@ class MilestoneReportGraphController {
       seriesData.push(scoreData);
     }
     return seriesData;
-  }
-
-  trimStepTitle(title) {
-    const trimLength = 26;
-    return title.length > trimLength ? `${title.substring(0, trimLength - 3)}...` : title;
   }
 }
 

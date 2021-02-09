@@ -240,10 +240,9 @@ export class MilestoneService {
     if (content) {
       content = this.processMilestoneGraphsAndData(content, componentAggregateAutoScores);
     }
-    const recommendations = template.recommendations ? template.recommendations : '';
     return {
       content: content,
-      recommendations: recommendations
+      recommendations: template.recommendations ? template.recommendations : ''
     };
   }
 
@@ -266,7 +265,7 @@ export class MilestoneService {
     componentId: string,
     periodId: number,
     report: any
-  ) {
+  ): any {
     const aggregateAutoScore: any = this.calculateAggregateAutoScores(
       nodeId,
       componentId,
