@@ -1,7 +1,7 @@
 <form role="form" (submit)="saveChanges()" [formGroup]="editProfileFormGroup">
   <div class="form-fields"
        fxLayout="row wrap"
-       fxLayoutAlign="center"
+       fxLayoutAlign="start center"
        fxLayoutGap="0"
        fxLayoutGap.gt-xs="16px grid">
     <p fxFlex="100" fxFlex.gt-xs="50">
@@ -22,6 +22,16 @@
                name="lastName"
                formControlName="lastName" />
         <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
+      </mat-form-field>
+    </p>
+    <p fxFlex="100" fxFlex.gt-xs="50">
+      <mat-form-field fxFlex appearance="fill">
+        <mat-label i18n>Username</mat-label>
+        <input matInput
+               id="username"
+               name="username"
+               formControlName="username" />
+        <mat-error *ngIf="editProfileFormGroup.controls['username'].hasError('required')" i18n>User Name required</mat-error>
       </mat-form-field>
     </p>
     <p fxFlex="100" fxFlex.gt-xs="50">

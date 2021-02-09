@@ -32,6 +32,7 @@ export class EditProfileComponent {
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
     lastName: new FormControl({ value: '', disabled: true }, [Validators.required]),
+    username: new FormControl({ value: '', disabled: true }, [Validators.required]),
     displayName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
@@ -55,6 +56,7 @@ export class EditProfileComponent {
       this.user = <Teacher>user;
       this.setControlFieldValue('firstName', this.user.firstName);
       this.setControlFieldValue('lastName', this.user.lastName);
+      this.setControlFieldValue('username', this.user.username);
       this.setControlFieldValue('displayName', this.user.displayName);
       this.setControlFieldValue('email', this.user.email);
       this.setControlFieldValue('city', this.user.city);
