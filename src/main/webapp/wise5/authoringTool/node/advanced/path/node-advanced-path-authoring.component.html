@@ -122,6 +122,14 @@
                 ng-change='$ctrl.saveProject()'
                 ng-list=','/>
           </md-input-container>
+          <md-input-container ng-if='param.value === "scoreId"'
+              style='margin-top:0px; margin-bottom:0px;'>
+            <label>{{ ::param.text }}</label>
+            <input type='text'
+                ng-model='transitionCriteria.params.scoreId'
+                ng-model-options='{ debounce: 1000 }'
+                ng-change='$ctrl.scoreIdChanged(transitionCriteria)'/>
+          </md-input-container>
           <md-input-container ng-if='param.value == "choiceIds" && $ctrl.getChoiceTypeByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId) == "radio"'>
             <label>{{ ::'theStudentNeedsToChooseThisChoice' | translate }}</label>
             <md-select id="radioChoiceIdsSelectMenu"
