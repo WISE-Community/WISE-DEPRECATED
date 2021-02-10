@@ -34,6 +34,10 @@ class NodeAdvancedPathAuthoringController {
           {
             value: 'scores',
             text: this.$translate('scoresParens')
+          },
+          {
+            value: 'scoreId',
+            text: this.$translate('scoreID')
           }
         ]
       },
