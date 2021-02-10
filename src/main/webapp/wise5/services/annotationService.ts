@@ -734,11 +734,6 @@ export class AnnotationService {
     return annotation;
   }
 
-  /**
-   * Get the score value from the score annotation
-   * @param scoreAnnotation a score annotation
-   * @returns the score value e.g. 5
-   */
   getScoreValueFromScoreAnnotation(scoreAnnotation: any): number {
     return scoreAnnotation.data.value;
   }

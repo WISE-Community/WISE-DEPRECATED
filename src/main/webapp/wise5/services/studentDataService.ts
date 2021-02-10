@@ -607,21 +607,19 @@ export class StudentDataService extends DataService {
 
   evaluateScoreCriteria(criteria: any): boolean {
     const params = criteria.params;
-    const nodeId = params.nodeId;
-    const componentId = params.componentId;
-    const scoreId = params.scoreId;
-    const scores = params.scores;
-    const workgroupId = this.ConfigService.getWorkgroupId();
     const scoreType = 'any';
     const latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
-      nodeId,
-      componentId,
-      workgroupId,
+      params.nodeId,
+      params.componentId,
+      this.ConfigService.getWorkgroupId(),
       scoreType
     );
     if (latestScoreAnnotation != null) {
-      const scoreValue = this.getScoreValueFromScoreAnnotation(latestScoreAnnotation, scoreId);
-      return this.isScoreInExpectedScores(scores, scoreValue);
+      const scoreValue = this.getScoreValueFromScoreAnnotation(
+        latestScoreAnnotation,
+        params.scoreId
+      );
+      return this.isScoreInExpectedScores(params.scores, scoreValue);
     }
     return false;
   }
