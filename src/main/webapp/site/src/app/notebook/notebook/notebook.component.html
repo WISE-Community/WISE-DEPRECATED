@@ -1,11 +1,5 @@
 <ng-container *ngIf="config.enabled" [ngClass]="{'notes-visible': notesVisible}">
     <div class="notebook-overlay"></div>
-    <notebook-launcher *ngIf="config.itemTypes.note.enabled"
-        [config]="config"
-        [noteCount]="notebook.items.length"
-        [notesVisible]="notesVisible"
-        (onOpen)="open($event)">
-    </notebook-launcher>
     <notebook-report *ngIf="config.itemTypes.report.enabled"
         [mode]="mode"
         [insertContent]="insertContent"

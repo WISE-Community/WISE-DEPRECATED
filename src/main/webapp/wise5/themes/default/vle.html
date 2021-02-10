@@ -18,14 +18,16 @@
              ng-show="themeCtrl.layoutState === 'nav'"></div>
         <div ng-if="themeCtrl.isEndedAndLocked"
              style="color: red; display: flex; justify-content: center; align-items: center; height: 30px;">
-          <span
-                style="border: 1px solid black; border-radius: 3px; padding-left: 8px; padding-right: 8px; background-color: white;">{{
-            themeCtrl.endedAndLockedMessage }}</span>
+          <span style="border: 1px solid black; border-radius: 3px; padding-left: 8px; padding-right: 8px; background-color: white;">
+            {{ themeCtrl.endedAndLockedMessage }}
+          </span>
         </div>
         <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'">
         </div>
       </md-content>
       <global-annotations></global-annotations>
+      <notebook-launcher ng-if="!vleController.notesVisible" 
+                         [notebookConfig]="vleController.notebookConfig"></notebook-launcher>
       <notebook></notebook>
     </div>
   </listen-for-delete-keypress>

@@ -2,361 +2,364 @@
 $notebook-sidebar-width: 56px;
 
 // Base
-.notebook-launcher {
-    @media only screen and (min-width: $layout-breakpoint-xs) {
-        &.md-button.md-fab {
-            z-index: 61;
-        }
+notebook-launcher {
+  position: absolute;
+  bottom: 24px;
+  right: 28px;
+
+  @media only screen and (min-width: $layout-breakpoint-xs) {
+    &.md-button.md-fab {
+      z-index: 61;
     }
+  }
 }
 
 .notes-visible {
-    @media only screen and (min-width: $layout-breakpoint-sm) {
-        .notebook-report-container {
-            right: 516px;
-            transition: right 250ms;
-        }
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    .notebook-report-container {
+      right: 516px;
+      transition: right 250ms;
     }
+  }
 }
 
 .notebook-menu {
-    transition: opacity 500ms;
+  transition: opacity 500ms;
 
-    &.ng-enter {
-        opacity: 0;
-    }
+  &.ng-enter {
+    opacity: 0;
+  }
 
-    .ng-enter-active {
-        opacity: 1;
-        transition-delay: 250ms;
-    }
+  .ng-enter-active {
+    opacity: 1;
+    transition-delay: 250ms;
+  }
 
-    &.ng-leave-active, &.ng-hide {
-        opacity: 0;
-    }
+  &.ng-leave-active, &.ng-hide {
+    opacity: 0;
+  }
 
-    &.ng-hide-add, &.ng-hide-add-active,
-    &.ng-hide-remove, &.ng-hide-remove-active {
-        opacity: 0;
-    }
+  &.ng-hide-add, &.ng-hide-add-active,
+  &.ng-hide-remove, &.ng-hide-remove-active {
+    opacity: 0;
+  }
 }
 
 .notebook-item {
-    transition: box-shadow 250ms;
-    margin: 0 16px 16px;
-    display: block;
+  transition: box-shadow 250ms;
+  margin: 0 16px 16px;
+  display: block;
 }
 
 .notebook-item__content {
-    height: 250px;
-    min-width: 230px;
-    position: relative;
-    padding: 0;
-    background-color: color('gray');
-    border-top-left-radius: $card-border-radius;
-    border-top-right-radius: $card-border-radius;
+  height: 250px;
+  min-width: 230px;
+  position: relative;
+  padding: 0;
+  background-color: color('gray');
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
 }
 
 .notebook-item__content__attachment, .notebook-item__content__text {
-    position: absolute;
-    left: 0;
-    right: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 .notebook-item__content__attachment {
-    background-repeat: no-repeat !important;
-    border-top-left-radius: $card-border-radius;
-    border-top-right-radius: $card-border-radius;
-    background-position: center top !important;
-    background-size: cover !important;
-    top: 0;
-    bottom: 0;
+  background-repeat: no-repeat !important;
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
+  background-position: center top !important;
+  background-size: cover !important;
+  top: 0;
+  bottom: 0;
 }
 
 .notebook-item__content__text {
-    bottom: 0;
-    padding: 8px;
-    font-weight: 500;
-    overflow: hidden;
-    max-height: 120px;
-    min-height: 56px;
-    background-color: rgba(255,255,255,0.95);
-    border-top: 1px solid color('gray-lighter');
+  bottom: 0;
+  padding: 8px;
+  font-weight: 500;
+  overflow: hidden;
+  max-height: 120px;
+  min-height: 56px;
+  background-color: rgba(255,255,255,0.95);
+  border-top: 1px solid color('gray-lighter');
 
-    &:after {
-        content: "";
-        text-align: right;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 0.8em;
-        background: linear-gradient(180deg,hsla(0,0%,100%,0),rgba(255,255,255,0.95) 100%);
-    }
+  &:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 0.8em;
+    background: linear-gradient(180deg,hsla(0,0%,100%,0),rgba(255,255,255,0.95) 100%);
+  }
 }
 
 .notebook-item__content--text-only {
-    &:after {
-        content: "note";
-        font-family: 'Material Icons';
-        font-weight: normal;
-        font-style: normal;
-        display: inline-block;
-        line-height: 1;
-        text-transform: none;
-        letter-spacing: normal;
-        word-wrap: normal;
-        white-space: nowrap;
-        direction: ltr;
+  &:after {
+    content: "note";
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
 
-        /* Support for all WebKit browsers. */
-        -webkit-font-smoothing: antialiased;
-        /* Support for Safari and Chrome. */
-        text-rendering: optimizeLegibility;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
 
-        /* Support for Firefox. */
-        -moz-osx-font-smoothing: grayscale;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
 
-        /* Support for IE. */
-        font-feature-settings: 'liga';
-        //position: absolute;
-        font-size: 80px;
-        color: color('text-disabled');
-    }
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+    //position: absolute;
+    font-size: 80px;
+    color: color('text-disabled');
+  }
 }
 
 .notebook-item--question__content--text-only {
-    content: "live_help";
+  content: "live_help";
 }
 
 .notebook-item__content__location {
-    opacity: 0.9;
-    padding: 8px 0;
+  opacity: 0.9;
+  padding: 8px 0;
 
-    md-icon {
-        font-size: 22px;
-    }
+  md-icon {
+    font-size: 22px;
+  }
 }
 
 .notebook-item__edit {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .notebook-item__actions {
-    margin: 0;
-    padding: 0 8px;
-    color: #ffffff;
-    background-color: color('gray-darkest');
-    border-bottom-left-radius: $card-border-radius;
-    border-bottom-right-radius: $card-border-radius;
+  margin: 0;
+  padding: 0 8px;
+  color: #ffffff;
+  background-color: color('gray-darkest');
+  border-bottom-left-radius: $card-border-radius;
+  border-bottom-right-radius: $card-border-radius;
 
-    md-icon {
-        color: #ffffff;
-    }
+  md-icon {
+    color: #ffffff;
+  }
 }
 
 .notebook-item__text-input {
-    margin: 0;
+  margin: 0;
 }
 
 .notebook-item__text-input__textarea {
-    padding-left: 0;
-    padding-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .notebook-item__attachment {
-    background-color: color('gray-light');
-    padding: 16px;
-    margin-bottom: 16px;
-    text-align: center;
-    position: relative;
+  background-color: color('gray-light');
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  position: relative;
 }
 
 .notebook-item__attachment__content {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .notebook-item__attachment__delete {
-    position: absolute;
-    top: 4px;
-    right: -2px;
-    // TODO: generalize for on item buttons like this (delete attachment, etc)
-    width: 34px !important;
-    height: 34px !important;
-    min-height: 0;
+  position: absolute;
+  top: 4px;
+  right: -2px;
+  // TODO: generalize for on item buttons like this (delete attachment, etc)
+  width: 34px !important;
+  height: 34px !important;
+  min-height: 0;
 
-    md-icon {
-        margin-left: -2px;
-        font-size: 22px;
-    }
+  md-icon {
+    margin-left: -2px;
+    font-size: 22px;
+  }
 }
 
 .notebook-item__info {
-    font-style: italic;
-    opacity: .8;
+  font-style: italic;
+  opacity: .8;
+  color: lighten(color('accent-1'), 5%);
+
+  a, md-icon {
     color: lighten(color('accent-1'), 5%);
+  }
 
-    a, md-icon {
-        color: lighten(color('accent-1'), 5%);
-    }
-
-    md-icon {
-        font-size: 1.5em;
-        min-width: 0;
-        width: auto;
-    }
+  md-icon {
+    font-size: 1.5em;
+    min-width: 0;
+    width: auto;
+  }
 }
 
 .notebook-item__upload {
-    text-align: center;
-    padding: 24px;
-    background-color: color('gray-lighter');
-    margin-bottom: 16px;
-    color: color('text-secondary');
-    border-radius: 4px;
-    cursor: pointer;
-    border: 1px dashed transparent;
-    transition: all 250ms;
+  text-align: center;
+  padding: 24px;
+  background-color: color('gray-lighter');
+  margin-bottom: 16px;
+  color: color('text-secondary');
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  transition: all 250ms;
+
+  md-icon, span {
+    transition: color 250ms;
+  }
+
+  &:hover, &:focus, &.dragover {
+    border-color: color('accent');
+    background-color: lighten(color('accent'), 35%);
+    color: color('accent');
 
     md-icon, span {
-        transition: color 250ms;
+      color: color('accent');
     }
-
-    &:hover, &:focus, &.dragover {
-        border-color: color('accent');
-        background-color: lighten(color('accent'), 35%);
-        color: color('accent');
-
-        md-icon, span {
-            color: color('accent');
-        }
-    }
+  }
 }
 
 .view-notebook-item {
-    width: $layout-breakpoint-xs;
+  width: $layout-breakpoint-xs;
 }
 
 .view-notebook-item__content {
 }
 
 .notebook-item--report {
-    background-color: #ffffff;
+  background-color: #ffffff;
 
-    .note-editor {
-        margin-bottom: 16px;
-        border-color: color('gray');
-    }
+  .note-editor {
+    margin-bottom: 16px;
+    border-color: color('gray');
+  }
 }
 
 .notebook-item--report__container {
-    &.ui-scrollpoint {
-        .notebook-item--report__toolbar {
-            position: fixed;
-            top: ($wise-toolbar-height + $md-toolbar-height);
-            left: 0;
-            right: 0;
-            z-index: 1;
+  &.ui-scrollpoint {
+    .notebook-item--report__toolbar {
+      position: fixed;
+      top: ($wise-toolbar-height + $md-toolbar-height);
+      left: 0;
+      right: 0;
+      z-index: 1;
 
-            @media only screen and (min-width: $layout-breakpoint-xs) {
-                left: ($notebook-sidebar-width - 2);
-            }
+      @media only screen and (min-width: $layout-breakpoint-xs) {
+        left: ($notebook-sidebar-width - 2);
+      }
 
-            @media only screen and (min-width: $layout-breakpoint-xs) {
-                padding: 0 24px;
-            }
+      @media only screen and (min-width: $layout-breakpoint-xs) {
+        padding: 0 24px;
+      }
 
-            @media only screen and (min-width: $layout-breakpoint-sm) {
-                padding: 0 32px;
-            }
+      @media only screen and (min-width: $layout-breakpoint-sm) {
+        padding: 0 32px;
+      }
 
-            .note-toolbar {
-                margin: 0 16px;
+      .note-toolbar {
+        margin: 0 16px;
 
-                @media only screen and (min-width: $layout-breakpoint-xs) {
-                    margin: 0 8px;
-                }
-
-                @media only screen and (min-width: $layout-breakpoint-sm) {
-                    margin: 0 16px;
-                }
-            }
+        @media only screen and (min-width: $layout-breakpoint-xs) {
+          margin: 0 8px;
         }
 
-        .note-editor {
-            padding-top: 40px;
+        @media only screen and (min-width: $layout-breakpoint-sm) {
+          margin: 0 16px;
         }
+      }
     }
+
+    .note-editor {
+      padding-top: 40px;
+    }
+  }
 }
 
 .notebook-item--report__toolbar {
-
-    .note-toolbar {
-        background-color: color('gray-light');
-        border: 1px solid color('gray');
-        margin-bottom: -2px;
-    }
+  .note-toolbar {
+    background-color: color('gray-light');
+    border: 1px solid color('gray');
+    margin-bottom: -2px;
+  }
 }
 
 .notebook-item--report__heading {
-    text-align: center;
-    margin-bottom: 32px;
+  text-align: center;
+  margin-bottom: 32px;
 }
 
 .notebook-item--report__content {
 }
 
 .notebook-item--report__add-note {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .notebook-item--report__note-img {
-    max-width: 100%;
-    height: auto !important;
+  max-width: 100%;
+  height: auto !important;
 }
 
 .notebook-sidebar {
-    @media only screen and (min-width: $layout-breakpoint-xs) {
-        width: 400px;
-        max-width: none;
-    }
+  @media only screen and (min-width: $layout-breakpoint-xs) {
+    width: 400px;
+    max-width: none;
+  }
 
-    @media only screen and (min-width: $layout-breakpoint-sm) {
-        width: 500px;
-        max-width: none;
-    }
+  @media only screen and (min-width: $layout-breakpoint-sm) {
+    width: 500px;
+    max-width: none;
+  }
 }
 
 .notebook-items {
+  width: 100%;
+  overflow: auto;
+  padding-top: 16px;
+  padding-bottom: 76px;
+
+  .notebook-item {
     width: 100%;
-    overflow: auto;
-    margin-top: 16px;
-    margin-bottom: 76px;
+  }
 
-    .notebook-item {
-        width: 100%;
-    }
-
-    .notebook-item__content {
-        height: 200px;
-        min-width: 0;
-    }
+  .notebook-item__content {
+    height: 200px;
+    min-width: 0;
+  }
 }
 
 .notebook-items--grading {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
-    .notebook-enabled {
-        .md-fab-bottom-right, .md-fab-bottom-left {
-            bottom: ($wise-toolbar-height + 8) !important;
-        }
+  .notebook-enabled {
+    .md-fab-bottom-right, .md-fab-bottom-left {
+      bottom: ($wise-toolbar-height + 8) !important;
     }
+  }
 }
 
 .notebook-grading {
-    background-color: #ffffff;
-    display: block;
+  background-color: #ffffff;
+  display: block;
 }

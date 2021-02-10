@@ -1,10 +1,8 @@
-<button *ngIf="isShowButton()" mat-button
-    class="md-scale md-fab md-fab-bottom-right notebook-launcher"
-    aria-label="{{ fabLabel() }}"
-    matTooltip="{{ fabLabel() }}"
+<button *ngIf="notebookConfig.itemTypes.note.enabled"
+    mat-fab color="accent"
+    [attr.aria-label]="label"
+    [matTooltip]="label"
     matTooltipPosition="above"
-    i18n-matToolip
-    (click)="fabAction($event)">
-  <mat-icon *ngIf="!notesVisible">{{ config.icon }}</mat-icon>
-  <mat-icon *ngIf="notesVisible">add</mat-icon>
+    (click)="showNotes()">
+  <mat-icon>{{ notebookConfig.icon }}</mat-icon>
 </button>

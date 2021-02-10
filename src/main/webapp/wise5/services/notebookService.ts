@@ -12,11 +12,10 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class NotebookService {
-  // TODO: i18n
-  // TODO: allow wise instance to set defaults, enabled/disabled for each type in wise config?
+  // TODO: allow wise instance to set defaults in wise config?
   config = {
     enabled: false,
-    label: 'Notebook',
+    label: $localize`Notebook`,
     icon: 'book',
     enableAddNew: true,
     addIcon: 'note_add',
@@ -29,9 +28,9 @@ export class NotebookService {
         enableStudentUploads: true,
         type: 'note',
         label: {
-          singular: 'note',
-          plural: 'notes',
-          link: 'Manage Notes',
+          singular: $localize`note`,
+          plural: $localize`notes`,
+          link: $localize`Manage Notes`,
           icon: 'note',
           color: '#1565C0'
         }
@@ -41,9 +40,9 @@ export class NotebookService {
         enableLink: true,
         type: 'report',
         label: {
-          singular: 'report',
-          plural: 'reports',
-          link: 'Report',
+          singular: $localize`report`,
+          plural: $localize`reports`,
+          link: $localize`Report`,
           icon: 'assignment',
           color: '#AD1457'
         },
@@ -73,6 +72,8 @@ export class NotebookService {
   public publicNotebookItemsRetrieved$ = this.publicNotebookItemsRetrievedSource.asObservable();
   private showReportAnnotationsSource: Subject<any> = new Subject<any>();
   public showReportAnnotations$ = this.showReportAnnotationsSource.asObservable();
+  private notesVisibleSource: Subject<boolean> = new Subject<boolean>();
+  public notesVisible$ = this.notesVisibleSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -625,5 +626,9 @@ export class NotebookService {
 
   broadcastShowReportAnnotations() {
     this.showReportAnnotationsSource.next();
+  }
+
+  setNotesVisible(value: boolean): void {
+    this.notesVisibleSource.next(value);
   }
 }

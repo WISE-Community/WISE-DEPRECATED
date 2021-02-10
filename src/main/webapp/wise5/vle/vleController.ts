@@ -10,6 +10,7 @@ import { StudentDataService } from '../services/studentDataService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
 import { Directive } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Directive()
 class VLEController {
@@ -26,6 +27,7 @@ class VLEController {
   notebookEnabled: boolean;
   notebookConfig: any;
   notebookItemPath: string;
+  notesVisible: boolean = false;
   notifications: any;
   pauseDialog: any;
   projectName: string;
@@ -33,9 +35,11 @@ class VLEController {
   reportItem: any;
   themePath: string;
   totalScore: any;
-  currentNodeChangedSubscription: any;
-  showSessionWarningSubscription: any;
-  notificationChangedSubscription: any;
+  currentNodeChangedSubscription: Subscription;
+  showSessionWarningSubscription: Subscription;
+  notificationChangedSubscription: Subscription;
+  notesVisibleSubscription: Subscription;
+  pauseScreenSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -99,8 +103,9 @@ class VLEController {
     this.totalScore = this.StudentDataService.getTotalScore();
     this.maxScore = this.StudentDataService.maxScore;
     this.notebookEnabled = this.NotebookService.isNotebookEnabled();
-
-    this.notebookConfig = this.NotebookService.getNotebookConfig();
+    if (this.notebookEnabled) {
+      this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
+    }
     // Get report, if enabled; assume only one report for now
     this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
 
@@ -213,12 +218,18 @@ class VLEController {
       }
     );
 
-    this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
-      if (doPause) {
-        this.pauseScreen();
-      } else {
-        this.unPauseScreen();
+    this.pauseScreenSubscription = this.StudentDataService.pauseScreen$.subscribe(
+      (doPause: boolean) => {
+        if (doPause) {
+          this.pauseScreen();
+        } else {
+          this.unPauseScreen();
+        }
       }
+    );
+
+    this.notesVisibleSubscription = this.NotebookService.notesVisible$.subscribe((notesVisible) => {
+      this.notesVisible = notesVisible;
     });
 
     // Make sure if we drop something on the page we don't navigate away
@@ -300,6 +311,7 @@ class VLEController {
     this.currentNodeChangedSubscription.unsubscribe();
     this.showSessionWarningSubscription.unsubscribe();
     this.notificationChangedSubscription.unsubscribe();
+    this.pauseScreenSubscription.unsubscribe();
   }
 
   goHome() {
