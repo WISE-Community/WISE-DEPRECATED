@@ -253,6 +253,13 @@ class NodeAdvancedPathAuthoringController {
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
   }
+
+  scoreIdChanged(transitionCriteria: any): void {
+    if (transitionCriteria.params.scoreId === '') {
+      delete transitionCriteria.params.scoreId;
+    }
+    this.saveProject();
+  }
 }
 
 export const NodeAdvancedPathAuthoringComponent = {
