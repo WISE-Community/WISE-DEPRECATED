@@ -60,6 +60,7 @@ import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
 import '../components/openResponse/openResponseAuthoringComponentModule';
+import '../components/openResponse/openResponseGradingComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
@@ -89,6 +90,7 @@ angular
     'ngAnimate',
     'ngFileSaver',
     'openResponseAuthoringComponentModule',
+    'openResponseGradingComponentModule',
     'outsideURLAuthoringComponentModule',
     'structureAuthoringModule',
     'tableAuthoringComponentModule',
