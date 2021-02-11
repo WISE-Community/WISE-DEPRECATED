@@ -36,11 +36,6 @@ describe('DiscussionService', () => {
     service = TestBed.get(DiscussionService);
     configService = TestBed.get(ConfigService);
     studentDataService = TestBed.get(StudentDataService);
-    spyOn(service, 'getTranslation').and.callFake((key: string) => {
-      if (key === 'ENTER_PROMPT_HERE') {
-        return 'Enter prompt here';
-      }
-    });
   });
   createComponent();
   isCompleted();
@@ -92,7 +87,7 @@ function createComponent() {
   it('should create a discussion component', () => {
     const component = service.createComponent();
     expect(component.type).toEqual('Discussion');
-    expect(component.prompt).toEqual('Enter prompt here');
+    expect(component.prompt).toEqual('');
     expect(component.isStudentAttachmentEnabled).toEqual(true);
     expect(component.gateClassmateResponses).toEqual(true);
   });

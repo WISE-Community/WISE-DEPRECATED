@@ -558,6 +558,10 @@ export class UtilService {
     return str.trim().split(/\s+/).length;
   }
 
+  trimToLength(str: string, maxLength: number): string {
+    return str.length > maxLength ? `${str.substring(0, maxLength - 3)}...` : str;
+  }
+
   /**
    * Check if there is a 'nodeEntered' event in the array of events.
    * @param events An array of events.

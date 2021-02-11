@@ -54,11 +54,19 @@ import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/
 import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
 import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
 import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
+import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
+import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
+import { GraphAuthoring } from '../../../wise5/components/graph/graph-authoring/graph-authoring.component';
+import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component';
+import { AnimationAuthoring } from '../../../wise5/components/animation/animation-authoring/animation-authoring.component';
+import { OpenResponseGrading } from '../../../wise5/components/openResponse/open-response-grading/open-response-grading.component';
 
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
     AlertStatusCornerComponent,
+    AnimationAuthoring,
+    AudioOscillatorAuthoring,
     ChooseImportStepComponent,
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
@@ -75,6 +83,8 @@ import { DiscussionAuthoring } from '../../../wise5/components/discussion/discus
     EditComponentWidthComponent,
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
+    EmbeddedAuthoring,
+    GraphAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
     ManageStudentsComponent,
@@ -85,11 +95,13 @@ import { DiscussionAuthoring } from '../../../wise5/components/discussion/discus
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
+    OpenResponseGrading,
     OpenResponseAuthoring,
     OutsideUrlAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
+    SummaryAuthoring,
     TableAuthoring,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,

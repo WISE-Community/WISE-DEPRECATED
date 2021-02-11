@@ -1,0 +1,65 @@
+@import '~style/abstracts/variables', '~style/themes/default';
+
+$notice-bg: map-get($default-colors, notice-bg);
+
+.prompt {
+  width: 100%;
+}
+
+.wide-drop-down {
+  width: 300px;
+  margin-right: 20px;
+}
+
+.short-drop-down {
+  width: 200px;
+  margin-right: 20px;
+}
+
+.checkbox {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-right: 40px;
+}
+
+.custom-label-colors-label {
+  margin-right: 10px;
+}
+
+.info-block {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.custom-label-color-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #dddddd;
+  background-color: $notice-bg;
+  border-radius: $card-border-radius;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+
+  &:last-of-type {
+    margin-bottom: 20px;
+  }
+}
+
+.long-input {
+  width: 400px;
+  margin-right: 20px;
+}
+
+.short-input {
+  width: 200px;
+  margin-right: 20px;
+}
+
+.button {
+  margin-left: 10px;
+  margin-right: 10px;
+}

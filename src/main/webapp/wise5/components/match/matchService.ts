@@ -91,4 +91,15 @@ export class MatchService extends ComponentService {
     }
     return null;
   }
+
+  componentHasCorrectAnswer(component: any): boolean {
+    for (const feedback of component.feedback) {
+      for (const choice of feedback.choices) {
+        if (choice.isCorrect) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }

@@ -136,11 +136,6 @@ class OpenResponseController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    } else if (this.mode === 'grading') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;
