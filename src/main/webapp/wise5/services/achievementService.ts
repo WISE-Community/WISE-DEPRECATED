@@ -115,8 +115,8 @@ export class AchievementService {
                 this.createStudentAchievement(projectAchievement);
               }
             }
+            this.registerAchievementListeners();
           }
-          this.registerAchievementListeners();
           return this.studentAchievementsByWorkgroupId;
         });
     }
