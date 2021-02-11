@@ -20,6 +20,7 @@ describe('UtilService', () => {
   calculateMeanTests();
   getIntersectOfArraysTests();
   isValidJSONStringTests();
+  trimToLength();
 });
 
 function generateKeyTests() {
@@ -207,6 +208,18 @@ function isValidJSONStringTests() {
     it('should return false for invalid json strings', () => {
       const invalidJSON = '{"a":1,"b":2';
       expect(service.isValidJSONString(invalidJSON)).toBeFalsy();
+    });
+  });
+}
+
+function trimToLength() {
+  describe('trimToLength()', () => {
+    it('should keep strings intact if its length is equal to or less than max length', () => {
+      expect(service.trimToLength('123456789', 9)).toEqual('123456789');
+      expect(service.trimToLength('123456789', 10)).toEqual('123456789');
+    });
+    it('should trim length and add ellipses if length is longer than max length', () => {
+      expect(service.trimToLength('123456789', 7)).toEqual('1234...');
     });
   });
 }
