@@ -5,35 +5,26 @@ import { ConfigService } from './configService';
 import { ProjectService } from './projectService';
 import { StudentDataService } from './studentDataService';
 import { Injectable } from '@angular/core';
-import { UpgradeModule } from '@angular/upgrade/static';
 import { UtilService } from './utilService';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class AchievementService {
-  studentAchievementsByWorkgroupId: any;
-  debug: boolean;
+  studentAchievementsByWorkgroupId: any = {};
+  debug: boolean = false;
   private achievementCompletedSource: Subject<any> = new Subject<any>();
   public achievementCompleted$: Observable<any> = this.achievementCompletedSource.asObservable();
   private newStudentAchievementSource: Subject<any> = new Subject<any>();
   public newStudentAchievement$: Observable<any> = this.newStudentAchievementSource.asObservable();
 
   constructor(
-    private upgrade: UpgradeModule,
     private http: HttpClient,
     private ConfigService: ConfigService,
     private ProjectService: ProjectService,
     private StudentDataService: StudentDataService,
     private UtilService: UtilService
-  ) {
-    this.studentAchievementsByWorkgroupId = {};
-    this.debug = false;
-  }
+  ) {}
 
-  /**
-   * Output the string to the console if debug=true
-   * @param str the string to output to the console
-   */
   debugOutput(str) {
     if (this.debug) {
       console.log(str);
@@ -70,7 +61,7 @@ export class AchievementService {
         .then((studentAchievements: any[]) => {
           for (const studentAchievement of studentAchievements) {
             this.addOrUpdateStudentAchievement(studentAchievement);
-            if (this.ConfigService.getMode() === 'studentRun') {
+            if (this.ConfigService.isStudentRun()) {
               const projectAchievement = this.ProjectService.getAchievementByAchievementId(
                 studentAchievement.achievementId
               );
@@ -93,21 +84,15 @@ export class AchievementService {
             }
           }
 
-          if (this.ConfigService.getMode() === 'studentRun') {
+          if (this.ConfigService.isStudentRun()) {
             /*
-             * Loop through all the projectAchievements and
-             * re-evaluate whether the student has completed each.
-             * This is to make sure students never get stuck in a
-             * state where they did everything required to complete
-             * a certain achievement but some error or bug occurred
-             * which prevented their student achievement from being
-             * saved and then they end up never being able to
-             * complete that achievement. We will avoid this
-             * situation by re-evaluating all the projectAchievements
-             * each time the student loads the VLE.
+             * Loop through all the projectAchievements and re-evaluate whether the student has
+             * completed each when the student loads the VLE. This is to make sure that students
+             * never get stuck in a state where they did everything required to complete a certain
+             * achievement but some error or bug occurred which prevented their student achievement
+             * from being saved and then they end up never being able to complete that achievement.
              */
-            const projectAchievements = this.ProjectService.getAchievementItems();
-            for (const projectAchievement of projectAchievements) {
+            for (const projectAchievement of this.ProjectService.getAchievementItems()) {
               if (
                 !this.isStudentAchievementExists(projectAchievement.id) &&
                 this.isProjectAchievementSatisfied(projectAchievement)
