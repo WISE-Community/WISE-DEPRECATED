@@ -1,6 +1,4 @@
-<div class="component--grading__response__content"
-    [innerHTML]="studentResponse">
-</div>
+<div class="component--grading__response__content" [innerHTML]="studentResponse"></div>
 <div class="component__attachment"
      *ngFor="let audioAttachment of audioAttachments"
      fxLayout="row"
@@ -9,7 +7,6 @@
     <source [src]="audioAttachment.url" type="audio/webm">
   </audio>
 </div>
-<div class='component__attachment'
-    *ngFor='let otherAttachment of otherAttachments'>
+<div class='component__attachment' *ngFor='let otherAttachment of otherAttachments'>
   <img [src]='otherAttachment.iconURL' class='component__attachment__content' />
 </div>
