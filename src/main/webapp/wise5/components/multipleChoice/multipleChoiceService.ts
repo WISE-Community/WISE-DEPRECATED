@@ -209,11 +209,7 @@ export class MultipleChoiceService extends ComponentService {
   }
 
   getChoicesIdsStudentChose(studentChoices: any[]): string[] {
-    const studentChoiceIds: string[] = [];
-    for (const studentChoice of studentChoices) {
-      studentChoiceIds.push(studentChoice.id);
-    }
-    return studentChoiceIds;
+    return studentChoices.map((studentChoice) => studentChoice.id);
   }
 
   isChoiceIdsSame(choiceIds1: string[], choiceIds2: string[]): boolean {
