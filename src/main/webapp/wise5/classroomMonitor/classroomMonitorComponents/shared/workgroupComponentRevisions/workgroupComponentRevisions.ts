@@ -141,7 +141,9 @@ const WorkgroupComponentRevisions = {
   bindings: {
     componentStates: '<',
     nodeId: '@',
-    workgroupId: '@'
+    componentId: '@',
+    workgroupId: '@',
+    fromWorkgroupId: '@'
   },
   template: `<md-list class="component-revisions">
             <div ng-repeat="item in $ctrl.data | toArray | orderBy: '-clientSaveTime'"
@@ -154,10 +156,49 @@ const WorkgroupComponentRevisions = {
                             #{{$ctrl.total - $index}}
                             <span ng-if="$first"> (Latest)</span>
                         </h3>
-                        <div>
-                            <component component-state="{{ item.componentState }}"
-                                       workgroup-id="::$ctrl.workgroupId"
-                                       mode="gradingRevision">
+                        <div style="padding: 20px;">
+                            <ng-content ng-switch="item.componentState.componentType">
+                              <div ng-switch-when="MultipleChoice|OpenResponse" ng-switch-when-separator="|" class="component__content" layout="row" layout-wrap>
+                                  <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
+                                      <multiple-choice-grading
+                                          ng-if="item.componentState.componentType === 'MultipleChoice'"
+                                          node-id="{{::$ctrl.nodeId}}"
+                                          component-id="{{::$ctrl.componentId}}"
+                                          component-state="{{ item.componentState }}"
+                                          workgroup-id="::$ctrl.workgroupId">
+                                      </multiple-choice-grading>
+                                      <open-response-grading
+                                          ng-if="item.componentState.componentType === 'OpenResponse'"
+                                          node-id="{{::$ctrl.nodeId}}"
+                                          component-id="{{::$ctrl.componentId}}"
+                                          component-state="{{ item.componentState }}"
+                                          workgroup-id="::$ctrl.workgroupId">
+                                      </open-response-grading>
+                                      <component-revisions-info
+                                          node-id="::$ctrl.nodeId"
+                                          component-id="::$ctrl.componentId"
+                                          to-workgroup-id="::$ctrl.workgroupId"
+                                          component-state="item.componentState"
+                                          active='false'>
+                                      </component-revisions-info>
+                                  </div>
+                                  <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
+                                    <component-grading node-id="::$ctrl.nodeId"
+                                        component-id="::$ctrl.componentId"
+                                        max-score="componentContent.maxScore"
+                                        from-workgroup-id="::$ctrl.fromWorkgroupId"
+                                        to-workgroup-id="$ctrl.workgroupId"
+                                        component-state-id="item.componentState.id"
+                                        show-all-annotations="true"
+                                        is-disabled="true">
+                                    </component-grading>
+                                  </div>
+                              </div>
+                              <component ng-switch-default
+                                         component-state="{{ item.componentState }}"
+                                         workgroup-id="::$ctrl.workgroupId"
+                                         mode="gradingRevision">
+                            </ng-content>
                         </div>
                     </div>
                 </md-list-item>

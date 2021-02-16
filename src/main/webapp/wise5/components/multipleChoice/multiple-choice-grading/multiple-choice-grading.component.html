@@ -1,0 +1,52 @@
+<div class="component--grading__response__content">
+  <div *ngIf="componentState"
+      class="md-block input-container--open-response input-container--component md-no-float"
+      [ngSwitch]="componentContent.choiceType">
+    <div *ngSwitchCase="'radio'" class="choices">
+      <mat-radio-group [(ngModel)]="studentChoiceId">
+        <div *ngFor="let choice of choices" class="choice">
+          <mat-radio-button
+              color="primary"
+              [value]="choice.id"
+              [disabled]="true">
+            <span [innerHTML]="choice.text">
+            </span>
+            <span *ngIf="componentState.isSubmit && showFeedback && choice.feedback !== '' && choice.id === studentChoiceId"
+                [ngClass]="{'success': hasCorrectAnswer && choice.isCorrect, 'warn': hasCorrectAnswer && !choice.isCorrect, 'info': !hasCorrectAnswer}">
+                {{choice.feedback}}
+            </span>
+          </mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+    <div *ngSwitchCase="'checkbox'" class="choices">
+      <div *ngFor="let choice of choices" class="choice">
+        <mat-checkbox
+            color="primary"
+            aria-label="choice.text"
+            [(ngModel)]="choice.isSelected"
+            [disabled]="true">
+          <span [innerHTML]="choice.text">
+          </span>
+          <span *ngIf="componentState.isSubmit && showFeedback && choice.isSelected"
+              [ngClass]="{'success': hasCorrectAnswer && choice.isCorrect, 'warn': hasCorrectAnswer && !choice.isCorrect, 'info': !hasCorrectAnswer}">
+              {{choice.feedback}}
+          </span>
+        </mat-checkbox>
+      </div>
+    </div>
+    <div *ngIf="componentContent.maxSubmitCount != null" i18n>
+      You have used {{componentState.studentData.submitCounter}} of {{componentContent.maxSubmitCount}} attempt(s)
+    </div>
+    <div *ngIf="hasCorrectAnswer && isStudentAnswerCorrect"
+        class="success"
+        i18n>
+      Correct
+    </div>
+    <div *ngIf="hasCorrectAnswer && !isStudentAnswerCorrect"
+        class="warn"
+        i18n>
+      Incorrect
+    </div>
+  </div>
+</div>
