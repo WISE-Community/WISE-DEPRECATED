@@ -159,4 +159,75 @@ export class MultipleChoiceService extends ComponentService {
     }
     return false;
   }
+
+  calculateIsCorrect(componentContent: any, componentState: any): boolean {
+    if (this.isRadio(componentContent)) {
+      return this.isRadioCorrect(componentContent, componentState);
+    } else if (this.isCheckbox(componentContent)) {
+      return this.isCheckboxCorrect(componentContent, componentState);
+    }
+  }
+
+  isRadio(componentContent: any): boolean {
+    return componentContent.choiceType === 'radio';
+  }
+
+  isCheckbox(componentContent: any): boolean {
+    return componentContent.choiceType === 'checkbox';
+  }
+
+  isRadioCorrect(componentContent: any, componentState: any): boolean {
+    const correctChoiceId = this.getCorrectChoiceIdForRadio(componentContent);
+    return componentState.studentData.studentChoices[0].id === correctChoiceId;
+  }
+
+  getCorrectChoiceIdForRadio(componentContent: any): string {
+    for (const choice of componentContent.choices) {
+      if (choice.isCorrect) {
+        return choice.id;
+      }
+    }
+    return null;
+  }
+
+  isCheckboxCorrect(componentContent: any, componentState: any): boolean {
+    const correctChoiceIds = this.getCorrectChoiceIdsForCheckbox(componentContent);
+    const choiceIdsStudentChose = this.getChoicesIdsStudentChose(
+      componentState.studentData.studentChoices
+    );
+    return this.isChoiceIdsSame(correctChoiceIds, choiceIdsStudentChose);
+  }
+
+  getCorrectChoiceIdsForCheckbox(componentContent: any): string[] {
+    const correctChoiceIds: string[] = [];
+    for (const choice of componentContent.choices) {
+      if (choice.isCorrect) {
+        correctChoiceIds.push(choice.id);
+      }
+    }
+    return correctChoiceIds;
+  }
+
+  getChoicesIdsStudentChose(studentChoices: any[]): any {
+    const studentChoiceIds: string[] = [];
+    for (const studentChoice of studentChoices) {
+      studentChoiceIds.push(studentChoice.id);
+    }
+    return studentChoiceIds;
+  }
+
+  isChoiceIdsSame(choiceIds1: string[], choiceIds2: string[]): boolean {
+    if (choiceIds1.length !== choiceIds2.length) {
+      return false;
+    } else {
+      choiceIds1.sort();
+      choiceIds2.sort();
+      for (let choiceIdIndex = 0; choiceIdIndex < choiceIds1.length; choiceIdIndex++) {
+        if (choiceIds1[choiceIdIndex] !== choiceIds2[choiceIdIndex]) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
 }
