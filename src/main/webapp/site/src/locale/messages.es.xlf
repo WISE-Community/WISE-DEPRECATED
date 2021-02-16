@@ -9150,6 +9150,30 @@
         </context-group>
         <target state="needs-translation">Optional</target>
       </trans-unit>
+      <trans-unit datatype="html" id="f80d8048e1a73a4f0c35681cc5f8a250754eaf4b">
+        <source> You have used <x equiv-text="{{componentState.studentData.submitCounter}}" id="INTERPOLATION"/> of <x equiv-text="{{componentContent.maxSubmitCount}}" id="INTERPOLATION_1"/> attempt(s) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target state="needs-translation"> You have used <x equiv-text="{{componentState.studentData.submitCounter}}" id="INTERPOLATION"/> of <x equiv-text="{{componentContent.maxSubmitCount}}" id="INTERPOLATION_1"/> attempt(s) </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="00a48b9fab48a5ccc0ebf0a2793495ee1cc9f968">
+        <source> Correct </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <target state="needs-translation"> Correct </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="49a3371af0eb58f02e541105eb395340048527ec">
+        <source> Incorrect </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <target state="needs-translation"> Incorrect </target>
+      </trans-unit>
       <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
         <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
         <context-group purpose="location">
