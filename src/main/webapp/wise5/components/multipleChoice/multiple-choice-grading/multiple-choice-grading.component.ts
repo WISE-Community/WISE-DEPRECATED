@@ -51,11 +51,9 @@ export class MultipleChoiceGrading extends ComponentGrading {
   }
 
   getChoiceIds(choices: any[]): string[] {
-    const choiceIds: string[] = [];
-    for (const choice of choices) {
-      choiceIds.push(choice.id);
-    }
-    return choiceIds;
+    return choices.map((choice) => {
+      return choice.id;
+    });
   }
 
   processChoices(choices: any[], studentChoices: any[]): any[] {

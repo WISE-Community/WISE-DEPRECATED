@@ -208,7 +208,7 @@ export class MultipleChoiceService extends ComponentService {
     return correctChoiceIds;
   }
 
-  getChoicesIdsStudentChose(studentChoices: any[]): any {
+  getChoicesIdsStudentChose(studentChoices: any[]): string[] {
     const studentChoiceIds: string[] = [];
     for (const studentChoice of studentChoices) {
       studentChoiceIds.push(studentChoice.id);
@@ -222,8 +222,8 @@ export class MultipleChoiceService extends ComponentService {
     } else {
       choiceIds1.sort();
       choiceIds2.sort();
-      for (let choiceIdIndex = 0; choiceIdIndex < choiceIds1.length; choiceIdIndex++) {
-        if (choiceIds1[choiceIdIndex] !== choiceIds2[choiceIdIndex]) {
+      for (let i = 0; i < choiceIds1.length; i++) {
+        if (choiceIds1[i] !== choiceIds2[i]) {
           return false;
         }
       }

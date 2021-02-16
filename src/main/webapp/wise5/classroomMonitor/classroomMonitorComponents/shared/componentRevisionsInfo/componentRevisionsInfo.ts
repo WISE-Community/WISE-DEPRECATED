@@ -61,12 +61,9 @@ class ComponentRevisionsInfoController {
     }
 
     if (latest) {
-      // calculate the save time of the latest component state
       this.latestComponentStateTime = this.ConfigService.convertToClientTimestamp(
         latest.serverSaveTime
       );
-
-      // check if the latest component state is a submit
       this.latestComponentStateIsSubmit = latest.isSubmit;
     }
   }
