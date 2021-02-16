@@ -27,5 +27,5 @@ export const EditMatchAdvancedComponent = {
     componentId: '@'
   },
   controller: EditMatchAdvancedController,
-  templateUrl: 'wise5/components/label/edit-label-advanced/edit-label-advanced.component.html'
+  templateUrl: 'wise5/components/match/edit-match-advanced/edit-match-advanced.component.html'
 };

@@ -15,6 +15,14 @@
   </div>
   <div>
     <md-checkbox class='md-primary'
+                 ng-if='$ctrl.isNotebookEnabled()'
+                 ng-model='$ctrl.authoringComponentContent.importPrivateNotes'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'match.showPrivateNotesAsChoices' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSaveButton'
                  ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SAVE_BUTTON' | translate }}
@@ -25,14 +33,6 @@
                  ng-model='$ctrl.authoringComponentContent.showSubmitButton'
                  ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
-    </md-checkbox>
-  </div>
-  <div>
-    <md-checkbox class='md-primary'
-                 ng-if='$ctrl.isNotebookEnabled()'
-                 ng-model='$ctrl.authoringComponentContent.importPrivateNotes'
-                 ng-change='$ctrl.componentChanged()'>
-      {{ ::'match.showPrivateNotesAsChoices' | translate }}
     </md-checkbox>
   </div>
   <div>
