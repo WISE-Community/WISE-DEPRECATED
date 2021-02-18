@@ -57,6 +57,7 @@ import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinym
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({ template: `` })
 export class EmptyComponent {}
@@ -80,6 +81,7 @@ export class EmptyComponent {}
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -138,6 +140,7 @@ export class EmptyComponent {}
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,

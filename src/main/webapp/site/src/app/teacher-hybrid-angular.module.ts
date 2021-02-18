@@ -61,6 +61,7 @@ import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscilla
 import { AnimationAuthoring } from '../../../wise5/components/animation/animation-authoring/animation-authoring.component';
 import { OpenResponseGrading } from '../../../wise5/components/openResponse/open-response-grading/open-response-grading.component';
 import { MultipleChoiceGrading } from '../../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component';
+import { MatchGrading } from '../../../wise5/components/match/match-grading/match-grading.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { MultipleChoiceGrading } from '../../../wise5/components/multipleChoice/
     LabelAuthoring,
     ManageStudentsComponent,
     MatchAuthoring,
+    MatchGrading,
     MilestonesComponent,
     MilestoneReportDataComponent,
     MultipleChoiceAuthoring,
