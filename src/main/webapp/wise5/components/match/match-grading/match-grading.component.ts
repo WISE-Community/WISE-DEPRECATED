@@ -18,10 +18,10 @@ export class MatchGrading extends ComponentGrading {
   ngOnInit() {
     super.ngOnInit();
     this.initializeBuckets(this.componentState.studentData.buckets);
-    this.setHasCorrectAnswer(this.hasCorrectChoices(this.componentContent));
-    this.setIsCorrect(this.componentState.studentData.isCorrect);
-    this.setIsHorizontal(this.componentContent.horizontal);
-    this.setBucketWidth(this.calculateBucketWidth(this.targetBuckets, this.isHorizontal));
+    this.hasCorrectAnswer = this.hasCorrectChoices(this.componentContent);
+    this.isCorrect = this.componentState.studentData.isCorrect;
+    this.isHorizontal = this.componentContent.horizontal;
+    this.bucketWidth = this.calculateBucketWidth(this.targetBuckets, this.isHorizontal);
   }
 
   initializeBuckets(buckets: any[]): void {
@@ -34,10 +34,6 @@ export class MatchGrading extends ComponentGrading {
     }
   }
 
-  setHasCorrectAnswer(hasCorrectAnswer: boolean): void {
-    this.hasCorrectAnswer = hasCorrectAnswer;
-  }
-
   hasCorrectChoices(componentContent: any): boolean {
     for (const bucket of componentContent.feedback) {
       for (const choice of bucket.choices) {
@@ -47,14 +43,6 @@ export class MatchGrading extends ComponentGrading {
       }
     }
     return false;
-  }
-
-  setIsCorrect(isCorrect: boolean): void {
-    this.isCorrect = isCorrect;
-  }
-
-  setIsHorizontal(isHorizontal: boolean): void {
-    this.isHorizontal = isHorizontal;
   }
 
   calculateBucketWidth(buckets: any[], isHorizontal: boolean): number {
@@ -72,9 +60,5 @@ export class MatchGrading extends ComponentGrading {
     } else if (numBuckets % 2 === 0) {
       return 100 / 2;
     }
-  }
-
-  setBucketWidth(width: number): void {
-    this.bucketWidth = width;
   }
 }

@@ -6,7 +6,7 @@
     <possible-score [max-score]='matchController.componentContent.maxScore'></possible-score>
   </div>
   <div class='match-content'>
-    <component-annotations ng-if='matchController.mode === "student"'
+    <component-annotations
         class='annotations--inside'
         [annotations]='matchController.latestAnnotations'
         [max-score]='matchController.componentContent.maxScore'>
