@@ -63,6 +63,7 @@ import { OpenResponseGrading } from '../../../wise5/components/openResponse/open
 import { MultipleChoiceGrading } from '../../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component';
 import { MatchGrading } from '../../../wise5/components/match/match-grading/match-grading.component';
 import { LabelGrading } from '../../../wise5/components/label/label-grading/label-grading.component';
+import { DrawGrading } from '../../../wise5/components/draw/draw-grading/draw-grading.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { LabelGrading } from '../../../wise5/components/label/label-grading/labe
     ComponentSelectComponent,
     ConceptMapAuthoring,
     DrawAuthoring,
+    DrawGrading,
     DiscussionAuthoring,
     EditComponentRubricComponent,
     EditComponentJsonComponent,

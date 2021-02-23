@@ -1,6 +1,12 @@
 'use strict';
 
 import * as angular from 'angular';
+import * as $ from 'jquery';
+import * as fabric from 'fabric';
+window['fabric'] = fabric.fabric;
+import * as EventEmitter2 from 'eventemitter2';
+window['EventEmitter2'] = EventEmitter2;
+import DrawingTool from '../../lib/drawingTool/drawing-tool';
 import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
 import { Injectable } from '@angular/core';
@@ -156,5 +162,50 @@ export class DrawService extends ComponentService {
       return canvas[0];
     }
     return null;
+  }
+
+  initializeDrawingTool(
+    drawingToolId: string,
+    stamps: any = {},
+    width: number = 800,
+    height: number = 600,
+    isHideDrawingTools: boolean = false
+  ): any {
+    const drawingTool = new DrawingTool('#' + drawingToolId, {
+      stamps: stamps,
+      parseSVG: true,
+      width: width,
+      height: height
+    });
+    let state = null;
+    $('#set-background').on('click', () => {
+      drawingTool.setBackgroundImage($('#background-src').val());
+    });
+    $('#resize-background').on('click', () => {
+      drawingTool.resizeBackgroundToCanvas();
+    });
+    $('#resize-canvas').on('click', () => {
+      drawingTool.resizeCanvasToBackground();
+    });
+    $('#shrink-background').on('click', () => {
+      drawingTool.shrinkBackgroundToCanvas();
+    });
+    $('#clear').on('click', () => {
+      drawingTool.clear(true);
+    });
+    $('#save').on('click', () => {
+      state = drawingTool.save();
+      $('#load').removeAttr('disabled');
+    });
+    $('#load').on('click', () => {
+      if (state === null) return;
+      drawingTool.load(state);
+    });
+    if (isHideDrawingTools) {
+      $('#' + drawingToolId)
+        .find('.dt-tools')
+        .hide();
+    }
+    return drawingTool;
   }
 }

@@ -7,7 +7,6 @@ window['fabric'] = fabric.fabric;
 import ComponentController from '../componentController';
 import * as EventEmitter2 from 'eventemitter2';
 window['EventEmitter2'] = EventEmitter2;
-import DrawingTool from '../../lib/drawingTool/drawing-tool';
 import { DrawService } from './drawService';
 
 class DrawController extends ComponentController {
@@ -106,21 +105,10 @@ class DrawController extends ComponentController {
 
     this.componentType = this.componentContent.type;
 
-    if (this.isStudentMode() || this.isAuthoringComponentPreviewMode()) {
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.isResetButtonVisible = true;
-      this.drawingToolId = 'drawingtool_' + this.nodeId + '_' + this.componentId;
-    } else if (this.isGradingMode() || this.isGradingRevisionMode()) {
-      const componentState = this.$scope.componentState;
-      if (componentState != null) {
-        if (this.isGradingRevisionMode()) {
-          this.drawingToolId = 'drawingtool_gradingRevision_' + componentState.id;
-        } else {
-          this.drawingToolId = 'drawingtool_' + componentState.id;
-        }
-      }
-    }
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.isResetButtonVisible = true;
+    this.drawingToolId = 'drawingtool_' + this.nodeId + '_' + this.componentId;
 
     /*
      * Running this inside a timeout ensures that the code only runs after the markup is rendered.
@@ -193,67 +181,31 @@ class DrawController extends ComponentController {
   }
 
   initializeDrawingTool() {
-    this.drawingTool = new DrawingTool('#' + this.drawingToolId, {
-      stamps: this.componentContent.stamps || {},
-      parseSVG: true,
-      width: this.width,
-      height: this.height
-    });
-    let state = null;
-    $('#set-background').on('click', () => {
-      this.drawingTool.setBackgroundImage($('#background-src').val());
-    });
-    $('#resize-background').on('click', () => {
-      this.drawingTool.resizeBackgroundToCanvas();
-    });
-    $('#resize-canvas').on('click', () => {
-      this.drawingTool.resizeCanvasToBackground();
-    });
-    $('#shrink-background').on('click', () => {
-      this.drawingTool.shrinkBackgroundToCanvas();
-    });
-    $('#clear').on('click', () => {
-      this.drawingTool.clear(true);
-    });
-    $('#save').on('click', () => {
-      state = this.drawingTool.save();
-      $('#load').removeAttr('disabled');
-    });
-    $('#load').on('click', () => {
-      if (state === null) return;
-      this.drawingTool.load(state);
-    });
-
+    this.drawingTool = this.DrawService.initializeDrawingTool(
+      this.drawingToolId,
+      this.componentContent.stamps,
+      this.width,
+      this.height
+    );
     const componentState = this.$scope.componentState;
-    if (this.isStudentMode()) {
-      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-        this.handleConnectedComponents();
-      } else if (
-        this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)
-      ) {
-        this.setStudentWork(componentState);
-      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        this.handleConnectedComponents();
-      } else if (
-        componentState == null ||
-        !this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)
-      ) {
-        if (this.componentContent.starterDrawData != null) {
-          this.drawingTool.load(this.componentContent.starterDrawData);
-        }
-        if (this.componentContent.background != null) {
-          this.drawingTool.setBackgroundImage(this.componentContent.background);
-        }
-      }
-    } else if (this.isAuthoringComponentPreviewMode()) {
+    if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+      this.handleConnectedComponents();
+    } else if (
+      this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
+      this.setStudentWork(componentState);
+    } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      this.handleConnectedComponents();
+    } else if (
+      componentState == null ||
+      !this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
       if (this.componentContent.starterDrawData != null) {
         this.drawingTool.load(this.componentContent.starterDrawData);
       }
       if (this.componentContent.background != null) {
         this.drawingTool.setBackgroundImage(this.componentContent.background);
       }
-    } else {
-      this.setStudentWork(componentState);
     }
 
     if (this.hasMaxSubmitCount() && this.hasSubmitsLeft()) {
@@ -278,24 +230,16 @@ class DrawController extends ComponentController {
       500
     );
 
-    if (this.isStudentMode()) {
-      this.drawingTool.on('tool:changed', (toolName) => {
-        const category = 'Tool';
-        const event = 'toolSelected';
-        const data = {
-          selectedToolName: toolName
-        };
-        this.StudentDataService.saveComponentEvent(this, category, event, data);
-      });
-    }
+    this.drawingTool.on('tool:changed', (toolName) => {
+      const category = 'Tool';
+      const event = 'toolSelected';
+      const data = {
+        selectedToolName: toolName
+      };
+      this.StudentDataService.saveComponentEvent(this, category, event, data);
+    });
 
-    if (this.isGradingMode() || this.isGradingRevisionMode()) {
-      $('#' + this.drawingToolId)
-        .find('.dt-tools')
-        .hide();
-    } else {
-      this.setupTools();
-    }
+    this.setupTools();
 
     if (this.isDisabled) {
       this.drawingTool.canvas.removeListeners();
