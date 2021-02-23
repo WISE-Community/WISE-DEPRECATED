@@ -1,87 +1,75 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { Subscription } from "rxjs";
-import { NotebookService } from "../../../../../wise5/services/notebookService";
-import { ProjectService } from "../../../../../wise5/services/projectService";
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ConfigService } from '../../../../../wise5/services/configService';
+import { NotebookService } from '../../../../../wise5/services/notebookService';
+import { ProjectService } from '../../../../../wise5/services/projectService';
+import { UtilService } from '../../../../../wise5/services/utilService';
+import { NotebookParentComponent } from '../notebook-parent/notebook-parent.component';
 
 @Component({
   selector: 'notebook-notes',
-  templateUrl: 'notebook-notes.component.html'
+  styleUrls: ['notebook-notes.component.scss'],
+  templateUrl: 'notebook-notes.component.html',
+  encapsulation: ViewEncapsulation.None
 })
-export class NotebookNotesComponent {
-
-  @Input()
-  config: any;
-
-  @Input()
-  insertMode: boolean;
-
-  @Input()
-  notebook: any;
-
-  @Input()
-  notesVisible: boolean;
-
+export class NotebookNotesComponent extends NotebookParentComponent {
   @Input()
   viewOnly: boolean;
 
-  @Input()
-  workgroupId: number;
-
-  @Input()
-  onSetInsertMode: any;
-
-  @Input()
-  mode: string;
-
-  @Output()
-  onClose: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  onInsert: EventEmitter<any> = new EventEmitter();
-
   groups = [];
-  selectedTabIndex = 0;
-  groupNameToGroup = {};
-  color: string;
   hasNotes: boolean;
+  groupNameToGroup = {};
+  label: any;
+  selectedTabIndex = 0;
+  title: string;
   notebookUpdatedSubscription: Subscription;
   openNotebookSubscription: Subscription;
   publicNotebookItemsRetrievedSubscription: Subscription;
 
-  constructor(private NotebookService: NotebookService, private ProjectService: ProjectService) {
+  constructor(
+    ConfigService: ConfigService,
+    NotebookService: NotebookService,
+    private ProjectService: ProjectService,
+    UtilService: UtilService
+  ) {
+    super(ConfigService, NotebookService, UtilService);
   }
 
-  ngOnInit(): void {
-    this.color = this.config.itemTypes.note.label.color;
+  initComplete(): void {
+    this.label = this.config.itemTypes.note.label;
     this.addPersonalGroupToGroups();
     this.addSpacesToGroups();
     this.hasNotes = this.isHasNotes();
 
     this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
-        ({notebookItem}) => {
-      if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
-          notebookItem.type === 'note') {
-        this.updatePrivateNotebookNote(notebookItem);
+      ({ notebookItem }) => {
+        if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
+            notebookItem.type === 'note'
+        ) {
+          this.updatePrivateNotebookNote(notebookItem);
+        }
+        if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
+          this.updatePublicNotebookNote(notebookItem);
+        }
+        this.hasNotes = this.isHasNotes();
       }
-      if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
-        this.updatePublicNotebookNote(notebookItem);
-      }
-      this.hasNotes = this.isHasNotes();
-    });
+    );
 
     this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe(
-        ({visibleSpace}) => {
-      this.selectedTabIndex = visibleSpace === 'public' ? 1 : 0;
-    });
+      ({ visibleSpace }) => {
+        this.selectedTabIndex = visibleSpace === 'public' ? 1 : 0;
+      }
+    );
 
-    this.publicNotebookItemsRetrievedSubscription =
-        this.NotebookService.publicNotebookItemsRetrieved$.subscribe(() => {
-      for (const group of this.groups) {
-        if (group.name !== 'private') {
-          group.items = this.NotebookService.publicNotebookItems[group.name];
+    this.publicNotebookItemsRetrievedSubscription = 
+      this.NotebookService.publicNotebookItemsRetrieved$.subscribe(() => {
+        for (const group of this.groups) {
+          if (group.name !== 'private') {
+            group.items = this.NotebookService.publicNotebookItems[group.name];
+          } 
         }
       }
-    });
+    );
   }
 
   ngOnDestroy(): void {
@@ -100,7 +88,7 @@ export class NotebookNotesComponent {
 
   addPersonalGroupToGroups(): void {
     const personalGroup = {
-      title: 'Personal',
+      title: $localize`Personal`,
       name: 'private',
       isEditAllowed: true,
       items: []
@@ -130,23 +118,41 @@ export class NotebookNotesComponent {
   }
 
   updatePrivateNotebookNote(notebookItem: any): void {
-    this.updateNotebookNote(this.groupNameToGroup['private'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+    this.updateNotebookNote(
+      this.groupNameToGroup['private'],
+      notebookItem.localNotebookItemId,
+      notebookItem.workgroupId,
+      notebookItem
+    );
     if (this.groupNameToGroup['public'] != null) {
-      this.removeNotebookNote(this.groupNameToGroup['public'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId);
+      this.removeNotebookNote(
+        this.groupNameToGroup['public'],
+        notebookItem.localNotebookItemId,
+        notebookItem.workgroupId
+      );
     }
   }
 
   updatePublicNotebookNote(notebookItem: any): void {
-    this.updateNotebookNote(this.groupNameToGroup['public'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-    this.removeNotebookNote(this.groupNameToGroup['private'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId);
+    this.updateNotebookNote(
+      this.groupNameToGroup['public'],
+      notebookItem.localNotebookItemId,
+      notebookItem.workgroupId,
+      notebookItem
+    );
+    this.removeNotebookNote(
+      this.groupNameToGroup['private'],
+      notebookItem.localNotebookItemId,
+      notebookItem.workgroupId
+    );
   }
 
-  updateNotebookNote(group: any, localNotebookItemId: string, workgroupId: number,
-      notebookItem: any): void {
+  updateNotebookNote(
+    group: any,
+    localNotebookItemId: string,
+    workgroupId: number,
+    notebookItem: any
+  ): void {
     let added = false;
     let items = group.items;
     for (let i = 0; i < items.length; i++) {
@@ -172,31 +178,12 @@ export class NotebookNotesComponent {
     }
   }
 
-  getTitle(): string {
-    if (this.insertMode) {
-      return $localize`Select Item To Insert`;
-    } else {
-      return this.config.itemTypes.note.label.link;
-    }
+  addNote() {
+    this.NotebookService.addNote();
   }
 
-  editItem($ev: any, note: any): void {
-    this.NotebookService.broadcastEditNote({note: note, isEditMode: !this.viewOnly, ev: $ev});
-  }
-
-  select({event, note}: any): void {
-    if (this.insertMode) {
-      this.onInsert.emit({note: note, event: event});
-    } else {
-      this.editItem(event, note);
-    }
-  }
-
-  close($event: any): void {
-    this.onClose.emit($event);
-  }
-
-  cancelInsertMode($event: any): void {
-    this.onSetInsertMode({value: false});
+  close(): void {
+    this.NotebookService.setNotesVisible(false);
+    this.NotebookService.setInsertMode(false);
   }
 }

@@ -12,13 +12,3 @@
         (onSetInsertMode)="setInsertMode($event)">
     </notebook-report>
 </ng-container>
-<notebook-notes *ngIf="config.enabled"
-    [notebook]="notebook"
-    [notesVisible]="notesVisible"
-    [config]="config"
-    [insertMode]="insertMode"
-    [workgroupId]="workgroupId"
-    (onClose)="closeNotes()"
-    (onInsert)="insert($event)"
-    (onSetInsertMode)="setInsertMode($event)">
-</notebook-notes>

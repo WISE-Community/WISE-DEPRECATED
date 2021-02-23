@@ -55,6 +55,7 @@ import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
 import { NotebookComponent } from './notebook/notebook/notebook.component';
+import { NotebookParentComponent } from './notebook/notebook-parent/notebook-parent.component';
 import { NotebookItemComponent } from './notebook/notebook-item/notebook-item.component';
 import { NotebookLauncherComponent } from './notebook/notebook-launcher/notebook-launcher.component';
 import { NotebookNotesComponent } from './notebook/notebook-notes/notebook-notes.component';
@@ -63,6 +64,7 @@ import { NotebookReportAnnotationsComponent } from './notebook/notebook-report-a
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({ template: `` })
 export class EmptyComponent {}
@@ -74,6 +76,7 @@ export class EmptyComponent {}
     NodeIconComponent,
     NodeStatusIcon,
     NotebookComponent,
+    NotebookParentComponent,
     NotebookItemComponent,
     NotebookLauncherComponent,
     NotebookNotesComponent,
@@ -101,6 +104,7 @@ export class EmptyComponent {}
     MatSelectModule,
     MatSidenavModule,
     MatTabsModule,
+    MatToolbarModule,
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
@@ -159,6 +163,7 @@ export class EmptyComponent {}
     MatSelectModule,
     MatSidenavModule,
     MatTabsModule,
+    MatToolbarModule,
     MatTooltipModule,
     MomentModule,
     NodeIconComponent,

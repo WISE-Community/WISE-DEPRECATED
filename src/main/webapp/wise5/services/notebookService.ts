@@ -74,6 +74,8 @@ export class NotebookService {
   public showReportAnnotations$ = this.showReportAnnotationsSource.asObservable();
   private notesVisibleSource: Subject<boolean> = new Subject<boolean>();
   public notesVisible$ = this.notesVisibleSource.asObservable();
+  private insertModeSource: Subject<boolean> = new Subject<boolean>();
+  public insertMode$ = this.insertModeSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -630,5 +632,9 @@ export class NotebookService {
 
   setNotesVisible(value: boolean): void {
     this.notesVisibleSource.next(value);
+  }
+
+  setInsertMode(value: boolean): void {
+    this.insertModeSource.next(value);
   }
 }

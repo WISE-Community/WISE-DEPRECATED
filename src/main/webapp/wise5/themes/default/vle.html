@@ -25,9 +25,14 @@
         <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'">
         </div>
       </md-content>
+      <md-sidenav class="md-sidenav-right md-whiteframe-4dp notebook-sidebar"
+                  md-component-id="notes" md-disable-backdrop
+                  md-is-open="vleController.notesVisible">
+        <notebook-notes [config]="vleController.notebookConfig"></notebook-notes>
+      </md-sidenav>
       <global-annotations></global-annotations>
-      <notebook-launcher ng-if="!vleController.notesVisible" 
-                         [notebookConfig]="vleController.notebookConfig"></notebook-launcher>
+      <notebook-launcher ng-if="vleController.notebookEnabled && !vleController.notesVisible" 
+                         [notebook-config]="vleController.notebookConfig"></notebook-launcher>
       <notebook></notebook>
     </div>
   </listen-for-delete-keypress>
