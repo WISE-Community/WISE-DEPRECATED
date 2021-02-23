@@ -57,6 +57,7 @@ import '../authoringTool/node/editRubric/editRubricModule';
 import '../authoringTool/importComponent/importComponentModule';
 import '../authoringTool/importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
+import '../components/label/labelGradingComponentModule';
 import '../components/match/matchAuthoringComponentModule';
 import '../components/match/matchGradingComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
@@ -87,6 +88,7 @@ angular
     'importComponentModule',
     'importStepModule',
     'labelAuthoringComponentModule',
+    'labelGradingComponentModule',
     'matchAuthoringComponentModule',
     'matchGradingComponentModule',
     'multipleChoiceAuthoringComponentModule',

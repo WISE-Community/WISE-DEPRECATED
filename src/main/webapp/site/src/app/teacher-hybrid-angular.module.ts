@@ -62,6 +62,7 @@ import { AnimationAuthoring } from '../../../wise5/components/animation/animatio
 import { OpenResponseGrading } from '../../../wise5/components/openResponse/open-response-grading/open-response-grading.component';
 import { MultipleChoiceGrading } from '../../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component';
 import { MatchGrading } from '../../../wise5/components/match/match-grading/match-grading.component';
+import { LabelGrading } from '../../../wise5/components/label/label-grading/label-grading.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { MatchGrading } from '../../../wise5/components/match/match-grading/matc
     GraphAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
+    LabelGrading,
     ManageStudentsComponent,
     MatchAuthoring,
     MatchGrading,
