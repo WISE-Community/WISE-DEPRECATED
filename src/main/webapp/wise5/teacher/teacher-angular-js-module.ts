@@ -58,6 +58,7 @@ import '../authoringTool/importComponent/importComponentModule';
 import '../authoringTool/importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
+import '../components/match/matchGradingComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceGradingComponentModule';
 import '../components/openResponse/openResponseAuthoringComponentModule';
@@ -87,6 +88,7 @@ angular
     'importStepModule',
     'labelAuthoringComponentModule',
     'matchAuthoringComponentModule',
+    'matchGradingComponentModule',
     'multipleChoiceAuthoringComponentModule',
     'multipleChoiceGradingComponentModule',
     'ngAnimate',

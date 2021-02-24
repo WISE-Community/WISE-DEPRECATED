@@ -1,0 +1,48 @@
+@import '~style/abstracts/variables', '~style/abstracts/functions';
+
+.match-grading {
+  .mat-card {
+    padding: 0px;
+    margin: 8px;
+  }
+
+  .mat-card-header {
+    .mat-card-title {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+  }
+
+  .match-bucket__item {
+    cursor: auto;
+  }
+
+  .mat-list-base {
+    .mat-list-item {
+      width: auto;
+
+      .mat-list-item-content {
+        padding: 0px;
+      }
+    }
+
+    .mat-list-item.mat-2-line {
+      height: auto;
+    }
+
+    .mat-line.match-feedback {
+      margin-top: 0.5rem;
+      padding: 4px;
+    }
+  }
+
+  .mat-list .mat-list-item .mat-line {
+    white-space: pre-wrap;
+  }
+
+  .columns-2 {
+    @media (min-width: breakpoint('md.min')) {
+      column-count: 2;
+    }
+  }
+}

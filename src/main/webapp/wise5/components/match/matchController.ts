@@ -109,54 +109,33 @@ class MatchController extends ComponentController {
 
     this.privateNotebookItems = [];
 
-    if (this.mode === 'student') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      if (this.shouldImportPrivateNotes()) {
-        const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
-        this.privateNotebookItems = allPrivateNotebookItems.filter((note) => {
-          return note.serverDeleteTime == null;
-        });
-        this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
-          (args) => {
-            if (args.notebookItem.type === 'note') {
-              this.addNotebookItemToSourceBucket(args.notebookItem);
-            }
-          }
-        );
-      }
-    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
-      if (this.shouldImportPrivateNotes()) {
-        this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems(this.workgroupId);
-      }
-    } else if (this.mode === 'showPreviousWork') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
+    this.isPromptVisible = true;
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    if (this.shouldImportPrivateNotes()) {
+      const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
+      this.privateNotebookItems = allPrivateNotebookItems.filter((note) => {
+        return note.serverDeleteTime == null;
+      });
+      this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe((args) => {
+        if (args.notebookItem.type === 'note') {
+          this.addNotebookItemToSourceBucket(args.notebookItem);
+        }
+      });
     }
 
     this.hasCorrectAnswer = this.hasCorrectChoices();
     this.initializeChoices();
     this.initializeBuckets();
     const componentState = this.$scope.componentState;
-    if (this.mode == 'student') {
-      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-        this.handleConnectedComponents();
-      } else if (
-        this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)
-      ) {
-        this.setStudentWork(componentState);
-      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        this.handleConnectedComponents();
-      }
-    } else if (componentState != null) {
+    if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+      this.handleConnectedComponents();
+    } else if (
+      this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
       this.setStudentWork(componentState);
+    } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      this.handleConnectedComponents();
     }
 
     if (componentState != null && componentState.isSubmit) {
