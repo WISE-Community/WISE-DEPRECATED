@@ -11,55 +11,10 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content class="match-bucket__content">
-            <mat-list class="match-bucket__contents">
-              <mat-list-item class="match-bucket__item__contents"
-                  *ngFor="let item of sourceBucket.items"
-                  fxFlex.gt-sm="{{isHorizontal ? 100 : 50}}">
-                <p mat-line>
-                  <span class="match-bucket__item__contents__text"
-                      [innerHTML]="item.value">
-                  </span>
-                </p>
-                <p class="match-feedback mat-body-2"
-                    *ngIf="item.feedback != null && item.feedback !== ''"
-                    mat-line
-                    [ngClass]="{'success-bg': !hasCorrectAnswer || item.isCorrect, 'info-bg': item.isIncorrectPosition, 'warn-bg': hasCorrectAnswer && !item.isCorrect}"
-                    fxLayoutAlign="start center">
-                  <mat-icon *ngIf="hasCorrectAnswer && item.isCorrect">
-                    check
-                  </mat-icon>
-                  <mat-icon *ngIf="hasCorrectAnswer && item.isIncorrectPosition">
-                    warning
-                  </mat-icon>
-                  <mat-icon *ngIf="hasCorrectAnswer && !item.isCorrect && !item.isIncorrectPosition">
-                    clear
-                  </mat-icon>
-                  <span [innerHTML]="item.feedback">
-                  </span>
-                </p>
-              </mat-list-item>
-            </mat-list>
-          </mat-card-content>
-        </mat-card>
-        <mat-divider class="match-divider {{isHorizontal ? 'match-divider--horizontal' : ''}}"></mat-divider>
-      </div>
-      <div fxLayout="row wrap"
-          fxLayoutAlign="center start"
-          fxFlex="100"
-          fxFlex.gt-sm="{{isHorizontal ? 50 : 100}}">
-        <div *ngFor="let bucket of targetBuckets; index as bucketIndex"
-            class="match-bucket"
-            fxFlex="100"
-            fxFlex.gt-sm="{{isHorizontal ? 100 : bucketWidth}}">
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title [innerHTML]="bucket.value"
-                  class="primary mat-body-2"></mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="match-bucket__content">
-              <mat-list class="match-bucket__contents">
-                <mat-list-item class="match-bucket__item__contents"
-                    *ngFor="let item of bucket.items">
+            <mat-list class="match-bucket__contents columns-2">
+              <div class="match-bucket__item"
+                  *ngFor="let item of sourceBucket.items">
+                <mat-list-item class="match-bucket__item__contents">
                   <p mat-line>
                     <span class="match-bucket__item__contents__text"
                         [innerHTML]="item.value">
@@ -83,6 +38,54 @@
                     </span>
                   </p>
                 </mat-list-item>
+              </div>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+        <mat-divider class="match-divider {{isHorizontal ? 'match-divider--horizontal' : ''}}"></mat-divider>
+      </div>
+      <div fxLayout="row wrap"
+          fxLayoutAlign="center start"
+          fxFlex="100"
+          fxFlex.gt-sm="{{isHorizontal ? 50 : 100}}">
+        <div *ngFor="let bucket of targetBuckets; index as bucketIndex"
+            class="match-bucket"
+            fxFlex="100"
+            fxFlex.gt-sm="{{isHorizontal ? 100 : bucketWidth}}">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title [innerHTML]="bucket.value"
+                  class="primary mat-body-2"></mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="match-bucket__content">
+              <mat-list class="match-bucket__contents">
+                <div class="match-bucket__item"
+                    *ngFor="let item of bucket.items">
+                  <mat-list-item class="match-bucket__item__contents">
+                    <p mat-line>
+                      <span class="match-bucket__item__contents__text"
+                          [innerHTML]="item.value">
+                      </span>
+                    </p>
+                    <p class="match-feedback mat-body-2"
+                        *ngIf="item.feedback != null && item.feedback !== ''"
+                        mat-line
+                        [ngClass]="{'success-bg': !hasCorrectAnswer || item.isCorrect, 'info-bg': item.isIncorrectPosition, 'warn-bg': hasCorrectAnswer && !item.isCorrect}"
+                        fxLayoutAlign="start center">
+                      <mat-icon *ngIf="hasCorrectAnswer && item.isCorrect">
+                        check
+                      </mat-icon>
+                      <mat-icon *ngIf="hasCorrectAnswer && item.isIncorrectPosition">
+                        warning
+                      </mat-icon>
+                      <mat-icon *ngIf="hasCorrectAnswer && !item.isCorrect && !item.isIncorrectPosition">
+                        clear
+                      </mat-icon>
+                      <span [innerHTML]="item.feedback">
+                      </span>
+                    </p>
+                  </mat-list-item>
+                </div>
               </mat-list>
             </mat-card-content>
           </mat-card>

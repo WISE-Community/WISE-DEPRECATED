@@ -1,3 +1,5 @@
+@import '~style/abstracts/variables', '~style/abstracts/functions';
+
 .match-grading {
   .mat-card {
     padding: 0px;
@@ -16,16 +18,12 @@
   }
 
   .match-bucket__contents {
-    padding-top: 8px;
+    min-height: auto;
   }
 
   .mat-list-base {
     .mat-list-item {
       width: auto;
-      
-      &:not(:last-child) {
-        margin-bottom: 8px;
-      }
 
       .mat-list-item-content {
         padding: 0px;
@@ -44,5 +42,11 @@
 
   .mat-list .mat-list-item .mat-line {
     white-space: pre-wrap;
+  }
+
+  .columns-2 {
+    @media (min-width: breakpoint('md.min')) {
+      column-count: 2;
+    }
   }
 }
