@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ComponentGrading } from '../../../classroomMonitor/classroomMonitorComponents/shared/component-grading.component';
 
 @Component({
   selector: 'match-grading',
   templateUrl: 'match-grading.component.html',
-  styleUrls: ['match-grading.component.scss']
+  styleUrls: ['match-grading.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MatchGrading extends ComponentGrading {
   sourceBucketId = '0';
