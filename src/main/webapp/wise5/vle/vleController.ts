@@ -24,7 +24,7 @@ class VLEController {
   navFilters: any;
   newNotifications: any;
   noteDialog: any;
-  notebookEnabled: boolean;
+  notesEnabled: boolean = false;
   notebookConfig: any;
   notebookItemPath: string;
   notesVisible: boolean = false;
@@ -102,12 +102,10 @@ class VLEController {
     this.projectName = this.ProjectService.getProjectTitle();
     this.totalScore = this.StudentDataService.getTotalScore();
     this.maxScore = this.StudentDataService.maxScore;
-    this.notebookEnabled = this.NotebookService.isNotebookEnabled();
-    if (this.notebookEnabled) {
+    if (this.NotebookService.isNotebookEnabled()) {
       this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
+      this.notesEnabled = this.notebookConfig.itemTypes.note.enabled;
     }
-    // Get report, if enabled; assume only one report for now
-    this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
 
     let userType = this.ConfigService.getConfigParam('userType');
     let contextPath = this.ConfigService.getConfigParam('contextPath');
