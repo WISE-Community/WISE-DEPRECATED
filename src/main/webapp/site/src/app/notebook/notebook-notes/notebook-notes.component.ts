@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../../../../wise5/services/configService';
 import { NotebookService } from '../../../../../wise5/services/notebookService';

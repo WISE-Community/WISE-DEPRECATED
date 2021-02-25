@@ -1,10 +1,6 @@
 <ng-template #notebookItems let-group="group">
-  <div class="notes"
-      [ngClass]="{'notebook-items--insert': insertMode}"
-      fxLayout="row wrap">
-    <div *ngIf="!hasNotes" i18n>
-      You haven't created any {{label.plural}} yet.
-    </div>
+  <div class="notes" fxLayout="row wrap">
+    <div *ngIf="!hasNotes" i18n>You haven't created any {{label.plural}} yet.</div>
     <notebook-item *ngFor="let note of group.items"
         [config]="config"
         [group]="group.name"
@@ -25,9 +21,7 @@
 
 <ng-template #multipleGroups>
   <mat-tab-group mat-selected="selectedTabIndex" animationDuration="0ms">
-    <mat-tab *ngFor="let group of groups"
-        [disabled]="group.disabled"
-        [label]="group.title">
+    <mat-tab *ngFor="let group of groups" [disabled]="group.disabled" [label]="group.title">
       <div class="center">
         <ng-container *ngTemplateOutlet="notebookItems; context: {group: group}"></ng-container>
       </div>
@@ -35,21 +29,19 @@
   </mat-tab-group>
 </ng-template>
 
-<div class="notebook-notes">
+<div class="notebook-notes" [class.insert-mode]="insertMode">
   <ng-container *ngIf="mode !== 'classroomMonitor'">
-    <div [class.dark-theme]="insertMode">
-      <mat-toolbar role="heading">
-        <h4 *ngIf="insertMode" i18n>Select Item To Insert</h4>
-        <h4 *ngIf="!insertMode">{{label.link}}</h4>
-        <span fxFlex></span>
-        <button (click)="close()"
-            mat-icon-button
-            i18n-aria-label
-            attr.aria-label="Close {{label.link}}">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-toolbar>
-    </div>
+    <mat-toolbar role="heading">
+      <h4 *ngIf="insertMode" class="info" i18n>Select item to insert</h4>
+      <h4 *ngIf="!insertMode">{{label.link}}</h4>
+      <span fxFlex></span>
+      <button (click)="close()"
+          mat-icon-button
+          i18n-aria-label
+          attr.aria-label="Close {{label.link}}">
+        <mat-icon class="secondary-text">close</mat-icon>
+      </button>
+    </mat-toolbar>
     <mat-divider></mat-divider>
     <div class="notes-wrapper">
       <ng-container [ngTemplateOutlet]="groups.length > 1 ? multipleGroups : oneGroup">
@@ -69,24 +61,26 @@
     </button>
   </ng-container>
   <div class="notes notes-grading" *ngIf="mode === 'classroomMonitor'">
-    <div *ngFor="let group of groups">
-      <h4 *ngIf="groups.length > 1" class="mat-body-2 secondary-text">{{group.title}}</h4>
-      <div  fxLayout="row wrap" fxLayoutAlign="start center">
-        <notebook-item *ngFor="let note of group.items"
-            [config]="config"
-            [group]="group.name"
-            [itemId]="note.localNotebookItemId"
-            [isChooseMode]="insertMode"
-            [note]="note"
-            fxFlex="100"
-            fxFlex.gt-xs="50"
-            fxFlex.gt-sm="33"
-            fxFlex.gt-md="25">
-        </notebook-item>
+    <ng-container *ngIf="hasNotes">
+      <div *ngFor="let group of groups">
+        <h4 *ngIf="groups.length > 1" class="group-header mat-body-2 secondary-text">{{group.title}}</h4>
+        <div fxLayout="row wrap" fxLayoutAlign="start center">
+          <notebook-item *ngFor="let note of group.items"
+              [config]="config"
+              [group]="group.name"
+              [itemId]="note.localNotebookItemId"
+              [isChooseMode]="insertMode"
+              [note]="note"
+              fxFlex="100"
+              fxFlex.gt-xs="50"
+              fxFlex.gt-sm="33"
+              fxFlex.gt-md="25">
+          </notebook-item>
+        </div>
       </div>
-      <div *ngIf="!hasNotes" i18n>
-        Team hasn't created any {{label.plural}} yet.
-      </div>
-    </div>
+    </ng-container>
+    <p *ngIf="!hasNotes" i18n>
+      Team hasn't created any {{label.plural}} yet.
+    </p>
   </div>
 </div>

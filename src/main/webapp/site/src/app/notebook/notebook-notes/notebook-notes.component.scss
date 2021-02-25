@@ -5,10 +5,8 @@ $new-note-bottom: 24px;
   flex-direction: column;
   height: 100%;
 
-  &:not(.dark-theme) {
-    .mat-toolbar {
-      background-color: transparent;
-    }
+  .mat-toolbar {
+    background-color: transparent;
   }
 
   .mat-divider {
@@ -38,8 +36,7 @@ $new-note-bottom: 24px;
   }
 
   .notes-grading {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-bottom: 16px;
   }
 
   notebook-item {
@@ -51,5 +48,9 @@ $new-note-bottom: 24px;
     bottom: $new-note-bottom;
     right: 28px;
     z-index: 1;
+  }
+
+  .group-header {
+    margin-top: 0;
   }
 }
