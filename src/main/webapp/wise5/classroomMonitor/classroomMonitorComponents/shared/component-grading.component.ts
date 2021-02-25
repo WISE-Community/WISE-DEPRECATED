@@ -12,6 +12,9 @@ export abstract class ComponentGrading {
   @Input()
   componentState: any;
 
+  @Input()
+  isRevision: any = false;
+
   componentContent: any;
 
   constructor(protected ProjectService: ProjectService) {}
@@ -22,5 +25,6 @@ export abstract class ComponentGrading {
       this.nodeId,
       this.componentId
     );
+    this.isRevision = this.isRevision === 'true';
   }
 }
