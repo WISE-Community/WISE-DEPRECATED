@@ -455,15 +455,7 @@ function getCanvasTextObjects(canvas: any): any[] {
 }
 
 function sortByTextField(a: any, b: any): number {
-  const aText: string = a.text;
-  const bText: string = b.text;
-  if (aText > bText) {
-    return 1;
-  } else if (aText < bText) {
-    return -1;
-  } else {
-    return 0;
-  }
+  return a.text.localeCompare(b.text);
 }
 
 function createLabelServiceFunction() {
