@@ -41,9 +41,11 @@
         <notebook-notes [config]="vleController.notebookConfig"></notebook-notes>
       </md-sidenav>
       <global-annotations></global-annotations>
+      <notebook-report ng-if="vleController.reportEnabled"
+          ng-class="{'notes-visible': vleController.notesVisible, 'report-full': vleController.reportFullscreen}"
+          [config]="vleController.notebookConfig"></notebook-report>
       <notebook-launcher ng-if="vleController.notesEnabled && !vleController.notesVisible"
           [notebook-config]="vleController.notebookConfig"></notebook-launcher>
-      <notebook></notebook>
     </div>
   </listen-for-delete-keypress>
 </disable-delete-keypress>

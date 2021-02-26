@@ -1,96 +1,53 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AnnotationService } from "../../../../../wise5/services/annotationService";
 import { ConfigService } from "../../../../../wise5/services/configService";
 import { NotebookService } from "../../../../../wise5/services/notebookService";
 import { ProjectService } from "../../../../../wise5/services/projectService";
+import { UtilService } from '../../../../../wise5/services/utilService';
+import { NotebookParentComponent } from "../notebook-parent/notebook-parent.component";
 
 @Component({
   selector: 'notebook-report',
   styleUrls: ['notebook-report.component.scss'],
   templateUrl: 'notebook-report.component.html'
 })
-export class NotebookReportComponent {
-
-  @Input()
-  config: any;
-
-  @Input()
-  insertContent: any;
-
-  @Input()
-  insertMode: string;
-
-  @Input()
-  reportId: string;
-
-  @Input()
-  visible: boolean;
-
-  @Input()
-  workgroupId: number;
-
-  @Input()
-  mode: string;
-
-  @Input()
-  hasNewAnnotation: boolean;
-
-  @Input()
-  maxScore: number;
-
-  @Output()
-  onCollapse: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  onSetInsertMode: EventEmitter<any> = new EventEmitter();
-
-  hasReport: boolean = false;
-  full: boolean = false;
-  collapsed: boolean = true;
-  dirty: boolean = false;
+export class NotebookReportComponent extends NotebookParentComponent {
   autoSaveIntervalMS: number = 30000;
   autoSaveIntervalId: any;
-  saveTime: number = null;
+  collapsed: boolean = true;
+  dirty: boolean = false;
+  full: boolean = false;
+  hasAnnotation: boolean = false;
+  hasNewAnnotation: boolean = false;
+  isAddNoteButtonAvailable: boolean;
+  hasReport: boolean = false;
+  latestAnnotations: any;
+  maxScore: number;
+  reportId: number;
   reportItem: any;
   reportItemContent: any;
-  latestAnnotations: any;
-  hasAnnotation: boolean = false;
-  isAddNoteButtonAvailable: boolean;
+  saveTime: number = null;
   notebookItemAnnotationReceivedSubscription: Subscription;
   showReportAnnotationsSubscription: Subscription;
 
   constructor(
     private AnnotationService: AnnotationService,
-    private ConfigService: ConfigService,
-    private NotebookService: NotebookService,
-    private ProjectService: ProjectService
+    ConfigService: ConfigService,
+    NotebookService: NotebookService,
+    private ProjectService: ProjectService,
+    UtilService: UtilService
   ) {
+    super(ConfigService, NotebookService, UtilService);
   }
 
-  ngOnInit(): void {
+  initComplete(): void {
     this.reportId = this.config.itemTypes.report.notes[0].reportId;
-    if (this.workgroupId == null) {
-      this.workgroupId = this.ConfigService.getWorkgroupId();
-    }
-    this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(
-      this.reportId,
-      this.workgroupId
-    );
-    if (this.reportItem) {
-      this.hasReport = true;
-      const clientSaveTime = this.convertServerSaveTimeToClientSaveTime(
-        this.reportItem.serverSaveTime
-      );
-      this.setSaveTime(clientSaveTime);
-    } else {
-      this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
-      if (this.reportItem == null) {
-        return;
-      }
+    this.setReportItem();
+    if (this.reportItem == null) {
+      return;
     }
     this.maxScore = this.NotebookService.getMaxScoreByReportId(this.reportId);
-
     if (this.mode !== 'classroomMonitor') {
       this.reportItem.id = null; // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
     }
@@ -103,7 +60,8 @@ export class NotebookReportComponent {
     this.startAutoSaveInterval();
     this.isAddNoteButtonAvailable = this.isNoteEnabled();
 
-    this.notebookItemAnnotationReceivedSubscription = this.NotebookService.notebookItemAnnotationReceived$.subscribe(
+    this.notebookItemAnnotationReceivedSubscription = 
+        this.NotebookService.notebookItemAnnotationReceived$.subscribe(
       ({ annotation }: any) => {
         if (annotation.localNotebookItemId === this.reportId) {
           this.hasNewAnnotation = true;
@@ -119,7 +77,7 @@ export class NotebookReportComponent {
     this.showReportAnnotationsSubscription = this.NotebookService.showReportAnnotations$.subscribe(
       () => {
         if (this.collapsed) {
-          this.collapse();
+          this.toggleCollapse();
         }
         const $notebookReportContent = $('.notebook-report__content');
         setTimeout(() => {
@@ -134,6 +92,31 @@ export class NotebookReportComponent {
     );
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll(): void {
+    this.notebookItemAnnotationReceivedSubscription.unsubscribe();
+    this.showReportAnnotationsSubscription.unsubscribe();
+  }
+
+  setReportItem() {
+    this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(
+      this.reportId,
+      this.workgroupId
+    );
+    if (this.reportItem) {
+      this.hasReport = true;
+      const clientSaveTime = this.convertServerSaveTimeToClientSaveTime(
+        this.reportItem.serverSaveTime
+      );
+      this.setSaveTime(clientSaveTime);
+    } else {
+      this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
+    }
+  }
+
   calculateHasAnnotation(latestAnnotations: any): boolean {
     if (latestAnnotations != null) {
       return latestAnnotations.score != null || latestAnnotations.comment != null;
@@ -145,11 +128,8 @@ export class NotebookReportComponent {
     return this.ConfigService.convertToClientTimestamp(serverSaveTime);
   }
 
-  collapse(): void {
+  toggleCollapse(): void {
     this.collapsed = !this.collapsed;
-    if (this.collapsed) {
-      this.onCollapse.emit();
-    }
   }
 
   fullscreen(): void {
@@ -159,10 +139,12 @@ export class NotebookReportComponent {
     } else {
       this.full = !this.full;
     }
+    this.NotebookService.setReportFullScreen(this.full);
   }
 
   addNotebookItemContent($event: any): void {
-    this.onSetInsertMode.emit({ value: true, requester: 'report' });
+    this.NotebookService.setInsertMode(true);
+    this.NotebookService.setNotesVisible(true);
   }
 
   changed(value: string): void {

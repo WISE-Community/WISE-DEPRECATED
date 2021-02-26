@@ -76,6 +76,8 @@ export class NotebookService {
   public notesVisible$ = this.notesVisibleSource.asObservable();
   private insertModeSource: Subject<boolean> = new Subject<boolean>();
   public insertMode$ = this.insertModeSource.asObservable();
+  private reportFullScreenSource: Subject<boolean> = new Subject<boolean>();
+  public reportFullScreen$ = this.reportFullScreenSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -636,5 +638,9 @@ export class NotebookService {
 
   setInsertMode(value: boolean): void {
     this.insertModeSource.next(value);
+  }
+
+  setReportFullScreen(value: boolean): void {
+    this.reportFullScreenSource.next(value);
   }
 }

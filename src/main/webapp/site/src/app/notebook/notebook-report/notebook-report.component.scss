@@ -6,33 +6,23 @@ $title-width-collapsed: 164px !default;
 $width: 450px !default;
 $width-collapsed: 300px !default;
 
-.container {
-  max-height: 90%;
-  bottom: 0;
-  right: 96px;
-  position: absolute;
-  z-index: 3;
-}
-
-.full {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: none;
-}
-
-.report {
+.notebook-report {
   height: $height;
   width: $width;
   padding: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 
-  .full & {
+  &.full {
     height: 100%;
     width: 100%;
-    border-radius: 0;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+
+    .actions {
+      border-bottom-left-radius: $card-border-radius;
+      border-bottom-right-radius: $card-border-radius;
+    }
   }
 }
 
@@ -41,14 +31,14 @@ $width-collapsed: 300px !default;
   width: $width-collapsed;
 }
 
+.hidden {
+  display: none;
+}
+
 .mat-card-header {
   cursor: pointer;
   border-top-left-radius: $card-border-radius;
   border-top-right-radius: $card-border-radius;
-
-  .full & {
-    border-radius: 0;
-  }
 }
 
 .mat-card-header .mat-card-title {
@@ -64,6 +54,10 @@ $width-collapsed: 300px !default;
   @media (max-width: breakpoint('xs.max')) {
     max-width: $title-width-collapsed;
   }
+}
+
+.mat-card-content {
+  margin-bottom: 0;
 }
 
 .mat-card-actions {

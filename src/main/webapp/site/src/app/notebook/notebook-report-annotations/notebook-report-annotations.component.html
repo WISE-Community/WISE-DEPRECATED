@@ -17,10 +17,9 @@
       </div>
       <hr *ngIf="annotations.comment" />
       <div layout="row" laoyut-align="start center">
-        <span *ngIf="showScore && annotations.score"
-              class="annotations__score"
-              translate="SCORE_LABEL_AND_VALUE"
-              translate-value-score="{{annotations.score.data.value}}{{maxScoreDisplay}}"></span>
+        <span *ngIf="showScore && annotations.score" class="annotations__score" i18n>
+          Score: {{annotations.score.data.value}}{{maxScoreDisplay}}
+        </span>
         <span flex></span>
         <span>
           <span class="annotations__info"

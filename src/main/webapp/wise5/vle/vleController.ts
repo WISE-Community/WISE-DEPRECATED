@@ -32,7 +32,8 @@ class VLEController {
   pauseDialog: any;
   projectName: string;
   projectStyle: string;
-  reportItem: any;
+  reportEnabled: boolean = false;
+  reportFullscreen: boolean = false;
   themePath: string;
   totalScore: any;
   currentNodeChangedSubscription: Subscription;
@@ -40,6 +41,7 @@ class VLEController {
   notificationChangedSubscription: Subscription;
   notesVisibleSubscription: Subscription;
   pauseScreenSubscription: Subscription;
+  reportFullscreenSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -105,6 +107,7 @@ class VLEController {
     if (this.NotebookService.isNotebookEnabled()) {
       this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
       this.notesEnabled = this.notebookConfig.itemTypes.note.enabled;
+      this.reportEnabled = this.notebookConfig.itemTypes.report.enabled;
     }
 
     let userType = this.ConfigService.getConfigParam('userType');
@@ -226,8 +229,14 @@ class VLEController {
       }
     );
 
-    this.notesVisibleSubscription = this.NotebookService.notesVisible$.subscribe((notesVisible) => {
+    this.notesVisibleSubscription =
+        this.NotebookService.notesVisible$.subscribe((notesVisible: boolean) => {
       this.notesVisible = notesVisible;
+    });
+
+    this.reportFullscreenSubscription =
+        this.NotebookService.reportFullScreen$.subscribe((full: boolean) => {
+      this.reportFullscreen = full;
     });
 
     // Make sure if we drop something on the page we don't navigate away

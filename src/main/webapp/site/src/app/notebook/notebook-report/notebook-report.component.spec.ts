@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { configureTestSuite } from "ng-bullet";
+import { Subscription } from "rxjs";
 import { AnnotationService } from "../../../../../wise5/services/annotationService";
 import { ConfigService } from "../../../../../wise5/services/configService";
 import { NotebookService } from "../../../../../wise5/services/notebookService";
@@ -37,6 +38,8 @@ describe('NotebookReportComponent', () => {
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookReportComponent);
     component = fixture.componentInstance;
+    component.notebookItemAnnotationReceivedSubscription = new Subscription();
+    component.showReportAnnotationsSubscription = new Subscription();
     component.config = createConfig();
   });
 

@@ -1,5 +1,7 @@
 // Variables
-$notebook-sidebar-width: 56px;
+$notebook-sidebar-width: 500px;
+$report-position-right: 96px;
+$report-full-gap: 8px;
 
 // Base
 notebook-launcher {
@@ -14,11 +16,30 @@ notebook-launcher {
   }
 }
 
-.notes-visible {
+notebook-report {
+  position: absolute;
+  bottom: 0;
+  right: $report-position-right;
+  transition: right 250ms;
+  z-index: 3;
+
+  @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+    left: $report-full-gap;
+    right: $report-full-gap;
+    top: $report-full-gap;
+    bottom: $report-full-gap
+  }
+  
   @media only screen and (min-width: $layout-breakpoint-sm) {
-    .notebook-report-container {
-      right: 516px;
-      transition: right 250ms;
+    &.report-full {
+      left: $report-full-gap;
+      right: $report-full-gap;
+      top: $report-full-gap;
+      bottom: $report-full-gap
+    }
+
+    &.notes-visible {
+      right: $notebook-sidebar-width + 12;
     }
   }
 }
@@ -216,95 +237,14 @@ notebook-launcher {
   }
 }
 
-.view-notebook-item {
-  width: $layout-breakpoint-xs;
-}
-
-.view-notebook-item__content {
-}
-
-.notebook-item--report {
-  background-color: #ffffff;
-
-  .note-editor {
-    margin-bottom: 16px;
-    border-color: color('gray');
-  }
-}
-
-.notebook-item--report__container {
-  &.ui-scrollpoint {
-    .notebook-item--report__toolbar {
-      position: fixed;
-      top: ($wise-toolbar-height + $md-toolbar-height);
-      left: 0;
-      right: 0;
-      z-index: 1;
-
-      @media only screen and (min-width: $layout-breakpoint-xs) {
-        left: ($notebook-sidebar-width - 2);
-      }
-
-      @media only screen and (min-width: $layout-breakpoint-xs) {
-        padding: 0 24px;
-      }
-
-      @media only screen and (min-width: $layout-breakpoint-sm) {
-        padding: 0 32px;
-      }
-
-      .note-toolbar {
-        margin: 0 16px;
-
-        @media only screen and (min-width: $layout-breakpoint-xs) {
-          margin: 0 8px;
-        }
-
-        @media only screen and (min-width: $layout-breakpoint-sm) {
-          margin: 0 16px;
-        }
-      }
-    }
-
-    .note-editor {
-      padding-top: 40px;
-    }
-  }
-}
-
-.notebook-item--report__toolbar {
-  .note-toolbar {
-    background-color: color('gray-light');
-    border: 1px solid color('gray');
-    margin-bottom: -2px;
-  }
-}
-
-.notebook-item--report__heading {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.notebook-item--report__content {
-}
-
-.notebook-item--report__add-note {
-  font-weight: 700;
-}
-
-.notebook-item--report__note-img {
-  max-width: 100%;
-  height: auto !important;
-}
-
 .notebook-sidebar {
   @media only screen and (min-width: $layout-breakpoint-xs) {
-    width: 400px;
+    width: $notebook-sidebar-width - 100;  
     max-width: none;
   }
 
   @media only screen and (min-width: $layout-breakpoint-sm) {
-    width: 500px;
+    width: $notebook-sidebar-width;
     max-width: none;
   }
 }

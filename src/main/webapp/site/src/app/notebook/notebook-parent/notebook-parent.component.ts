@@ -23,7 +23,7 @@ export class NotebookParentComponent {
   insertModeSubscription: Subscription;
 
   constructor(
-    private ConfigService: ConfigService,
+    public ConfigService: ConfigService,
     public NotebookService: NotebookService,
     private UtilService: UtilService
   ) {}
