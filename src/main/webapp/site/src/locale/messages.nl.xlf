@@ -9082,7 +9082,7 @@
         <source> You have used <x equiv-text="{{componentState.studentData.submitCounter}}" id="INTERPOLATION"/> of <x equiv-text="{{componentContent.maxSubmitCount}}" id="INTERPOLATION_1"/> attempt(s) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-grading/match-grading.component.html</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
@@ -9094,7 +9094,7 @@
         <source> Correct </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-grading/match-grading.component.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
@@ -9106,7 +9106,7 @@
         <source> Incorrect </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-grading/match-grading.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
