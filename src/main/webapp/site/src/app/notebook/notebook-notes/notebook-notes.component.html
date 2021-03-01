@@ -5,8 +5,9 @@
         [config]="config"
         [group]="group.name"
         [itemId]="note.localNotebookItemId"
-        [isChooseMode]="insertMode"
+        [isChooseMode]="insertArgs.insertMode"
         [note]="note"
+        (onSelect)="select($event)"
         fxFlex="100"
         fxFlex.gt-xs="50">
     </notebook-item>
@@ -20,7 +21,9 @@
 </ng-template>
 
 <ng-template #multipleGroups>
-  <mat-tab-group mat-selected="selectedTabIndex" animationDuration="0ms">
+  <mat-tab-group [selectedIndex]="selectedTabIndex"
+      (selectedIndexChange)="selectedTabIndex = $event"
+      animationDuration="0ms">
     <mat-tab *ngFor="let group of groups" [disabled]="group.disabled" [label]="group.title">
       <div class="center">
         <ng-container *ngTemplateOutlet="notebookItems; context: {group: group}"></ng-container>
@@ -29,11 +32,11 @@
   </mat-tab-group>
 </ng-template>
 
-<div class="notebook-notes" [class.insert-mode]="insertMode">
+<div class="notebook-notes" [class.insert-mode]="insertArgs.insertMode">
   <ng-container *ngIf="mode !== 'classroomMonitor'">
     <mat-toolbar role="heading">
-      <h4 *ngIf="insertMode" class="info" i18n>Select item to insert</h4>
-      <h4 *ngIf="!insertMode">{{label.link}}</h4>
+      <h4 *ngIf="insertArgs.insertMode" class="info" i18n>Select item to insert</h4>
+      <h4 *ngIf="!insertArgs.insertMode">{{label.link}}</h4>
       <span fxFlex></span>
       <button (click)="close()"
           mat-icon-button
@@ -69,8 +72,9 @@
               [config]="config"
               [group]="group.name"
               [itemId]="note.localNotebookItemId"
-              [isChooseMode]="insertMode"
+              [isChooseMode]="insertArgs.insertMode"
               [note]="note"
+              (onSelect)="select($event)"
               fxFlex="100"
               fxFlex.gt-xs="50"
               fxFlex.gt-sm="33"

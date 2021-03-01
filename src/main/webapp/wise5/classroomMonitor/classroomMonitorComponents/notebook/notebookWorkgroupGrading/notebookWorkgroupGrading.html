@@ -1,9 +1,10 @@
 <div class="md-whiteframe-1dp">
   <md-subheader class="list-item md-whiteframe-1dp">
     <button class="md-button md-ink-ripple list-item__subheader-button"
-            aria-label="{{ ::toggleTeamNotebookDisplay | translate }}"
-            ng-class="{'list-item--expanded': $ctrl.showWork}" ng-click="$ctrl.toggleExpand()"
-            layout-wrap>
+        aria-label="{{ ::toggleTeamNotebookDisplay | translate }}"
+        ng-class="{'list-item--expanded': $ctrl.showWork}"
+        ng-click="$ctrl.toggleExpand()"
+        layout-wrap>
       <div layout="row" flex>
         <div layout="row" layout-align="center center" flex="10">
           {{ ::$ctrl.workgroup.workgroupId }}
@@ -11,8 +12,11 @@
         <div layout="row" layout-align="start center" flex>
           {{ ::$ctrl.workgroup.displayNames }}
         </div>
-        <div ng-if="$ctrl.notesEnabled" class="md-title" layout="row" layout-align="center center"
-             flex="10">
+        <div ng-if="$ctrl.notesEnabled"
+            class="md-title"
+            layout="row"
+            layout-align="center center"
+            flex="10">
           <span ng-class="{ 'text-secondary': $ctrl.getNumActiveNotes() === 0 }">
             {{ ::$ctrl.getNumActiveNotes() }}
           </span>
@@ -33,17 +37,21 @@
     <md-tabs class="md-body-2 gray-lightest-bg" md-dynamic-height md-border-bottom flex>
       <md-tab ng-if="$ctrl.notesEnabled" label="{{ ::'notes' | translate }}">
         <md-content>
-          <notebook-notes class="notebook-grading" [mode]="'classroomMonitor'" [notebook]="$ctrl.notebook"
-                          [config]="$ctrl.notebookConfig" [notes-visible]="false" [view-only]="true"
-                          [workgroup-id]="$ctrl.workgroup.workgroupId" [filter]="note">
+          <notebook-notes class="notebook-grading"
+              [mode]="'classroomMonitor'"
+              [config]="$ctrl.notebookConfig"
+              [view-only]="true"
+              [workgroup-id]="$ctrl.workgroup.workgroupId">
           </notebook-notes>
         </md-content>
       </md-tab>
       <md-tab ng-if="$ctrl.reportEnabled" label="{{ ::$ctrl.reportTitle }}">
         <md-content>
-          <notebook-report class="notebook-grading md-padding" [mode]="'classroomMonitor'"
-                           [config]="$ctrl.notebookConfig" [workgroup-id]="$ctrl.workgroup.workgroupId"
-                           [filter]="report"></notebook-report>
+          <notebook-report class="notebook-grading md-padding"
+              [mode]="'classroomMonitor'"
+              [config]="$ctrl.notebookConfig"
+              [workgroup-id]="$ctrl.workgroup.workgroupId">
+          </notebook-report>
         </md-content>
       </md-tab>
     </md-tabs>

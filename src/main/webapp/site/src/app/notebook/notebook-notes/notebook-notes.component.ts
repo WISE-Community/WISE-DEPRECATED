@@ -17,11 +17,15 @@ export class NotebookNotesComponent extends NotebookParentComponent {
   viewOnly: boolean;
 
   groups = [];
-  hasNotes: boolean;
   groupNameToGroup = {};
+  hasNotes: boolean;
+  insertArgs: any = {
+    insertMode: false
+  };
   label: any;
   selectedTabIndex = 0;
   title: string;
+  insertModeSubscription: Subscription;
   notebookUpdatedSubscription: Subscription;
   openNotebookSubscription: Subscription;
   publicNotebookItemsRetrievedSubscription: Subscription;
@@ -35,7 +39,8 @@ export class NotebookNotesComponent extends NotebookParentComponent {
     super(ConfigService, NotebookService, UtilService);
   }
 
-  initComplete(): void {
+  ngOnInit(): void {
+    super.ngOnInit();
     this.label = this.config.itemTypes.note.label;
     this.addPersonalGroupToGroups();
     this.addSpacesToGroups();
@@ -43,8 +48,9 @@ export class NotebookNotesComponent extends NotebookParentComponent {
 
     this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
       ({ notebookItem }) => {
-        if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
-            notebookItem.type === 'note'
+        if (
+          (notebookItem.groups == null || notebookItem.groups.length === 0) &&
+          notebookItem.type === 'note'
         ) {
           this.updatePrivateNotebookNote(notebookItem);
         }
@@ -55,18 +61,19 @@ export class NotebookNotesComponent extends NotebookParentComponent {
       }
     );
 
-    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe(
-      ({ visibleSpace }) => {
-        this.selectedTabIndex = visibleSpace === 'public' ? 1 : 0;
+    this.insertModeSubscription = this.NotebookService.insertMode$.subscribe((args) => {
+      this.insertArgs = args;
+      if (args.visibleSpace) {
+        this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
       }
-    );
+    });
 
-    this.publicNotebookItemsRetrievedSubscription = 
-      this.NotebookService.publicNotebookItemsRetrieved$.subscribe(() => {
+    this.publicNotebookItemsRetrievedSubscription = this.NotebookService.publicNotebookItemsRetrieved$.subscribe(
+      () => {
         for (const group of this.groups) {
           if (group.name !== 'private') {
             group.items = this.NotebookService.publicNotebookItems[group.name];
-          } 
+          }
         }
       }
     );
@@ -79,6 +86,7 @@ export class NotebookNotesComponent extends NotebookParentComponent {
   unsubscribeAll(): void {
     this.notebookUpdatedSubscription.unsubscribe();
     this.openNotebookSubscription.unsubscribe();
+    this.insertModeSubscription.unsubscribe();
     this.publicNotebookItemsRetrievedSubscription.unsubscribe();
   }
 
@@ -182,8 +190,18 @@ export class NotebookNotesComponent extends NotebookParentComponent {
     this.NotebookService.addNote();
   }
 
+  select({ event, note }: any): void {
+    if (this.insertArgs.insertMode) {
+      this.insertArgs.notebookItem = note;
+      this.NotebookService.broadcastNotebookItemChosen(this.insertArgs);
+    } else {
+      const isEditMode = !this.viewOnly;
+      this.NotebookService.editNote(note, isEditMode);
+    }
+  }
+
   close(): void {
     this.NotebookService.setNotesVisible(false);
-    this.NotebookService.setInsertMode(false);
+    this.NotebookService.setInsertMode({ insertMode: false });
   }
 }

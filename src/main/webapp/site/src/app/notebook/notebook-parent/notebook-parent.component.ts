@@ -19,13 +19,11 @@ export class NotebookParentComponent {
   mode: string;
 
   notebook: any;
-  insertMode: boolean;
-  insertModeSubscription: Subscription;
 
   constructor(
     public ConfigService: ConfigService,
     public NotebookService: NotebookService,
-    private UtilService: UtilService
+    public UtilService: UtilService
   ) {}
 
   ngOnInit(): void {
@@ -38,14 +36,6 @@ export class NotebookParentComponent {
     }
 
     this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
-    this.initComplete();
-    this.insertModeSubscription = this.NotebookService.insertMode$.subscribe((value) => {
-      this.insertMode = value;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.insertModeSubscription.unsubscribe();
   }
 
   setConfig(): void {
@@ -68,6 +58,4 @@ export class NotebookParentComponent {
         this.ConfigService.getWorkgroupId() !== this.workgroupId)
     );
   }
-
-  initComplete(): void {}
 }

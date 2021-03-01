@@ -54,27 +54,19 @@ export class NotebookService {
   publicNotebookItems = {};
   notebooksByWorkgroup = {};
   notebookItemAnnotationReceivedSubscription: any;
-  private addNoteSource: Subject<any> = new Subject<any>();
-  public addNote$ = this.addNoteSource.asObservable();
-  private closeNotebookSource: Subject<any> = new Subject<any>();
-  public closeNotebook$ = this.closeNotebookSource.asObservable();
-  private editNoteSource: Subject<any> = new Subject<any>();
-  public editNote$ = this.editNoteSource.asObservable();
   private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
   public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
   private notebookItemChosenSource: Subject<any> = new Subject<any>();
   public notebookItemChosen$ = this.notebookItemChosenSource.asObservable();
   private notebookUpdatedSource: Subject<any> = new Subject<any>();
   public notebookUpdated$ = this.notebookUpdatedSource.asObservable();
-  private openNotebookSource: Subject<any> = new Subject<any>();
-  public openNotebook$ = this.openNotebookSource.asObservable();
   private publicNotebookItemsRetrievedSource: Subject<any> = new Subject<any>();
   public publicNotebookItemsRetrieved$ = this.publicNotebookItemsRetrievedSource.asObservable();
   private showReportAnnotationsSource: Subject<any> = new Subject<any>();
   public showReportAnnotations$ = this.showReportAnnotationsSource.asObservable();
   private notesVisibleSource: Subject<boolean> = new Subject<boolean>();
   public notesVisible$ = this.notesVisibleSource.asObservable();
-  private insertModeSource: Subject<boolean> = new Subject<boolean>();
+  private insertModeSource: Subject<any> = new Subject<any>();
   public insertMode$ = this.insertModeSource.asObservable();
   private reportFullScreenSource: Subject<boolean> = new Subject<boolean>();
   public reportFullScreen$ = this.reportFullScreenSource.asObservable();
@@ -111,23 +103,69 @@ export class NotebookService {
     return Object.assign(this.config, this.ProjectService.project.teacherNotebook);
   }
 
-  editItem(ev, itemId) {
-    this.broadcastEditNote({ itemId: itemId, ev: ev });
+  addNote(
+    file: any = null,
+    text: string = null,
+    studentWorkIds: number[] = null,
+    isEditTextEnabled: boolean= true,
+    isFileUploadEnabled: boolean = true
+  ) {
+    const note = null;
+    const isEditMode = true;
+    this.showEditNoteDialog(
+      note,
+      isEditMode,
+      file,
+      text,
+      isEditTextEnabled,
+      isFileUploadEnabled,
+      studentWorkIds
+    );
   }
 
-  addNote(
-    file = null,
-    text = null,
-    studentWorkIds = null,
-    isEditTextEnabled = true,
-    isFileUploadEnabled = true
+  editNote(
+    note: any,
+    isEditMode: boolean = true
   ) {
-    this.broadcastAddNote({
-      file: file,
-      text: text,
-      studentWorkIds: studentWorkIds,
-      isEditTextEnabled: isEditTextEnabled,
-      isFileUploadEnabled: isFileUploadEnabled
+    const file = null;
+    const noteText = null;
+    const isEditTextEnabled = true;
+    const isFileUploadEnabled = true;
+    const studentWorkIds = null;
+    this.showEditNoteDialog(
+      note,
+      isEditMode,
+      file,
+      noteText,
+      isEditTextEnabled,
+      isFileUploadEnabled,
+      studentWorkIds
+    );
+  }
+
+  showEditNoteDialog(
+    note: any,
+    isEditMode: boolean,
+    file: any,
+    text: string,
+    isEditTextEnabled: boolean,
+    isFileUploadEnabled: boolean,
+    studentWorkIds: number[]
+  ): void {
+    this.upgrade.$injector.get('$mdDialog').show({
+      templateUrl: `${this.ProjectService.getThemePath()}/notebook/editNotebookItem.html`,
+      controller: 'EditNotebookItemController',
+      controllerAs: 'editNotebookItemController',
+      bindToController: true,
+      locals: {
+        note: note,
+        isEditMode: isEditMode,
+        file: file,
+        text: text,
+        studentWorkIds: studentWorkIds,
+        isEditTextEnabled: isEditTextEnabled,
+        isFileUploadEnabled: isFileUploadEnabled
+      }
     });
   }
 
@@ -600,28 +638,12 @@ export class NotebookService {
     );
   }
 
-  broadcastAddNote(args: any) {
-    this.addNoteSource.next(args);
-  }
-
-  broadcastCloseNotebook() {
-    this.closeNotebookSource.next();
-  }
-
-  broadcastEditNote(args: any) {
-    this.editNoteSource.next(args);
-  }
-
   broadcastNotebookItemChosen(args: any) {
     this.notebookItemChosenSource.next(args);
   }
 
   broadcastNotebookUpdated(args: any) {
     this.notebookUpdatedSource.next(args);
-  }
-
-  broadcastOpenNotebook(args: any) {
-    this.openNotebookSource.next(args);
   }
 
   broadcastPublicNotebookItemsRetrieved(args: any) {
@@ -636,8 +658,8 @@ export class NotebookService {
     this.notesVisibleSource.next(value);
   }
 
-  setInsertMode(value: boolean): void {
-    this.insertModeSource.next(value);
+  setInsertMode(args: any): void {
+    this.insertModeSource.next(args);
   }
 
   setReportFullScreen(value: boolean): void {

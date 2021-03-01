@@ -40,6 +40,7 @@ describe('NotebookNotesComponent', () => {
     component = fixture.componentInstance;
     component.notebookUpdatedSubscription = new Subscription();
     component.openNotebookSubscription = new Subscription();
+    component.insertModeSubscription = new Subscription();
     component.publicNotebookItemsRetrievedSubscription = new Subscription();
   });
 

@@ -41,7 +41,8 @@ export class NotebookReportComponent extends NotebookParentComponent {
     super(ConfigService, NotebookService, UtilService);
   }
 
-  initComplete(): void {
+  ngOnInit(): void {
+    super.ngOnInit();
     this.reportId = this.config.itemTypes.report.notes[0].reportId;
     this.setReportItem();
     if (this.reportItem == null) {
@@ -143,7 +144,7 @@ export class NotebookReportComponent extends NotebookParentComponent {
   }
 
   addNotebookItemContent($event: any): void {
-    this.NotebookService.setInsertMode(true);
+    this.NotebookService.setInsertMode({insertMode: true, requester: 'report'});
     this.NotebookService.setNotesVisible(true);
   }
 
