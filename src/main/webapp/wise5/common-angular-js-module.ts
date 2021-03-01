@@ -70,7 +70,6 @@ import './themes/default/theme';
 import SideMenu from './common/sideMenuComponent';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from './directives/wise-tinymce-editor/wise-tinymce-editor.component';
-import { NotebookComponent } from '../site/src/app/notebook/notebook/notebook.component';
 import { NotebookItemComponent } from '../site/src/app/notebook/notebook-item/notebook-item.component';
 import { NotebookNotesComponent } from '../site/src/app/notebook/notebook-notes/notebook-notes.component';
 import { NotebookReportComponent } from '../site/src/app/notebook/notebook-report/notebook-report.component';
@@ -116,10 +115,6 @@ angular
   .directive(
     'wiseTinymceEditor',
     downgradeComponent({ component: WiseTinymceEditorComponent }) as angular.IDirectiveFactory
-  )
-  .directive(
-    'notebook',
-    downgradeComponent({ component: NotebookComponent }) as angular.IDirectiveFactory
   )
   .directive(
     'notebookItem',

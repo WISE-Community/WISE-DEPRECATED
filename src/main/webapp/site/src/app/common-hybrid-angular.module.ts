@@ -54,7 +54,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
-import { NotebookComponent } from './notebook/notebook/notebook.component';
 import { NotebookParentComponent } from './notebook/notebook-parent/notebook-parent.component';
 import { NotebookItemComponent } from './notebook/notebook-item/notebook-item.component';
 import { NotebookLauncherComponent } from './notebook/notebook-launcher/notebook-launcher.component';
@@ -75,7 +74,6 @@ export class EmptyComponent {}
     HelpIconComponent,
     NodeIconComponent,
     NodeStatusIcon,
-    NotebookComponent,
     NotebookParentComponent,
     NotebookItemComponent,
     NotebookLauncherComponent,
