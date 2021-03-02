@@ -15,19 +15,21 @@
     <button mat-icon-button
         i18n-title
         title="Toggle Full Screen"
-        (click)="$event.stopPropagation(); fullscreen()">
+        (click)="$event.stopPropagation(); fullscreen()"
+        fxHide.lt-sm>
       <mat-icon *ngIf="!full || collapsed"> fullscreen </mat-icon>
       <mat-icon *ngIf="full && !collapsed"> fullscreen_exit </mat-icon>
     </button>
     <button *ngIf="!collapsed"
         mat-icon-button
-        i18n-title title="Collapse" 
+        i18n-title title="Collapse"
         (click)="$event.stopPropagation(); toggleCollapse()">
       <mat-icon> arrow_drop_down </mat-icon>
     </button>
-    <button mat-icon-button
-        i18n-title title="Restore"
+    <button 
         *ngIf="collapsed"
+        mat-icon-button
+        i18n-title title="Restore"
         (click)="$event.stopPropagation(); toggleCollapse()">
       <mat-icon> arrow_drop_up </mat-icon>
     </button>

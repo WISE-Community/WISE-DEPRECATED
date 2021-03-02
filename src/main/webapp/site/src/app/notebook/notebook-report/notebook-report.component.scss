@@ -51,7 +51,7 @@ $width-collapsed: 300px !default;
     max-width: $title-width-collapsed;
   }
 
-  @media (max-width: breakpoint('xs.max')) {
+  @media (max-width: breakpoint('xs.max') - 1) {
     max-width: $title-width-collapsed;
   }
 }

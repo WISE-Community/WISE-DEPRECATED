@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { Subscription } from "rxjs";
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { AnnotationService } from "../../../../../wise5/services/annotationService";
 import { ConfigService } from "../../../../../wise5/services/configService";
 import { NotebookService } from "../../../../../wise5/services/notebookService";
@@ -30,13 +31,15 @@ export class NotebookReportComponent extends NotebookParentComponent {
   saveTime: number = null;
   notebookItemAnnotationReceivedSubscription: Subscription;
   showReportAnnotationsSubscription: Subscription;
+  mediaObserverSubscription: Subscription;
 
   constructor(
     private AnnotationService: AnnotationService,
     ConfigService: ConfigService,
     NotebookService: NotebookService,
     private ProjectService: ProjectService,
-    UtilService: UtilService
+    UtilService: UtilService,
+    private mediaObserver: MediaObserver
   ) {
     super(ConfigService, NotebookService, UtilService);
   }
@@ -91,6 +94,13 @@ export class NotebookReportComponent extends NotebookParentComponent {
         }, 500);
       }
     );
+
+    this.mediaObserverSubscription = this.mediaObserver.media$.subscribe((change: MediaChange) => {
+      if (change.mqAlias == 'xs' && !this.collapsed) {
+        this.collapsed = true;
+        this.fullscreen();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -100,6 +110,7 @@ export class NotebookReportComponent extends NotebookParentComponent {
   unsubscribeAll(): void {
     this.notebookItemAnnotationReceivedSubscription.unsubscribe();
     this.showReportAnnotationsSubscription.unsubscribe();
+    this.mediaObserverSubscription.unsubscribe();
   }
 
   setReportItem() {
@@ -130,6 +141,14 @@ export class NotebookReportComponent extends NotebookParentComponent {
   }
 
   toggleCollapse(): void {
+    if (this.collapsed && this.mediaObserver.isActive('xs')) {
+      this.fullscreen();
+      return;
+    }
+    if (this.full) {
+      this.full = false;
+      this.NotebookService.setReportFullScreen(false);
+    }
     this.collapsed = !this.collapsed;
   }
 
@@ -144,7 +163,7 @@ export class NotebookReportComponent extends NotebookParentComponent {
   }
 
   addNotebookItemContent($event: any): void {
-    this.NotebookService.setInsertMode({insertMode: true, requester: 'report'});
+    this.NotebookService.setInsertMode({ insertMode: true, requester: 'report' });
     this.NotebookService.setNotesVisible(true);
   }
 

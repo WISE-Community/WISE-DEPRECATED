@@ -40,6 +40,7 @@ describe('NotebookReportComponent', () => {
     component = fixture.componentInstance;
     component.notebookItemAnnotationReceivedSubscription = new Subscription();
     component.showReportAnnotationsSubscription = new Subscription();
+    component.mediaObserverSubscription = new Subscription();
     component.config = createConfig();
   });
 
