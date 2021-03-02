@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Pipe, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../../../../wise5/services/configService';
 import { NotebookService } from '../../../../../wise5/services/notebookService';
@@ -18,7 +18,7 @@ export class NotebookNotesComponent extends NotebookParentComponent {
 
   groups = [];
   groupNameToGroup = {};
-  hasNotes: boolean;
+  hasPrivateNotes: boolean = false;
   insertArgs: any = {
     insertMode: false
   };
@@ -44,7 +44,7 @@ export class NotebookNotesComponent extends NotebookParentComponent {
     this.label = this.config.itemTypes.note.label;
     this.addPersonalGroupToGroups();
     this.addSpacesToGroups();
-    this.hasNotes = this.isHasNotes();
+    this.hasPrivateNotes = this.isHasPrivateNotes();
 
     this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
       ({ notebookItem }) => {
@@ -57,7 +57,7 @@ export class NotebookNotesComponent extends NotebookParentComponent {
         if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
           this.updatePublicNotebookNote(notebookItem);
         }
-        this.hasNotes = this.isHasNotes();
+        this.hasPrivateNotes = this.isHasPrivateNotes();
       }
     );
 
@@ -89,10 +89,11 @@ export class NotebookNotesComponent extends NotebookParentComponent {
     this.insertModeSubscription.unsubscribe();
     this.publicNotebookItemsRetrievedSubscription.unsubscribe();
   }
-
-  isHasNotes(): boolean {
-    return Object.keys(this.notebook.items).length ? true : false;
+  
+  isHasPrivateNotes(): boolean {
+    return this.groupNameToGroup['private'].items.some(note => note.serverDeleteTime == null);
   }
+
 
   addPersonalGroupToGroups(): void {
     const personalGroup = {
@@ -203,5 +204,9 @@ export class NotebookNotesComponent extends NotebookParentComponent {
   close(): void {
     this.NotebookService.setNotesVisible(false);
     this.NotebookService.setInsertMode({ insertMode: false });
+  }
+
+  filterDeleted(item: any): boolean {
+    return item.serverDeleteTime == null;
   }
 }

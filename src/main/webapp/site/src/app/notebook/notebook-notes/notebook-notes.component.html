@@ -1,16 +1,20 @@
 <ng-template #notebookItems let-group="group">
   <div class="notes" fxLayout="row wrap">
-    <div *ngIf="!hasNotes" i18n>You haven't created any {{label.plural}} yet.</div>
-    <notebook-item *ngFor="let note of group.items"
-        [config]="config"
-        [group]="group.name"
-        [itemId]="note.localNotebookItemId"
-        [isChooseMode]="insertArgs.insertMode"
-        [note]="note"
-        (onSelect)="select($event)"
-        fxFlex="100"
-        fxFlex.gt-xs="50">
-    </notebook-item>
+    <p *ngIf="!hasPrivateNotes"
+        class="empty"
+        i18n>You haven't created any {{label.plural}} yet.</p>
+    <ng-container *ngFor="let note of group.items">
+      <notebook-item *ngIf="note.serverDeleteTime == null"
+          [config]="config"
+          [group]="group.name"
+          [itemId]="note.localNotebookItemId"
+          [isChooseMode]="insertArgs.insertMode"
+          [note]="note"
+          (onSelect)="select($event)"
+          fxFlex="100"
+          fxFlex.gt-xs="50">
+      </notebook-item>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -55,20 +59,23 @@
         mat-fab
         color="accent"
         i18n-aria-label
-        attr.aria-label="Add {{config.itemTypes.note.label.singular}}"
+        attr.aria-label="Add {{label.singular}}"
         i18n-matTooltip
-        matTooltip="Add {{config.itemTypes.note.label.singular}}"
+        matTooltip="Add {{label.singular}}"
         matTooltipPosition="above"
         (click)="addNote()">
       <mat-icon>add</mat-icon>
     </button>
   </ng-container>
   <div class="notes notes-grading" *ngIf="mode === 'classroomMonitor'">
-    <ng-container *ngIf="hasNotes">
-      <div *ngFor="let group of groups">
-        <h4 *ngIf="groups.length > 1" class="group-header mat-body-2 secondary-text">{{group.title}}</h4>
-        <div fxLayout="row wrap" fxLayoutAlign="start center">
-          <notebook-item *ngFor="let note of group.items"
+    <div *ngFor="let group of groups">
+      <h4 *ngIf="groups.length > 1" class="group-header mat-body-2 secondary-text">{{group.title}}</h4>
+      <p *ngIf="group.name === 'private' && !hasPrivateNotes" class="empty" i18n>
+        Team hasn't created any {{label.plural}} yet.
+      </p>
+      <div fxLayout="row wrap" fxLayoutAlign="start center">
+        <ng-container *ngFor="let note of group.items">
+          <notebook-item *ngIf="note.serverDeleteTime == null"
               [config]="config"
               [group]="group.name"
               [itemId]="note.localNotebookItemId"
@@ -80,11 +87,8 @@
               fxFlex.gt-sm="33"
               fxFlex.gt-md="25">
           </notebook-item>
-        </div>
+        </ng-container>
       </div>
-    </ng-container>
-    <p *ngIf="!hasNotes" i18n>
-      Team hasn't created any {{label.plural}} yet.
-    </p>
+    </div>
   </div>
 </div>

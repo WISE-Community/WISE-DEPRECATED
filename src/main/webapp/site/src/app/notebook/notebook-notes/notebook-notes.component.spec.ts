@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { TestBed } from "@angular/core/testing";
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from "@angular/core/testing";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { configureTestSuite } from "ng-bullet";
 import { Subscription } from "rxjs";
@@ -44,16 +44,18 @@ describe('NotebookNotesComponent', () => {
     component.publicNotebookItemsRetrievedSubscription = new Subscription();
   });
 
-  isHasNotes();
+  isHasPrivateNotes();
 });
 
-function isHasNotes() {
-  it('should check if the notebook has notes when it does not have any notes', () => {
-    component.notebook = { items: [] };
-    expect(component.isHasNotes()).toEqual(false);
+function isHasPrivateNotes() {
+  it('should check if the notebook has private notes when it does not have any notes', () => {
+    component.notebook = { items: {} };
+    component.addPersonalGroupToGroups();
+    expect(component.isHasPrivateNotes()).toEqual(false);
   });
-  it('should check if the notebook has notes when it has a note', () => {
-    component.notebook = { items: [{}] };
-    expect(component.isHasNotes()).toEqual(true);
+  it('should check if the notebook has private notes when it has a note', () => {
+    component.notebook = { items: { 'abcd': [{type: 'note'}] } };
+    component.addPersonalGroupToGroups();
+    expect(component.isHasPrivateNotes()).toEqual(true);
   });
 }
