@@ -1,0 +1,196 @@
+{
+  "nodes": [
+      {
+          "id": "group0",
+          "type": "group",
+          "title": "Master",
+          "startId": "group1",
+          "ids": [
+              "group1"
+          ],
+          "transitionLogic": {
+              "transitions": []
+          }
+      },
+      {
+          "id": "group1",
+          "type": "group",
+          "title": "First Lesson",
+          "startId": "node1",
+          "ids": [
+              "node1",
+              "node2"
+          ],
+          "icons": {
+              "default": {
+                  "color": "#2196F3",
+                  "type": "font",
+                  "fontSet": "material-icons",
+                  "fontName": "info"
+              }
+          },
+          "transitionLogic": {
+              "transitions": []
+          }
+      },
+      {
+          "id": "node1",
+          "type": "node",
+          "title": "First Step",
+          "components": [],
+          "constraints": [],
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node2"
+                  }
+              ]
+          }
+      },
+      {
+          "id": "node2",
+          "title": "Second Step",
+          "type": "node",
+          "constraints": [],
+          "transitionLogic": {
+              "transitions": []
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      }
+  ],
+  "constraints": [],
+  "startGroupId": "group0",
+  "startNodeId": "node1",
+  "navigationMode": "guided",
+  "layout": {
+      "template": "starmap|leftNav|rightNav"
+  },
+  "metadata": {
+      "title": "Just two steps project",
+      "authors": [
+          {
+              "firstName": "h",
+              "lastName": "t",
+              "id": 3,
+              "username": "ht"
+          }
+      ]
+  },
+  "notebook": {
+      "enabled": false,
+      "label": "Notebook",
+      "enableAddNew": true,
+      "itemTypes": {
+          "note": {
+              "type": "note",
+              "enabled": true,
+              "enableLink": true,
+              "enableAddNote": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "requireTextOnEveryNote": false,
+              "label": {
+                  "singular": "note",
+                  "plural": "notes",
+                  "link": "Notes",
+                  "icon": "note",
+                  "color": "#1565C0"
+              }
+          },
+          "report": {
+              "enabled": false,
+              "label": {
+                  "singular": "report",
+                  "plural": "reports",
+                  "link": "Report",
+                  "icon": "assignment",
+                  "color": "#AD1457"
+              },
+              "notes": [
+                  {
+                      "reportId": "finalReport",
+                      "title": "Final Report",
+                      "description": "Final summary report of what you learned in this unit",
+                      "prompt": "Use this space to write your final report using evidence from your notebook.",
+                      "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+                  }
+              ]
+          }
+      }
+  },
+  "teacherNotebook": {
+      "enabled": true,
+      "label": "Teacher Notebook",
+      "enableAddNew": true,
+      "itemTypes": {
+          "note": {
+              "type": "note",
+              "enabled": false,
+              "enableLink": true,
+              "enableAddNote": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "requireTextOnEveryNote": false,
+              "label": {
+                  "singular": "note",
+                  "plural": "notes",
+                  "link": "Notes",
+                  "icon": "note",
+                  "color": "#1565C0"
+              }
+          },
+          "report": {
+              "enabled": true,
+              "label": {
+                  "singular": "teacher notes",
+                  "plural": "teacher notes",
+                  "link": "Teacher Notes",
+                  "icon": "assignment",
+                  "color": "#AD1457"
+              },
+              "notes": [
+                  {
+                      "reportId": "teacherReport",
+                      "title": "Teacher Notes",
+                      "description": "Notes for the teacher as they're running the WISE unit",
+                      "prompt": "Use this space to take notes for this unit",
+                      "content": "<p>Use this space to take notes for this unit</p>"
+                  }
+              ]
+          }
+      }
+  },
+  "inactiveNodes": [
+      {
+          "id": "group2",
+          "type": "group",
+          "title": "inactive lesson",
+          "startId": "node3",
+          "constraints": [],
+          "transitionLogic": {
+              "transitions": []
+          },
+          "ids": [
+              "node3"
+          ],
+          "checked": false
+      },
+      {
+          "id": "node3",
+          "title": "first inactive step",
+          "type": "node",
+          "constraints": [],
+          "transitionLogic": {
+              "transitions": []
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": [],
+          "checked": false
+      }
+  ]
+}

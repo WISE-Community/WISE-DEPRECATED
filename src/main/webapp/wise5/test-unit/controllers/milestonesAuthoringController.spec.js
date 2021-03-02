@@ -27,24 +27,16 @@ describe('MilestonesAuthoringToolController', () => {
   shouldInitializeMilestones();
   shouldCreateMilestone();
   shouldGetMilestoneIds();
-  shouldGenerateUniqueMilestoneId();
-  shouldGenerateMilestoneId();
-  shouldCheckIfMileStoneIdIsUnique();
+  shouldGenerateUniqueId();
   shouldAddMilestone();
   shouldDeleteMilestone();
   shouldCreateMilestoneSatisfyCriteria();
   shouldGetMilestoneSatisfyCriteriaIds();
-  shouldGenerateUniqueMilestoneSatisfyCriteriaId();
-  shouldCheckIfMileStoneSatisfyCriteriaIdIsUnique();
-  shouldGenerateMilestoneSatisfyCriteriaId();
   shouldAddMilestoneSatisfyCriteria();
   shouldDeleteMilestoneSatisfyCriteria();
   shouldCopySatisfyCriteriaToMilestone();
   shouldCreateReport();
   shouldGetReportIds();
-  shouldGenerateUniqueReportId();
-  shouldGenerateReportId();
-  shouldCheckIfReportIdIsUnique();
   shouldCreateLocation();
   shouldAddLocation();
   shouldDeleteLocation();
@@ -58,16 +50,10 @@ describe('MilestonesAuthoringToolController', () => {
   shouldDeleteCustomScoreValues();
   shouldCreateTemplate();
   shouldGetTemplateIds();
-  shouldGenerateUniqueTemplateId();
-  shouldGenerateTemplateId();
-  shouldCheckIfTemplateIdIsUnique();
   shouldAddTemplate();
   shouldDeleteTemplate();
   shouldCreateTemplateSatisfyCriteria();
   shouldGetTemplateSatisfyCriteriaIds();
-  shouldGenerateUniqueTemplateSatisfyCriteriaId();
-  shouldGenerateTemplateSatisfyCriteriaId();
-  shouldCheckIfTemplateSatisfyCriteriaIdIsUnique();
   shouldAddTemplateSatisfyCriteria();
   shouldDeleteTemplateSatisfyCriteria();
   shouldAddToIdToExpanded();
@@ -79,7 +65,7 @@ describe('MilestonesAuthoringToolController', () => {
 function shouldInitializeMilestones() {
   it('should initialize milestones', () => {
     milestonesAuthoringController.project.achievements = null;
-    milestonesAuthoringController.initializeMilestones(); 
+    milestonesAuthoringController.initializeMilestones();
     expect(milestonesAuthoringController.project.achievements.isEnabled).toBe(false);
     expect(milestonesAuthoringController.project.achievements.items).toBeDefined();
     expect(milestonesAuthoringController.project.achievements.items.length).toBe(0);
@@ -88,7 +74,7 @@ function shouldInitializeMilestones() {
 
 function shouldCreateMilestone() {
   it('should create milestone', () => {
-    const milestone = milestonesAuthoringController.createMilestone(); 
+    const milestone = milestonesAuthoringController.createMilestone();
     expect(milestone.id).toBeDefined();
     expect(milestone.isEnabled).toBe(true);
     expect(milestone.type).toBe('milestoneReport');
@@ -123,29 +109,14 @@ function shouldGetMilestoneIds() {
   });
 }
 
-function shouldGenerateUniqueMilestoneId() {
-  it('should generate unique milestone id', () => {
-    const existingMilestoneId = 'milestone-1234567890';
-    milestonesAuthoringController.milestoneIds[existingMilestoneId] = true;
-    const milestoneId = milestonesAuthoringController.generateUniqueMilestoneId();
-    expect(milestoneId != existingMilestoneId).toEqual(true);
-  });
-}
-
-function shouldGenerateMilestoneId() {
-  it('should generate milestone id', () => {
-    const milestoneId = milestonesAuthoringController.generateMilestoneId();
-    const milestoneIdRegex = /^milestone-\w{10}$/;
-    expect(milestoneIdRegex.test(milestoneId)).toEqual(true);
-  });
-}
-
-function shouldCheckIfMileStoneIdIsUnique() {
-  it('should check if milestone id is unique', () => {
-    const existingMilestoneId = 'milestone-1234567890';
-    milestonesAuthoringController.milestoneIds[existingMilestoneId] = true;
-    expect(milestonesAuthoringController.isUniqueMilestoneId(existingMilestoneId)).toBe(false);
-    expect(milestonesAuthoringController.isUniqueMilestoneId('milestone-abcdefghij')).toBe(true);
+function shouldGenerateUniqueId() {
+  it('should generate unique id', () => {
+    const prefix = 'milestone-';
+    const existingId = 'milestone-1234567890';
+    milestonesAuthoringController.milestoneIds[existingId] = true;
+    const newId = milestonesAuthoringController
+      .generateUniqueId(prefix, milestonesAuthoringController.milestoneIds);
+    expect(newId).not.toEqual(existingId);
   });
 }
 
@@ -210,38 +181,6 @@ function shouldGetMilestoneSatisfyCriteriaIds() {
     expect(Object.keys(satisfyCriteriaIds).length).toEqual(2);
     expect(satisfyCriteriaIds['satisfyCriteria1']).toEqual(true);
     expect(satisfyCriteriaIds['satisfyCriteria2']).toEqual(true);
-  });
-}
-
-function shouldGenerateUniqueMilestoneSatisfyCriteriaId() {
-  it('should generate unique milestone satisfy criteria id', () => {
-    const existingMilestoneSatisfyCriteriaId = 'milestone-satisfy-criteria-1234567890';
-    milestonesAuthoringController.milestoneSatisfyCriteriaIds[existingMilestoneSatisfyCriteriaId] =
-        true;
-    const milestoneSatisfyCriteriaId = 
-        milestonesAuthoringController.generateUniqueMilestoneSatisfyCriteriaId();
-    expect(milestoneSatisfyCriteriaId != existingMilestoneSatisfyCriteriaId).toEqual(true);
-  });
-}
-
-function shouldGenerateMilestoneSatisfyCriteriaId() {
-  it('should generate milestone satisfy criteria id', () => {
-    const milestoneSatisfyCriteriaId =
-        milestonesAuthoringController.generateMilestoneSatisfyCriteriaId();
-    const milestoneSatisfyCriteriaIdRegex = /^milestone-satisfy-criteria-\w{10}$/;
-    expect(milestoneSatisfyCriteriaIdRegex.test(milestoneSatisfyCriteriaId)).toEqual(true);
-  });
-}
-
-function shouldCheckIfMileStoneSatisfyCriteriaIdIsUnique() {
-  it('should check if milestone satisfy criteria id is unique', () => {
-    const existingMilestoneSatisfyCriteriaId = 'milestone-satisfy-criteria-1234567890';
-    milestonesAuthoringController.milestoneSatisfyCriteriaIds[existingMilestoneSatisfyCriteriaId] =
-        true;
-    expect(milestonesAuthoringController.isUniqueMilestoneSatisfyCriteriaId(
-        existingMilestoneSatisfyCriteriaId)).toBe(false);
-    expect(milestonesAuthoringController.isUniqueMilestoneSatisfyCriteriaId('milestone-abcdefghij'))
-        .toBe(true);
   });
 }
 
@@ -335,7 +274,7 @@ function shouldCopySatisfyCriteriaToMilestone() {
 
 function shouldCreateReport() {
   it('should create report', () => {
-    const report = milestonesAuthoringController.createReport(); 
+    const report = milestonesAuthoringController.createReport();
     expect(report.id).toBeDefined();
     expect(report.title).toEqual('');
     expect(report.isEnabled).toEqual(true);
@@ -374,35 +313,9 @@ function shouldGetReportIds() {
   });
 }
 
-function shouldGenerateUniqueReportId() {
-  it('should generate unique report id', () => {
-    const existingReportId = 'milestone-1234567890';
-    milestonesAuthoringController.reportIds[existingReportId] = true;
-    const reportId = milestonesAuthoringController.generateUniqueReportId();
-    expect(reportId != existingReportId).toEqual(true);
-  });
-}
-
-function shouldGenerateReportId() {
-  it('should generate report id', () => {
-    const reportId = milestonesAuthoringController.generateReportId();
-    const reportIdRegex = /^report-\w{10}$/;
-    expect(reportIdRegex.test(reportId)).toEqual(true);
-  });
-}
-
-function shouldCheckIfReportIdIsUnique() {
-  it('should check if report id is unique', () => {
-    const existingReportId = 'report-1234567890';
-    milestonesAuthoringController.reportIds[existingReportId] = true;
-    expect(milestonesAuthoringController.isUniqueReportId(existingReportId)).toBe(false);
-    expect(milestonesAuthoringController.isUniqueReportId('report-abcdefghij')).toBe(true);
-  });
-}
-
 function shouldCreateLocation() {
   it('should create location', () => {
-    const location = milestonesAuthoringController.createLocation(); 
+    const location = milestonesAuthoringController.createLocation();
     expect(location.nodeId).toEqual('');
     expect(location.componentId).toEqual('');
   });
@@ -520,7 +433,7 @@ function shouldDeleteCustomScoreValues() {
 
 function shouldCreateTemplate() {
   it('should create template', () => {
-    const template = milestonesAuthoringController.createTemplate(); 
+    const template = milestonesAuthoringController.createTemplate();
     expect(template.id).toBeDefined();
     expect(template.description).toEqual('');
     expect(template.recommendations).toEqual('');
@@ -566,32 +479,6 @@ function shouldGetTemplateIds() {
   });
 }
 
-function shouldGenerateUniqueTemplateId() {
-  it('should generate unique template id', () => {
-    const existingTemplateId = 'template-1234567890';
-    milestonesAuthoringController.templateIds[existingTemplateId] = true;
-    const templateId = milestonesAuthoringController.generateUniqueTemplateId();
-    expect(templateId != existingTemplateId).toEqual(true);
-  });
-}
-
-function shouldGenerateTemplateId() {
-  it('should generate template id', () => {
-    const templateId = milestonesAuthoringController.generateTemplateId();
-    const templateIdRegex = /^template-\w{10}$/;
-    expect(templateIdRegex.test(templateId)).toEqual(true);
-  });
-}
-
-function shouldCheckIfTemplateIdIsUnique() {
-  it('should check if template id is unique', () => {
-    const existingTemplateId = 'template-1234567890';
-    milestonesAuthoringController.templateIds[existingTemplateId] = true;
-    expect(milestonesAuthoringController.isUniqueTemplateId(existingTemplateId)).toBe(false);
-    expect(milestonesAuthoringController.isUniqueTemplateId('template-abcdefghij')).toBe(true);
-  });
-}
-
 function shouldAddTemplate() {
   it('should add template', () => {
     const report = {
@@ -623,7 +510,7 @@ function shouldDeleteTemplate() {
 
 function shouldCreateTemplateSatisfyCriteria() {
   it('should create template satisfy criteria', () => {
-    const templateSatisfyCriteria = milestonesAuthoringController.createTemplateSatisfyCriteria(); 
+    const templateSatisfyCriteria = milestonesAuthoringController.createTemplateSatisfyCriteria();
     expect(templateSatisfyCriteria.id).toBeDefined();
     expect(templateSatisfyCriteria.nodeId).toEqual('');
     expect(templateSatisfyCriteria.componentId).toEqual('');
@@ -679,38 +566,6 @@ function shouldGetTemplateSatisfyCriteriaIds() {
     expect(templateSatisfyCriteriaIds[templateSatisfyCriteriaId1]).toEqual(true);
     expect(templateSatisfyCriteriaIds[templateSatisfyCriteriaId2]).toEqual(true);
     expect(templateSatisfyCriteriaIds[templateSatisfyCriteriaId3]).toBeUndefined();
-  });
-}
-
-function shouldGenerateUniqueTemplateSatisfyCriteriaId() {
-  it('should generate unique template satisfy criteria id', () => {
-    const existingTemplateSatisfyCriteriaId = 'template-satisfy-criteria-1234567890';
-    milestonesAuthoringController.templateSatisfyCriteriaIds[existingTemplateSatisfyCriteriaId] =
-        true;
-    const templateSatisfyCriteriaId =
-        milestonesAuthoringController.generateUniqueTemplateSatisfyCriteriaId();
-    expect(templateSatisfyCriteriaId != existingTemplateSatisfyCriteriaId).toEqual(true);
-  });
-}
-
-function shouldGenerateTemplateSatisfyCriteriaId() {
-  it('should generate template satisfy criteria id', () => {
-    const templateSatisfyCriteriaId =
-        milestonesAuthoringController.generateTemplateSatisfyCriteriaId();
-    const templateSatisfyCriteriaIdRegex = /^template-satisfy-criteria-\w{10}$/;
-    expect(templateSatisfyCriteriaIdRegex.test(templateSatisfyCriteriaId)).toEqual(true);
-  });
-}
-
-function shouldCheckIfTemplateSatisfyCriteriaIdIsUnique() {
-  it('should check if template satisfy criteria id is unique', () => {
-    const existingTemplateSatisfyCriteriaId = 'template-satisfy-criteria-1234567890';
-    milestonesAuthoringController.templateSatisfyCriteriaIds[existingTemplateSatisfyCriteriaId] =
-        true;
-    expect(milestonesAuthoringController
-        .isUniqueTemplateSatisfyCriteriaId(existingTemplateSatisfyCriteriaId)).toBe(false);
-    expect(milestonesAuthoringController.isUniqueTemplateSatisfyCriteriaId('template-abcdefghij'))
-        .toBe(true);
   });
 }
 

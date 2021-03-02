@@ -64,6 +64,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({ template: `` })
 export class EmptyComponent {}
@@ -93,16 +96,19 @@ export class EmptyComponent {}
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
     MatTabsModule,
     MatToolbarModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
@@ -152,16 +158,19 @@ export class EmptyComponent {}
     MatCardModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
     MatTabsModule,
     MatToolbarModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
     NodeIconComponent,

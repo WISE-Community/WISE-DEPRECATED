@@ -34,6 +34,10 @@ class NodeAdvancedPathAuthoringController {
           {
             value: 'scores',
             text: this.$translate('scoresParens')
+          },
+          {
+            value: 'scoreId',
+            text: this.$translate('scoreID')
           }
         ]
       },
@@ -248,6 +252,13 @@ class NodeAdvancedPathAuthoringController {
 
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
+  }
+
+  scoreIdChanged(transitionCriteria: any): void {
+    if (transitionCriteria.params.scoreId === '') {
+      delete transitionCriteria.params.scoreId;
+    }
+    this.saveProject();
   }
 }
 

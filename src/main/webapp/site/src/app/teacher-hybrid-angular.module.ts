@@ -46,17 +46,41 @@ import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-h
 import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
 import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
 import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
+import { OutsideUrlAuthoring } from '../../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component';
+import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component';
+import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component';
+import { DrawAuthoring } from '../../../wise5/components/draw/draw-authoring/draw-authoring.component';
+import { MatchAuthoring } from '../../../wise5/components/match/match-authoring/match-authoring.component';
+import { LabelAuthoring } from '../../../wise5/components/label/label-authoring/label-authoring.component';
+import { TableAuthoring } from '../../../wise5/components/table/table-authoring/table-authoring.component';
+import { DiscussionAuthoring } from '../../../wise5/components/discussion/discussion-authoring/discussion-authoring.component';
+import { SummaryAuthoring } from '../../../wise5/components/summary/summary-authoring/summary-authoring.component';
+import { EmbeddedAuthoring } from '../../../wise5/components/embedded/embedded-authoring/embedded-authoring.component';
+import { GraphAuthoring } from '../../../wise5/components/graph/graph-authoring/graph-authoring.component';
+import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component';
+import { AnimationAuthoring } from '../../../wise5/components/animation/animation-authoring/animation-authoring.component';
+import { OpenResponseGrading } from '../../../wise5/components/openResponse/open-response-grading/open-response-grading.component';
+import { MultipleChoiceGrading } from '../../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component';
+import { MatchGrading } from '../../../wise5/components/match/match-grading/match-grading.component';
+import { LabelGrading } from '../../../wise5/components/label/label-grading/label-grading.component';
+import { DrawGrading } from '../../../wise5/components/draw/draw-grading/draw-grading.component';
 
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
     AlertStatusCornerComponent,
+    AnimationAuthoring,
+    AudioOscillatorAuthoring,
     ChooseImportStepComponent,
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
     ComponentSelectComponent,
+    ConceptMapAuthoring,
+    DrawAuthoring,
+    DrawGrading,
+    DiscussionAuthoring,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
     EditComponentMaxScoreComponent,
@@ -64,17 +88,29 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
     EditComponentWidthComponent,
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
+    EmbeddedAuthoring,
+    GraphAuthoring,
     HtmlAuthoring,
+    LabelAuthoring,
+    LabelGrading,
     ManageStudentsComponent,
+    MatchAuthoring,
+    MatchGrading,
     MilestonesComponent,
     MilestoneReportDataComponent,
+    MultipleChoiceAuthoring,
+    MultipleChoiceGrading,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
+    OpenResponseGrading,
     OpenResponseAuthoring,
+    OutsideUrlAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
+    SummaryAuthoring,
+    TableAuthoring,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     WorkgroupSelectAutocompleteComponent,

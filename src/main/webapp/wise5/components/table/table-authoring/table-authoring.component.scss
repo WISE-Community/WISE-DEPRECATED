@@ -1,0 +1,62 @@
+.prompt {
+  width: 100%;
+}
+
+.size-input {
+  width: 120px;
+  margin-right: 20px;
+}
+
+.table {
+  width: 100%;
+}
+
+.rotate90 {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.rotate270 {
+  -webkit-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+
+.column-buttons {
+  margin: 5px;
+}
+
+.row-buttons {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.spacer {
+  width: 56px;
+}
+
+.outer-cell-container {
+  border: 1px solid black;
+  padding: 5px;
+  width: auto;
+}
+
+.inner-cell-container {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.cell-text {
+  width: 100%;
+}
+
+.blank-row-cell {
+  height: 20px;
+}
+
+::ng-deep .mat-form-field-infix {
+  width: auto !important;
+}
+
+.make-all-cells-editable-buttons {
+  margin: 10px;
+}

@@ -1,0 +1,28 @@
+<mat-form-field class="prompt">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      placeholder="Enter Prompt Here"
+      i18n-placeholder
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<div class="checkbox-container">
+  <mat-checkbox
+      color="primary"
+      [(ngModel)]="authoringComponentContent.isStudentAttachmentEnabled"
+      (ngModelChange)="componentChanged()"
+      i18n>
+    Students can upload and use images in their posts
+  </mat-checkbox>
+</div>
+<div class="checkbox-container">
+  <mat-checkbox
+      color="primary"
+      [(ngModel)]="authoringComponentContent.gateClassmateResponses"
+      (ngModelChange)="componentChanged()"
+      i18n>
+    Students must create a post before viewing classmates' posts
+  </mat-checkbox>
+</div>

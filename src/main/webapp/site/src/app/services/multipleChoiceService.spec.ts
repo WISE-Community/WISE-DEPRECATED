@@ -18,8 +18,10 @@ let choiceId2: string = 'bbbbbbbbbb';
 let choiceId3: string = 'cccccccccc';
 let choiceText1: string = 'Apple';
 let choiceText2: string = 'Banana';
+let choiceText3: string = 'Cherry';
 let choice1: any;
 let choice2: any;
+let choice3: any;
 let nodeId1: string = 'node1';
 let componentId1: string = 'abcdefghij';
 
@@ -43,6 +45,7 @@ describe('MultipleChoiceService', () => {
     studentDataService = TestBed.get(StudentDataService);
     choice1 = createChoice(choiceId1, choiceText1, '', false);
     choice2 = createChoice(choiceId2, choiceText2, '', false);
+    choice3 = createChoice(choiceId3, choiceText3, '', false);
   });
   createComponent();
   choiceChosen();
@@ -52,6 +55,9 @@ describe('MultipleChoiceService', () => {
   getStudentDataString();
   componentStateHasStudentWork();
   componentHasCorrectAnswer();
+  isRadioCorrect();
+  isCheckboxCorrect();
+  isChoiceIdsSame();
 });
 
 function createComponent() {
@@ -83,7 +89,7 @@ function createComponentState(studentChoices: any[], isSubmit: boolean = false) 
   };
 }
 
-function createMultipleChoiceComponent(choices: any[]) {
+function createComponentContent(choices: any[]) {
   return {
     choices: choices
   };
@@ -251,7 +257,7 @@ function componentStateHasStudentWork() {
 
 function componentHasCorrectAnswer() {
   function expectComponentHasCorrectAnswer(expectedResult: boolean) {
-    const component = createMultipleChoiceComponent([
+    const component = createComponentContent([
       createChoice(choiceId1, choiceText1, '', expectedResult)
     ]);
     expect(service.componentHasCorrectAnswer(component)).toEqual(expectedResult);
@@ -261,5 +267,63 @@ function componentHasCorrectAnswer() {
   });
   it('should check if component has correct answer when it is true', () => {
     expectComponentHasCorrectAnswer(true);
+  });
+}
+
+function isRadioCorrect() {
+  let componentContent: any;
+  beforeEach(() => {
+    componentContent = createComponentContent([createChoice(choiceId1, choiceText1, '', true)]);
+  });
+  function expectIsRadioCorrect(chosenChoices: any[], expectedResult: boolean): void {
+    const componentState = createComponentState(chosenChoices, true);
+    expect(service.isRadioCorrect(componentContent, componentState)).toBe(expectedResult);
+  }
+  it('should check if a radio component state is correct when it is not correct', () => {
+    expectIsRadioCorrect([choice2], false);
+  });
+  it('should check if a radio component state is correct when it is correct', () => {
+    expectIsRadioCorrect([choice1], true);
+  });
+}
+
+function isCheckboxCorrect() {
+  let componentContent: any;
+  beforeEach(() => {
+    componentContent = createComponentContent([
+      createChoice(choiceId1, choiceText1, '', true),
+      createChoice(choiceId2, choiceText2, '', true)
+    ]);
+  });
+  function expectIsCheckboxCorrect(chosenChoices: any[], expectedResult: boolean): void {
+    const componentState = createComponentState(chosenChoices, true);
+    expect(service.isCheckboxCorrect(componentContent, componentState)).toBe(expectedResult);
+  }
+  it('should check if a checkbox component state is correct when it is not correct', () => {
+    expectIsCheckboxCorrect([choice1, choice2, choice3], false);
+  });
+  it('should check if a checkbox component state is correct when it is correct', () => {
+    expectIsCheckboxCorrect([choice1, choice2], true);
+  });
+}
+
+function isChoiceIdsSame() {
+  function expectChoiceIdsSame(
+    choiceIds1: string[],
+    choiceIds2: string[],
+    expectedResult: boolean
+  ): void {
+    expect(service.isChoiceIdsSame(choiceIds1, choiceIds2)).toEqual(expectedResult);
+  }
+  it('should check if choice ids are the same when they are not the same', () => {
+    expectChoiceIdsSame([choiceId1], [choiceId2], false);
+  });
+  it(`should check if choice ids are the same when there are different numbers of choice
+      ids`, () => {
+    expectChoiceIdsSame([choiceId1, choiceId2], [choiceId1], false);
+  });
+  it(`should check if choice ids are the same when they are the same but in different
+      order`, () => {
+    expectChoiceIdsSame([choiceId1, choiceId2], [choiceId2, choiceId1], true);
   });
 }

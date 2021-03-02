@@ -1,0 +1,51 @@
+@import '~style/abstracts/variables', '~style/themes/default';
+
+$notice-bg: map-get($default-colors, notice-bg);
+
+.prompt {
+  width: 100%;
+}
+
+.background {
+  max-width: 100%;
+  width: 360px;
+}
+
+.canvas-dimension {
+  margin-top: 20px;
+}
+
+.add-content {
+  padding: 16px;
+  border: 2px solid #dddddd;
+  border-radius: $card-border-radius;
+}
+
+.node-labels {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.content-item {
+  border: 1px solid #dddddd;
+  background-color: $notice-bg;
+  border-radius: $card-border-radius;
+  padding: 8px;
+  margin-bottom: 8px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.content-item-setting {
+  padding: 0 8px;
+}
+
+.node-dimension {
+  max-width: 80px;
+}
+
+.starter-concept-map {
+  margin-bottom: 16px;
+}

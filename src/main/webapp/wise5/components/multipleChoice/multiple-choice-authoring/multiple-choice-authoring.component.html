@@ -1,0 +1,128 @@
+<mat-form-field class="prompt">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      placeholder="Enter Prompt Here"
+      i18n-placeholder
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<p>
+  <label id="selection-type-label">Selection Type:</label>
+  <mat-radio-group aria-labelledby="selection-type-label"
+      [(ngModel)]="authoringComponentContent.choiceType"
+      (ngModelChange)="componentChanged()">
+    <mat-radio-button
+        class="choice-radio-button"
+        color="primary"
+        value="radio"
+        i18n>
+      Single Answer
+    </mat-radio-button>
+    <mat-radio-button
+        class="choice-radio-button"
+        color="primary"
+        value="checkbox"
+        i18n>
+      Multiple Answer
+    </mat-radio-button>
+  </mat-radio-group>
+</p>
+<span class="choices-label" i18n>Choices</span>
+<button mat-raised-button
+    color="primary"
+    class="add-choice-button"
+    (click)="addChoice()"
+    i18nMatTooltip
+    matTooltip="Add Choice"
+    matTooltipPosition="above"
+    i18n-aria-label
+    aria-label="Add">
+  <mat-icon>add</mat-icon>
+</button>
+<div *ngIf="authoringComponentContent.choices == null || authoringComponentContent.choices.length === 0"
+    class="info-block"
+    i18n>
+  There are no choices. Click the "Add Choice" button to add a choice.
+</div>
+<div *ngFor="let choice of authoringComponentContent.choices; first as isFirst; last as isLast"
+    class="choice-container">
+  <div fxLayout="row wrap" fxLayoutAlign="start center">
+    <mat-form-field class="choice-text-input-container">
+      <mat-label i18n>Choice Text</mat-label>
+      <input matInput
+          [(ngModel)]="choice.text"
+          (ngModelChange)="choiceTextChange.next($event)"
+          i18n-placeholder
+          placeholder="Type text or choose an image" />
+    </mat-form-field>
+    <button mat-raised-button
+        color="primary"
+        class="choice-authoring-button"
+        (click)="chooseChoiceAsset(choice)"
+        i18n-matTooltip
+        matTooltip="Choose an Image"
+        matTooltipPosition="above"
+        i18n-aria-label
+        aria-label="Image">
+      <mat-icon>insert_photo</mat-icon>
+    </button>
+    <div>
+      <mat-checkbox
+          color="primary"
+          [(ngModel)]="choice.isCorrect"
+          (change)="feedbackChanged()"
+          i18n-aria-label
+          aria-label="Is Correct"
+          i18n>
+        Is Correct
+      </mat-checkbox>
+    </div>
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="start center">
+    <mat-form-field class="choice-feedback-input-container">
+      <mat-label i18n>Feeback</mat-label>
+      <input matInput
+          [(ngModel)]="choice.feedback"
+          (ngModelChange)="feedbackTextChange.next($event)"
+          i18n-placeholder
+          placeholder="Optional" />
+    </mat-form-field>
+    <button mat-raised-button
+        color="primary"
+        class="choice-authoring-button"
+        [disabled]="isFirst"
+        (click)="moveChoiceUp(choice.id)"
+        i18n-matTooltip
+        matTooltip="Move Up"
+        matTooltipPosition="above"
+        i18n-aria-label
+        aria-label="Up">
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+    <button mat-raised-button
+        color="primary"
+        class="choice-authoring-button"
+        [disabled]="isLast"
+        (click)="moveChoiceDown(choice.id)"
+        i18n-matTooltip
+        matTooltip="Move Down"
+        matTooltipPosition="above"
+        i18n-aria-label
+        aria-label="Down">
+      <mat-icon>arrow_downward</mat-icon>
+    </button>
+    <button mat-raised-button
+        color="primary"
+        class="choice-authoring-button"
+        (click)="deleteChoice(choice.id)"
+        i18n-matTooltip
+        matTooltip="Delete"
+        matTooltipPosition="above"
+        i18n-aria-label
+        aria-label="Delete">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

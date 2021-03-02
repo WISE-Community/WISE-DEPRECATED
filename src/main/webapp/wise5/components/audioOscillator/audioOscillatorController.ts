@@ -190,10 +190,14 @@ class AudioOscillatorController extends ComponentController {
     if (this.componentContent.oscillatorTypes.length > 0) {
       this.oscillatorType = this.componentContent.oscillatorTypes[0];
     }
-    this.oscilloscopeWidth = this.componentContent.oscilloscopeWidth;
-    this.oscilloscopeHeight = this.componentContent.oscilloscopeHeight;
-    this.gridCellSize = this.componentContent.gridCellSize;
+    this.setFieldMininum1('oscilloscopeWidth', this.componentContent.oscilloscopeWidth);
+    this.setFieldMininum1('oscilloscopeHeight', this.componentContent.oscilloscopeHeight);
+    this.setFieldMininum1('gridCellSize', this.componentContent.gridCellSize);
     this.stopAfterGoodDraw = this.componentContent.stopAfterGoodDraw;
+  }
+
+  setFieldMininum1(field: string, value: number): void {
+    this[field] = value < 1 ? 1 : value;
   }
 
   setStudentWork(componentState) {

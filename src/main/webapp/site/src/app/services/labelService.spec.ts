@@ -15,8 +15,29 @@ let service: LabelService;
 let utilService: UtilService;
 let label1: any;
 let label2: any;
+let label1Text: any = 'Label 1';
+let label2Text: any = 'Label 2';
+let label1PointX: number = 1;
+let label1PointY: number = 11;
+let label1TextX: number = 111;
+let label1TextY: number = 1111;
+let label2PointX: number = 2;
+let label2PointY: number = 22;
+let label2TextX: number = 222;
+let label2TextY: number = 2222;
+let color1: string = 'blue';
+let color2: string = 'red';
+let width: number = 400;
+let height: number = 400;
+let pointSize: number = 5;
+let fontSize: number = 12;
+let labelWidth: number = 20;
+let enableCircles: boolean = true;
+let studentDataVersion: number = 2;
+let canEditBoolean: boolean = true;
+let canDeleteBoolean: boolean = true;
 
-describe('LabelServiceService', () => {
+describe('LabelService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, UpgradeModule],
@@ -34,8 +55,8 @@ describe('LabelServiceService', () => {
     });
     service = TestBed.get(LabelService);
     utilService = TestBed.get(UtilService);
-    label1 = createLabel('Label 1', 1, 11, 111, 1111, 'blue');
-    label2 = createLabel('Label 2', 2, 22, 222, 2222, 'red');
+    label1 = createLabel(label1Text, label1PointX, label1PointY, label1TextX, label1TextY, color1);
+    label2 = createLabel(label2Text, label2PointX, label2PointY, label2TextX, label2TextY, color2);
   });
   createComponent();
   isCompleted();
@@ -48,6 +69,11 @@ describe('LabelServiceService', () => {
   labelsAreTheSame();
   getTSpans();
   getSVGTextElementString();
+  initializeCanvas();
+  addLabelsToCanvas();
+  addLabelToCanvas();
+  createLabelServiceFunction();
+  makeSureValueIsWithinLimit();
 });
 
 function createComponentState(labels: any[], isSubmit: boolean = false) {
@@ -68,21 +94,52 @@ function createObjectWithLabels(labels: any[]) {
 }
 
 function createLabel(
-  text: string,
-  pointX: number,
-  pointY: number,
-  textX: number,
-  textY: number,
-  color: string
-) {
+  text: string = '',
+  pointX: number = 100,
+  pointY: number = 100,
+  textX: number = 200,
+  textY: number = 200,
+  color: string = color1,
+  canEdit: boolean = true,
+  canDelete: boolean = true
+): any {
   return {
     text: text,
+    color: color,
     pointX: pointX,
     pointY: pointY,
     textX: textX,
     textY: textY,
-    color: color
+    canEdit: canEdit,
+    canDelete: canDelete
   };
+}
+
+function createFabricLabel() {
+  const pointX: number = 100;
+  const pointY: number = 100;
+  const textX: number = 200;
+  const textY: number = 200;
+  const textString: string = label1Text;
+  const color: string = color1;
+  const canEdit: boolean = true;
+  const canDelete: boolean = true;
+  return service.createLabel(
+    pointX,
+    pointY,
+    textX,
+    textY,
+    textString,
+    color,
+    canEdit,
+    canDelete,
+    width,
+    height,
+    pointSize,
+    fontSize,
+    labelWidth,
+    studentDataVersion
+  );
 }
 
 function createComponent() {
@@ -127,7 +184,8 @@ function isCompleted() {
     componentStates.push(createComponentState([label1]));
     expectIsCompleted(component, componentStates, node, true);
   });
-  it(`should check if is completed when submit is required and there are labels but not submitted`, () => {
+  it(`should check if is completed when submit is required and there are labels but not
+      submitted`, () => {
     node.showSubmitButton = true;
     componentStates.push(createComponentState([label1]));
     expectIsCompleted(component, componentStates, node, false);
@@ -144,14 +202,17 @@ function componentStateHasSubmitWithLabel() {
   beforeEach(() => {
     componentState = createComponentState([]);
   });
-  it('should check if a component state has a submit with label when it does not have any labels', () => {
+  it(`should check if a component state has a submit with label when it does not have any
+      labels`, () => {
     expect(service.componentStateHasSubmitWithLabel(componentState)).toEqual(false);
   });
-  it('should check if a component state has a submit with label when it has a label but no submit', () => {
+  it(`should check if a component state has a submit with label when it has a label but no
+      submit`, () => {
     componentState.studentData.labels.push(label1);
     expect(service.componentStateHasSubmitWithLabel(componentState)).toEqual(false);
   });
-  it('should check if a component state has a submit with label when it has a label and submit', () => {
+  it(`should check if a component state has a submit with label when it has a label and
+      submit`, () => {
     componentState.studentData.labels.push(label1);
     componentState.isSubmit = true;
     expect(service.componentStateHasSubmitWithLabel(componentState)).toEqual(true);
@@ -292,11 +353,20 @@ function labelsAreTheSame() {
   it('should check if labels are the same when one is null and one is not null', () => {
     expectLabelsAreTheSame({}, null, false);
   });
-  it(`should check if labels are the same when both are not null and do not have the same values`, () => {
+  it(`should check if labels are the same when both are not null and do not have the same
+      values`, () => {
     expectLabelsAreTheSame(label1, label2, false);
   });
-  it(`should check if labels are the same when both are not null and do have the same values`, () => {
-    const label3 = createLabel('Label 1', 1, 11, 111, 1111, 'blue');
+  it(`should check if labels are the same when both are not null and do have the same
+      values`, () => {
+    const label3 = createLabel(
+      label1Text,
+      label1PointX,
+      label1PointY,
+      label1TextX,
+      label1TextY,
+      color1
+    );
     expectLabelsAreTheSame(label1, label3, true);
   });
 }
@@ -325,4 +395,94 @@ function getSVGTextElementString() {
       `font-size="${fontSize}">${tspans}</text>`;
     expect(textElementString).toEqual(expectedResult);
   });
+}
+
+function createCanvas() {
+  return service.initializeCanvas('label-canvas', 400, 300, false);
+}
+
+function initializeCanvas() {
+  it('should initialize the canvas', () => {
+    const canvas: any = createCanvas();
+    expect(canvas).not.toBeNull();
+  });
+}
+
+function addLabelsToCanvas() {
+  it('should add labels to canvas', () => {
+    const canvas: any = createCanvas();
+    const labels: any[] = [label1, label2];
+    const fabricLabels: any = service.addLabelsToCanvas(
+      canvas,
+      labels,
+      width,
+      height,
+      pointSize,
+      fontSize,
+      labelWidth,
+      enableCircles,
+      studentDataVersion
+    );
+    const canvasTextObjects = getCanvasTextObjects(canvas);
+    expect(fabricLabels.length).toEqual(2);
+    expect(fabricLabels[0].text.text).toEqual(label1Text);
+    expect(fabricLabels[1].text.text).toEqual(label2Text);
+    // sort the canvas text objects because their order is not guaranteed to be in the same order
+    // we added them
+    canvasTextObjects.sort(sortByTextField);
+    expect(canvasTextObjects.length).toEqual(2);
+    expect(canvasTextObjects[0].text).toMatch('Label 1');
+    expect(canvasTextObjects[1].text).toMatch('Label 2');
+  });
+}
+
+function addLabelToCanvas() {
+  it('should add label to canvas', () => {
+    const canvas: any = createCanvas();
+    const label: any = createFabricLabel();
+    const enableCircles: boolean = true;
+    service.addLabelToCanvas(canvas, label, enableCircles);
+    const canvasTextObjects = getCanvasTextObjects(canvas);
+    expect(canvasTextObjects.length).toEqual(1);
+    expect(canvasTextObjects[0].text).toMatch(label1Text);
+  });
+}
+
+function getCanvasTextObjects(canvas: any): any[] {
+  return canvas.getObjects().filter((obj: any) => {
+    return typeof obj.text === 'string';
+  });
+}
+
+function sortByTextField(a: any, b: any): number {
+  return a.text.localeCompare(b.text);
+}
+
+function createLabelServiceFunction() {
+  it('shoud create a label', () => {
+    const label: any = createFabricLabel();
+    expect(label.circle).not.toBeNull();
+    expect(label.line).not.toBeNull();
+    expect(label.text).not.toBeNull();
+    expect(label.text.text).toEqual(label1Text);
+    expect(label.canEdit).toEqual(canEditBoolean);
+    expect(label.canDelete).toEqual(canDeleteBoolean);
+  });
+}
+
+function makeSureValueIsWithinLimit() {
+  const limit: number = 100;
+  it('should make sure value is within limit when it is negative', () => {
+    expectMakeSureValueIsWithinLimit(-1, limit, 0);
+  });
+  it('should make sure value is within limit when it is between zero and limit', () => {
+    expectMakeSureValueIsWithinLimit(50, limit, 50);
+  });
+  it('should make sure value is within limit when it is greater than limit', () => {
+    expectMakeSureValueIsWithinLimit(101, limit, 100);
+  });
+}
+
+function expectMakeSureValueIsWithinLimit(x: number, width: number, expectedValue: number) {
+  expect(service.makeSureValueIsWithinLimit(x, width)).toEqual(expectedValue);
 }

@@ -49,6 +49,7 @@ import '../authoringTool/components/authoringToolComponents';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import '../components/discussion/discussionAuthoringComponentModule';
 import '../components/draw/drawAuthoringComponentModule';
+import '../components/draw/drawGradingComponentModule';
 import '../components/embedded/embeddedAuthoringComponentModule';
 import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
@@ -57,9 +58,13 @@ import '../authoringTool/node/editRubric/editRubricModule';
 import '../authoringTool/importComponent/importComponentModule';
 import '../authoringTool/importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
+import '../components/label/labelGradingComponentModule';
 import '../components/match/matchAuthoringComponentModule';
+import '../components/match/matchGradingComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
+import '../components/multipleChoice/multipleChoiceGradingComponentModule';
 import '../components/openResponse/openResponseAuthoringComponentModule';
+import '../components/openResponse/openResponseGradingComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
@@ -78,17 +83,22 @@ angular
     'conceptMapAuthoringComponentModule',
     'discussionAuthoringComponentModule',
     'drawAuthoringComponentModule',
+    'drawGradingComponentModule',
     'embeddedAuthoringComponentModule',
     'graphAuthoringComponentModule',
     'htmlAuthoringComponentModule',
     'importComponentModule',
     'importStepModule',
     'labelAuthoringComponentModule',
+    'labelGradingComponentModule',
     'matchAuthoringComponentModule',
+    'matchGradingComponentModule',
     'multipleChoiceAuthoringComponentModule',
+    'multipleChoiceGradingComponentModule',
     'ngAnimate',
     'ngFileSaver',
     'openResponseAuthoringComponentModule',
+    'openResponseGradingComponentModule',
     'outsideURLAuthoringComponentModule',
     'structureAuthoringModule',
     'tableAuthoringComponentModule'

@@ -1,15 +1,18 @@
 'use strict';
 
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { EmbeddedService } from './embeddedService';
-import EmbeddedAuthoring from './embeddedAuthoring';
 import { EditEmbeddedAdvancedComponent } from './edit-embedded-advanced/edit-embedded-advanced.component';
+import { EmbeddedAuthoring } from './embedded-authoring/embedded-authoring.component';
 
 const embeddedAuthoringComponentModule = angular
   .module('embeddedAuthoringComponentModule', ['pascalprecht.translate'])
   .service('EmbeddedService', downgradeInjectable(EmbeddedService))
-  .component('embeddedAuthoring', EmbeddedAuthoring)
+  .directive(
+    'embeddedAuthoring',
+    downgradeComponent({ component: EmbeddedAuthoring }) as angular.IDirectiveFactory
+  )
   .component('editEmbeddedAdvanced', EditEmbeddedAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',

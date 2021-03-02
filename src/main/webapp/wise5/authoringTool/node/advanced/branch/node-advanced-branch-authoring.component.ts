@@ -15,6 +15,7 @@ class NodeAdvancedBranchAuthoringController {
   items: any[];
   node: any;
   nodeId: string;
+  scoreId: string;
   $translate: any;
 
   static $inject = [
@@ -64,6 +65,7 @@ class NodeAdvancedBranchAuthoringController {
     this.node = this.ProjectService.getNodeById(this.nodeId);
     this.items = this.ProjectService.idToOrder;
     this.populateBranchAuthoring();
+    this.populateScoreId();
   }
 
   populateBranchAuthoring() {
@@ -144,6 +146,15 @@ class NodeAdvancedBranchAuthoringController {
         } else if (this.node.transitionLogic.howToChooseAmongAvailablePaths === 'random') {
           this.createBranchCriterion = 'random';
         }
+      }
+    }
+  }
+
+  populateScoreId(): void {
+    for (const transition of this.node.transitionLogic.transitions) {
+      const scoreId = transition.criteria[0].params.scoreId;
+      if (scoreId != null) {
+        this.scoreId = scoreId;
       }
     }
   }
@@ -346,7 +357,7 @@ class NodeAdvancedBranchAuthoringController {
             branch.scores = null;
           } else if (this.createBranchCriterion === 'score') {
             transition.criteria = [];
-            const criterion = {
+            const criterion: any = {
               name: 'score',
               params: {
                 nodeId: this.createBranchNodeId,
@@ -354,6 +365,9 @@ class NodeAdvancedBranchAuthoringController {
                 scores: []
               }
             };
+            if (this.scoreId != null && this.scoreId !== '') {
+              criterion.params.scoreId = this.scoreId;
+            }
             transition.criteria.push(criterion);
             branch.choiceId = null;
             branch.scores = criterion.params.scores;
@@ -740,6 +754,17 @@ class NodeAdvancedBranchAuthoringController {
 
   getNodePositionById(nodeId) {
     return this.ProjectService.getNodePositionById(nodeId);
+  }
+
+  scoreIdChanged(): void {
+    for (const branch of this.createBranchBranches) {
+      if (this.scoreId === '') {
+        delete branch.transition.criteria[0].params.scoreId;
+      } else {
+        branch.transition.criteria[0].params.scoreId = this.scoreId;
+      }
+    }
+    this.saveProject();
   }
 }
 

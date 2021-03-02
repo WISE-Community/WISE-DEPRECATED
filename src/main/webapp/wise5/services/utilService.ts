@@ -558,6 +558,10 @@ export class UtilService {
     return str.trim().split(/\s+/).length;
   }
 
+  trimToLength(str: string, maxLength: number): string {
+    return str.length > maxLength ? `${str.substring(0, maxLength - 3)}...` : str;
+  }
+
   /**
    * Check if there is a 'nodeEntered' event in the array of events.
    * @param events An array of events.
@@ -806,6 +810,30 @@ export class UtilService {
       arrData[arrData.length - 1].push(finalValue);
     }
     return arrData;
+  }
+
+  greaterThanEqualTo(a: number, b: number): boolean {
+    return a >= b;
+  }
+
+  greaterThan(a: number, b: number): boolean {
+    return a > b;
+  }
+
+  lessThanEqualTo(a: number, b: number): boolean {
+    return a <= b;
+  }
+
+  lessThan(a: number, b: number): boolean {
+    return a < b;
+  }
+
+  equalTo(a: number, b: number): boolean {
+    return a === b;
+  }
+
+  notEqualTo(a: number, b: number): boolean {
+    return a !== b;
   }
 }
 

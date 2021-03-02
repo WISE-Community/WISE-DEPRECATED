@@ -1,6 +1,7 @@
 import { Directive, Input } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { ConfigService } from '../../services/configService';
 import { NodeService } from '../../services/nodeService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
@@ -31,6 +32,7 @@ export abstract class ComponentAuthoring {
   constructor(
     protected ConfigService: ConfigService,
     protected NodeService: NodeService,
+    protected ProjectAssetService: ProjectAssetService,
     protected ProjectService: TeacherProjectService
   ) {
     this.promptChange
@@ -60,6 +62,11 @@ export abstract class ComponentAuthoring {
     );
   }
 
+  ngOnDestroy() {
+    this.componentChangedSubscription.unsubscribe();
+    this.starterStateResponseSubscription.unsubscribe();
+  }
+
   promptChanged(prompt: string): void {
     this.promptChange.next(prompt);
   }
@@ -85,4 +92,45 @@ export abstract class ComponentAuthoring {
   }
 
   saveStarterState(starterState: any): void {}
+
+  setShowSubmitButtonValue(show: boolean): void {
+    if (show == null || show == false) {
+      this.authoringComponentContent.showSaveButton = false;
+      this.authoringComponentContent.showSubmitButton = false;
+    } else {
+      this.authoringComponentContent.showSaveButton = true;
+      this.authoringComponentContent.showSubmitButton = true;
+    }
+    this.NodeService.broadcastComponentShowSubmitButtonValueChanged({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      showSubmitButton: show
+    });
+  }
+
+  chooseAsset(target: string): void {
+    const params = {
+      isPopup: true,
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      target: target
+    };
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any): any {
+    return this.ProjectAssetService.openAssetChooser(params).then((data: any) => {
+      return this.assetSelected(data);
+    });
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target }): void {}
+
+  getComponentsByNodeId(nodeId: string): any[] {
+    return this.ProjectService.getComponentsByNodeId(nodeId);
+  }
+
+  getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
+    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+  }
 }

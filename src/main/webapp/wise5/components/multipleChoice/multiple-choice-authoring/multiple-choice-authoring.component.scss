@@ -1,0 +1,54 @@
+@import '~style/abstracts/variables';
+
+.prompt {
+  width: 100%;
+}
+
+.mat-radio-group {
+  display: block;
+}
+
+label.mat-radio-label {
+  display: inline-flex;
+}
+
+.mat-radio-button.choice-radio-button {
+  display: block;
+  margin-top: 10px;
+  width: 5%;
+}
+
+.choices-label {
+  margin-right: 10px;
+}
+
+.add-choice-button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.choice-container {
+  border: 2px solid #dddddd;
+  border-radius: $card-border-radius;
+  margin-bottom: 20px;
+  padding: 20px 20px 10px 20px;
+}
+
+.info-block {
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.choice-authoring-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.mat-checkbox {
+  margin-left: 5px;
+}
+
+.choice-text-input-container, .choice-feedback-input-container {
+  width: 70%;
+}

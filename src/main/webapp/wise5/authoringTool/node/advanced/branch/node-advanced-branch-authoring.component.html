@@ -55,6 +55,15 @@
         </md-option>
       </md-select>
     </div>
+    <div ng-if='$ctrl.createBranchCriterion === "score"'>
+      <md-input-container style="margin-top:30px; margin-bottom:0px;">
+        <label>{{ ::'scoreID' | translate }}</label>
+        <input type='text'
+            ng-model='$ctrl.scoreId'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.scoreIdChanged()'/>
+      </md-input-container>
+    </div>
     <div ng-repeat='branch in $ctrl.createBranchBranches' style='border: 1px solid black'>
       {{ ::'branchPath' | translate }} {{::branch.number}}
       <div ng-if='$ctrl.createBranchCriterion == "workgroupId"'>

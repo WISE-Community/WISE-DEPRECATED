@@ -43,6 +43,7 @@ describe('DrawService', () => {
   isDrawDataContainsObjects();
   isStarterDrawDataExists();
   isStudentDrawDataDifferentFromStarterData();
+  initializeDrawingTool();
 });
 
 function createComponentState(drawData: string, isSubmit: boolean = false) {
@@ -260,5 +261,26 @@ function isStudentDrawDataDifferentFromStarterData() {
       defaultDrawDataWithNoObjectsField,
       true
     );
+  });
+}
+
+function initializeDrawingTool() {
+  it('should initialize the drawing tool', () => {
+    const drawingToolId: string = 'drawing-tool';
+    const stamps = {};
+    const width: number = 400;
+    const height: number = 300;
+    const isHideDrawingTools: boolean = false;
+    const drawingTool = service.initializeDrawingTool(
+      drawingToolId,
+      stamps,
+      width,
+      height,
+      isHideDrawingTools
+    );
+    expect(drawingTool).not.toBeNull();
+    expect(drawingTool.options.stamps).toEqual(stamps);
+    expect(drawingTool.canvas.width).toEqual(width);
+    expect(drawingTool.canvas.height).toEqual(height);
   });
 }

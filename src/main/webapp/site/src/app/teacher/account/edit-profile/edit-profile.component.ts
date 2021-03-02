@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../services/user.service';
 import { Teacher } from '../../../domain/teacher';
 import { TeacherService } from '../../teacher.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UnlinkGoogleAccountConfirmComponent } from '../../../modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent {
   user: Teacher;
   schoolLevels: any[] = [
     { id: 'ELEMENTARY_SCHOOL', label: $localize`Elementary School` },
@@ -23,10 +26,13 @@ export class EditProfileComponent implements OnInit {
   languages: object[];
   changed: boolean = false;
   isSaving: boolean = false;
+  userSubscription: Subscription;
+  languagesSubscription: Subscription;
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
     lastName: new FormControl({ value: '', disabled: true }, [Validators.required]),
+    username: new FormControl({ value: '', disabled: true }, [Validators.required]),
     displayName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
@@ -41,37 +47,50 @@ export class EditProfileComponent implements OnInit {
     private fb: FormBuilder,
     private teacherService: TeacherService,
     private userService: UserService,
+    public dialog: MatDialog,
     public snackBar: MatSnackBar
-  ) {
-    this.user = <Teacher>this.getUser().getValue();
-    this.setControlFieldValue('firstName', this.user.firstName);
-    this.setControlFieldValue('lastName', this.user.lastName);
-    this.setControlFieldValue('displayName', this.user.displayName);
-    this.setControlFieldValue('email', this.user.email);
-    this.setControlFieldValue('city', this.user.city);
-    this.setControlFieldValue('state', this.user.state);
-    this.setControlFieldValue('country', this.user.country);
-    this.setControlFieldValue('schoolName', this.user.schoolName);
-    this.setControlFieldValue('schoolLevel', this.user.schoolLevel);
-    this.setControlFieldValue('language', this.user.language);
-    this.userService.getLanguages().subscribe((response) => {
-      this.languages = <object[]>response;
-    });
-
-    this.editProfileFormGroup.valueChanges.subscribe(() => {
-      this.changed = true;
-    });
-  }
+  ) {}
 
   getUser() {
-    return this.userService.getUser();
+    this.userSubscription = this.userService.getUser().subscribe((user) => {
+      this.user = <Teacher>user;
+      this.setControlFieldValue('firstName', this.user.firstName);
+      this.setControlFieldValue('lastName', this.user.lastName);
+      this.setControlFieldValue('username', this.user.username);
+      this.setControlFieldValue('displayName', this.user.displayName);
+      this.setControlFieldValue('email', this.user.email);
+      this.setControlFieldValue('city', this.user.city);
+      this.setControlFieldValue('state', this.user.state);
+      this.setControlFieldValue('country', this.user.country);
+      this.setControlFieldValue('schoolName', this.user.schoolName);
+      this.setControlFieldValue('schoolLevel', this.user.schoolLevel);
+      this.setControlFieldValue('language', this.user.language);
+      if (user.isGoogleUser) {
+        this.editProfileFormGroup.controls['email'].disable();
+      } else {
+        this.editProfileFormGroup.controls['email'].enable();
+      }
+    });
   }
 
   setControlFieldValue(name: string, value: string) {
     this.editProfileFormGroup.controls[name].setValue(value);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getUser();
+    this.editProfileFormGroup.valueChanges.subscribe(() => {
+      this.changed = true;
+    });
+    this.languagesSubscription = this.userService.getLanguages().subscribe((response) => {
+      this.languages = <object[]>response;
+    });
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
+    this.languagesSubscription.unsubscribe();
+  }
 
   saveChanges() {
     this.isSaving = true;
@@ -127,5 +146,11 @@ export class EditProfileComponent implements OnInit {
     } else {
       this.snackBar.open($localize`An error occurred. Please try again.`);
     }
+  }
+
+  unlinkGoogleAccount() {
+    this.dialog.open(UnlinkGoogleAccountConfirmComponent, {
+      panelClass: 'mat-dialog--sm'
+    });
   }
 }

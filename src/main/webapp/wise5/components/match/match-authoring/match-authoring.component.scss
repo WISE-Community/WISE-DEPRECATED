@@ -1,0 +1,55 @@
+@import '~style/abstracts/variables', '~style/themes/default';
+
+$notice-bg: map-get($default-colors, notice-bg);
+
+.prompt {
+  width: 100%;
+}
+
+.section {
+  border: 2px solid #dddddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 20px 20px 10px 20px;
+}
+
+.authoring-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.add-button {
+  margin-bottom: 10px;
+}
+
+.name {
+  width: 60%;
+  margin-right: 10px;
+}
+
+.choice-ordered-checkbox {
+  margin-bottom: 10px;
+}
+
+.choice-feedback-container {
+  background: $notice-bg;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+}
+
+.feedback {
+  width: 80%;
+  margin-right: 20px;
+}
+
+.position {
+  width: 10%;
+  margin-right: 20px;
+}
+
+.incorrect-position-feedback {
+  width: 80%;
+  margin-right: 20px;
+}
