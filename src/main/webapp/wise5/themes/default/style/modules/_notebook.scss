@@ -1,5 +1,5 @@
 // Variables
-$notebook-sidebar-width: 500px;
+$notebook-sidebar-width: 480px;
 $report-position-right: 96px;
 $report-full-gap: 8px;
 
@@ -23,7 +23,7 @@ notebook-report {
   transition: right 250ms;
   z-index: 3;
 
-  @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+  &.report-full {
     left: $report-full-gap;
     right: $report-full-gap;
     top: $report-full-gap;
@@ -31,130 +31,9 @@ notebook-report {
   }
   
   @media only screen and (min-width: $layout-breakpoint-sm) {
-    &.report-full {
-      left: $report-full-gap;
-      right: $report-full-gap;
-      top: $report-full-gap;
-      bottom: $report-full-gap
-    }
-
     &.notes-visible {
       right: $notebook-sidebar-width + 12;
     }
-  }
-}
-
-.notebook-item {
-  transition: box-shadow 250ms;
-  margin: 0 16px 16px;
-  display: block;
-}
-
-.notebook-item__content {
-  height: 250px;
-  min-width: 230px;
-  position: relative;
-  padding: 0;
-  background-color: color('gray');
-  border-top-left-radius: $card-border-radius;
-  border-top-right-radius: $card-border-radius;
-}
-
-.notebook-item__content__attachment, .notebook-item__content__text {
-  position: absolute;
-  left: 0;
-  right: 0;
-}
-
-.notebook-item__content__attachment {
-  background-repeat: no-repeat !important;
-  border-top-left-radius: $card-border-radius;
-  border-top-right-radius: $card-border-radius;
-  background-position: center top !important;
-  background-size: cover !important;
-  top: 0;
-  bottom: 0;
-}
-
-.notebook-item__content__text {
-  bottom: 0;
-  padding: 8px;
-  font-weight: 500;
-  overflow: hidden;
-  max-height: 120px;
-  min-height: 56px;
-  background-color: rgba(255,255,255,0.95);
-  border-top: 1px solid color('gray-lighter');
-
-  &:after {
-    content: "";
-    text-align: right;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 0.8em;
-    background: linear-gradient(180deg,hsla(0,0%,100%,0),rgba(255,255,255,0.95) 100%);
-  }
-}
-
-.notebook-item__content--text-only {
-  &:after {
-    content: "note";
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
-
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
-
-    /* Support for IE. */
-    font-feature-settings: 'liga';
-    //position: absolute;
-    font-size: 80px;
-    color: color('text-disabled');
-  }
-}
-
-.notebook-item--question__content--text-only {
-  content: "live_help";
-}
-
-.notebook-item__content__location {
-  opacity: 0.9;
-  padding: 8px 0;
-
-  md-icon {
-    font-size: 22px;
-  }
-}
-
-.notebook-item__edit {
-  cursor: pointer;
-}
-
-.notebook-item__actions {
-  margin: 0;
-  padding: 0 8px;
-  color: #ffffff;
-  background-color: color('gray-darkest');
-  border-bottom-left-radius: $card-border-radius;
-  border-bottom-right-radius: $card-border-radius;
-
-  md-icon {
-    color: #ffffff;
   }
 }
 
@@ -238,14 +117,11 @@ notebook-report {
 }
 
 .notebook-sidebar {
-  @media only screen and (min-width: $layout-breakpoint-xs) {
-    width: $notebook-sidebar-width - 100;  
-    max-width: none;
-  }
+  width: $notebook-sidebar-width - 180;  
+  max-width: none;
 
-  @media only screen and (min-width: $layout-breakpoint-sm) {
+  @media only screen and (min-width: $layout-breakpoint-xs) {
     width: $notebook-sidebar-width;
-    max-width: none;
   }
 }
 

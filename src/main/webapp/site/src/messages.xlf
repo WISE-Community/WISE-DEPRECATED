@@ -5403,50 +5403,32 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="826b25211922a1b46436589233cb6f1a163d89b7">
-        <source>Delete</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/notebook/notebook-item/notebook-item.component.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="579dadbb7eeefd89e8b7097dc8258865f20f76c4">
-        <source>Revive Note</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/notebook/notebook-item/notebook-item.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="7a4dcc3f14029f6e71021bc396effab868353ad5">
         <source>You haven't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="6b19ee5aa027ce641a0df6d12215e956fce185f5">
         <source>Select item to insert</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="499193338ae9eb585e15fe0aecbf6f5ee1a12fc0">
-        <source>Add <x equiv-text="{{config.itemTypes.note.label.singular}}" id="INTERPOLATION"/></source>
+      <trans-unit datatype="html" id="5d07b8b45b941a4c76827fba39b64fc7ff7e483b">
+        <source>Add <x equiv-text="{{label.singular}}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="4af03f43ed2c1d162531316a776d96f6d10621d0">
+      <trans-unit datatype="html" id="63ed080bcfe44c14dbc55c5be82e82e602eef812">
         <source> Team hasn't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="3de550daa9bf35829dbeb9099844614347d2dbc5">
@@ -5460,35 +5442,35 @@
         <source>Collapse</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="d5cec7468241d72cafd86ad1af6d55b09a6e3ae5">
         <source>Restore</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="52c9a103b812f258bcddc3d90a6e3f46871d25fe">
         <source>Save</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="044703276ff14d0a94f05154d5bc032872465a0d">
         <source>Saved <x equiv-text="{{ saveTime | amTimeAgo }}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="70cfd60f574a2e5b823237ac05381d8d488e4c7c">
         <source> Team hasn't worked on <x equiv-text="{{ config.itemTypes.report.notes[0].title }}" id="INTERPOLATION"/> yet. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="85fd3b01ce1968fbd2304a0c598d4a5676e5da03">
@@ -6173,6 +6155,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="826b25211922a1b46436589233cb6f1a163d89b7">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2485299eb70909a6cfa961bfac54f062a220806c">

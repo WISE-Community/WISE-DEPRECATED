@@ -1,51 +1,47 @@
 <mat-card class="notebook-item"
-    *ngIf="isNotebookItemActive()"
-    ng-mouseenter="focus=true;"
-    ng-mouseleave="focus=false;"
-    [ngClass]="{'md-whiteframe-5dp': focus}"
-    (click)="doSelect($event)">
-  <mat-card-content aria-label="View"
-      class="notebook-item__content notebook-item__edit"
-      [ngClass]="{'notebook-item__content--text-only': !item.content.attachments.length}"
-      md-ink-ripple
-      flex
-      layout="column"
-      layout-align="center center">
+    (click)="doSelect($event)"
+    (keyup.enter)="doSelect($event)"
+    role="button"
+    tabindex="0">
+  <mat-card-content class="content" [ngClass]="{'text-only': !item.content.attachments.length}">
     <div *ngIf="item.content.attachments.length > 0"
-        class="notebook-item__content__attachment"
-        style="background: url('{{item.content.attachments[0].iconURL}}')">
+        class="attachment-content"
+        style="background-image: url('{{item.content.attachments[0].iconURL}}')">
     </div>
     <div *ngIf="item.content.text"
-        class="notebook-item__content__text notebook-item__edit md-body-1"
+        class="text-content mat-body-1"
         style="color: {{label.color}}">
-        {{item.content.text}}
+      {{item.content.text}}
     </div>
   </mat-card-content>
-  <mat-card-actions class="notebook-item__actions"
-      layout="row"
-      layout-align="start center"
-      style="background-color: {{color}}">
-    <span class="notebook-item__content__location">
-      <mat-icon>place</mat-icon><span class="md-body-1">{{getItemNodePosition()}}</span>
-    </span>
-    <span flex></span>
-    <button mat-button
-        *ngIf="canDeleteNotebookItem()"
-        aria-label="Delete notebook item"
-        matTooltip="Delete"
-        matTooltipPosition="above"
-        i18n-matTooltip
-        (click)="doDelete($event)">
-      <mat-icon>delete</mat-icon>
-    </button>
-    <button mat-button
-        *ngIf="canReviveNotebookItem()"
-        aria-label="Revive notebook item"
-        matTooltip="Revive Note"
-        matTooltipPosition="above"
-        i18n-matTooltip
-        (click)="doRevive($event)">
-      <mat-icon>undo</mat-icon>
-    </button>
+  <mat-card-actions class="dark-theme">
+    <div class="actions app-bar"
+        fxLayoutAlign="start center"
+        style="background-color: {{color}}">
+      <span class="location" fxLayoutAlign="start center">
+        <mat-icon>place</mat-icon><span class="mat-body-1">{{getItemNodePosition()}}</span>
+      </span>
+      <span fxFlex></span>
+      <button mat-icon-button
+          *ngIf="canDeleteNotebookItem()"
+          i18n-aria-label
+          attr.aria-label="Delete {{label.singular}}"
+          i18n-matTooltip
+          attr.matTooltip="Delete {{label.singular}}"
+          matTooltipPosition="above"
+          (click)="doDelete($event)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-icon-button
+          *ngIf="canReviveNotebookItem()"
+          i18n-aria-label
+          attr.aria-label="Revive {{label.singular}}"
+          i18n-matTooltip
+          attr.matTooltip="Revive {{label.singular}}"
+          matTooltipPosition="above"
+          (click)="doRevive($event)">
+        <mat-icon>undo</mat-icon>
+      </button>
+    </div>
   </mat-card-actions>
 </mat-card>

@@ -7,10 +7,10 @@ import { ProjectService } from "../../../../../wise5/services/projectService";
 
 @Component({
   selector: 'notebook-item',
+  styleUrls: ['notebook-item.component.scss'],
   templateUrl: 'notebook-item.component.html'
 })
 export class NotebookItemComponent {
-
   @Input()
   note: any;
 
@@ -100,9 +100,11 @@ export class NotebookItemComponent {
 
   doDelete(ev: any): void {
     ev.stopPropagation();
-    const confirm = this.upgrade.$injector.get('$mdDialog').confirm()
-      .title($localize`Are you sure you want to delete this note?`)
-      .ariaLabel('delete note confirmation')
+    const confirm = this.upgrade.$injector
+      .get('$mdDialog')
+      .confirm()
+      .title($localize`Are you sure you want to delete this ${this.label.singular}?`)
+      .ariaLabel($localize`Delete ${this.label.singular} confirmation`)
       .targetEvent(ev)
       .ok($localize`Delete`)
       .cancel($localize`Cancel`);
@@ -115,9 +117,11 @@ export class NotebookItemComponent {
 
   doRevive(ev: any): void {
     ev.stopPropagation();
-    const confirm = this.upgrade.$injector.get('$mdDialog').confirm()
-      .title($localize`Are you sure you want to revive this note?`)
-      .ariaLabel('revive note confirmation')
+    const confirm = this.upgrade.$injector
+      .get('$mdDialog')
+      .confirm()
+      .title($localize`Are you sure you want to revive this ${this.label.singular}?`)
+      .ariaLabel($localize`Revive ${this.label.singular} confirmation`)
       .targetEvent(ev)
       .ok($localize`revive`)
       .cancel($localize`cancel`);
@@ -151,8 +155,7 @@ export class NotebookItemComponent {
   }
 
   canDeleteNotebookItem(): boolean {
-    return this.isMyNotebookItem() &&
-        this.item.serverDeleteTime == null &&
+    return this.isMyNotebookItem() && this.item.serverDeleteTime == null &&
         !this.isChooseMode;
   }
 

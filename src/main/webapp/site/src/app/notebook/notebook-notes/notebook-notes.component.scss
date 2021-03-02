@@ -32,11 +32,16 @@ $new-note-bottom: 24px;
 
   .notes {
     flex: 1 1 0%;
-    padding: 16px 16px ($new-note-bottom + 56px) 16px;
+    padding: 16px 8px ($new-note-bottom + 56px) 8px;
   }
 
   .notes-grading {
     padding-bottom: 16px;
+  }
+
+  .empty {
+    margin-left: 8px;
+    margin-right: 8px;
   }
 
   notebook-item {
@@ -52,5 +57,7 @@ $new-note-bottom: 24px;
 
   .group-header {
     margin-top: 0;
+    margin-left: 8px;
+    margin-right: 8px;
   }
 }
