@@ -1,0 +1,140 @@
+<mat-card class="discussion-post">
+  <div class="discussion-post__contents">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <div class="discussion-post__avatar">
+        <mat-icon class="md-48"
+          style="color: {{getAvatarColorForWorkgroupId(response.workgroupId)}};">
+          account_circle
+        </mat-icon>
+      </div>
+      <div flex>
+        <div class="discussion-post__user">{{ response.usernames }}</div>
+        <div class="discussion-post__date">
+          <span class="component__actions__more"
+              matTooltip="{{adjustClientSaveTime(response.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a'}}"
+              matTooltipPosition="right">
+            {{ adjustClientSaveTime(response.serverSaveTime) | amTimeAgo }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="discussion-post__content"
+      [innerHTML]="response.studentData.responseTextHTML">
+    </div>
+    <img *ngFor="let attachment of response.studentData.attachments"
+      [src]="attachment.iconURL" alt="Image" class="discussion-post__attachment" />
+    <div fxLayoutAlign="end center" *ngIf="mode === 'grading' || mode === 'gradingRevision'">
+      <br />
+      <button
+          *ngIf="response.latestInappropriateFlagAnnotation == null || response.latestInappropriateFlagAnnotation.data == null || response.latestInappropriateFlagAnnotation.data.action != 'Delete'"
+          mat-raised-button
+          class="delete-button"
+          (click)="delete(response)"
+          matTooltip="Delete this post so students will not see it"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          i18n>
+        Delete
+      </button>
+      <button
+          *ngIf="response.latestInappropriateFlagAnnotation != null && response.latestInappropriateFlagAnnotation.data.action === 'Delete'"
+          mat-raised-button
+          class="delete-button"
+          (click)="undoDelete(response)"
+          matTooltip="Make this post viewable to students"
+          matTooltipPosition="above"
+          i18n-matTooltip
+          i18n>
+        Undo Delete
+      </button>
+    </div>
+  </div>
+  <mat-divider *ngIf="mode === 'student' || response.replies.length > 0"></mat-divider>
+  <div class="discussion-comments">
+    <div class="discussion-comments__contents" *ngIf="response.replies.length > 0">
+      <div class="discussion-comments__header" matSubheader>
+        <span *ngIf="response.replies.length === 1" i18n>
+          Comments ({{ response.replies.length }})
+        </span>
+        <a *ngIf="response.replies.length > 1"
+            (click)="toggleExpanded()"
+            fxLayoutAlign="start center">
+          <span i18n>Comments ({{ response.replies.length }})</span>
+          <mat-icon>{{expanded ? "expand_less" : "expand_more"}}</mat-icon>
+        </a>
+      </div>
+      <mat-list class="discussion-comments__list">
+        <mat-list-item class="discussion-reply" [ngClass]="{'animate-show': !isLast}"
+            *ngFor="let reply of repliesToShow">
+          <div class="discussion-post__avatar--reply discussion-post__avatar">
+            <mat-icon class="mat-24"
+              style="color: {{getAvatarColorForWorkgroupId(reply.workgroupId)}}">
+              account_circle
+            </mat-icon>
+          </div>
+          <div class="discussion-reply__details">
+            <h3 class="discussion-post__user discussion-post__user--reply">
+              {{ reply.usernames }}
+              <span class="discussion-post__date discussion-post__date--reply component__actions__more"
+                  matTooltip="{{adjustClientSaveTime(reply.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a'}}"
+                  matTooltipPosition="right">
+                {{ adjustClientSaveTime(reply.serverSaveTime) | amTimeAgo }}
+              </span>
+            </h3>
+            <div class="discusstion-reply__content"
+                [innerHTML]="reply.studentData.responseHTML">
+            </div>
+          </div>
+          <div fxFlex></div>
+          <div *ngIf="mode === 'grading' || mode === 'gradingRevision'">
+            <button
+                *ngIf="(response.latestInappropriateFlagAnnotation == null || response.latestInappropriateFlagAnnotation.data.action !== 'Delete') && (reply.latestInappropriateFlagAnnotation == null || reply.latestInappropriateFlagAnnotation.data.action != 'Delete')"
+                mat-raised-button
+                class="delete-button"
+                (click)="delete(reply)"
+                matTooltip="Delete this post so students will not see it"
+                matTooltipPosition="above"
+                i18n>
+              Delete
+            </button>
+            <span
+                *ngIf="response.latestInappropriateFlagAnnotation != null && response.latestInappropriateFlagAnnotation.data.action === 'Delete'"
+                class="parent-deleted-message"
+                matTooltip="Students will not see this post"
+                matTooltipPosition="above"
+                i18n-matTooltip
+                i18n>
+              Parent Deleted
+            </span>
+            <button
+                *ngIf="reply.latestInappropriateFlagAnnotation != null && reply.latestInappropriateFlagAnnotation.data.action === 'Delete'"
+                mat-raised-button
+                class="delete-button"
+                (click)="undoDelete(reply)"
+                matTooltip="Make this post viewable to students"
+                matTooltipPosition="above"
+                i18n>
+              Undo Delete
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+      <mat-divider></mat-divider>
+    </div>
+    <div class="discussion-new-reply" fxLayout="row"
+      *ngIf="mode === 'student' && !isdisabled">
+      <div class="input-container discussion-new-reply__input-container">
+        <textarea
+            class="input--textarea discussion-reply__input" 
+            [(ngModel)]="response.replyText"
+            (keyup)="replyEntered($event)"
+            placeholder="Add Comment"
+            i18n-placeholder
+            aria-label="Add Comment"
+            i18n-aria-label
+            cdkTextareaAutosize>
+        </textarea>
+      </div>
+    </div>
+  </div>
+</mat-card>

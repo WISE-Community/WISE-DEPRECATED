@@ -162,9 +162,7 @@ class DiscussionController extends ComponentController {
         this.setClassResponses(componentStates, annotations);
       }
     }
-    this.initializeScopeSubmitButtonClicked();
     this.initializeScopeGetComponentState();
-    this.initializeScopeStudentDataChanged();
     this.registerStudentWorkReceivedListener();
     this.initializeWatchMdMedia();
     this.broadcastDoneRenderingComponent();
@@ -206,25 +204,23 @@ class DiscussionController extends ComponentController {
     return connectedComponentIds;
   }
 
-  initializeScopeSubmitButtonClicked() {
-    this.$scope.submitbuttonclicked = (componentStateReplyingTo) => {
-      if (componentStateReplyingTo && componentStateReplyingTo.replyText) {
-        const componentState = componentStateReplyingTo;
-        const componentStateId = componentState.id;
-        this.$scope.discussionController.studentResponse = componentState.replyText;
-        this.$scope.discussionController.componentStateIdReplyingTo = componentStateId;
-        this.$scope.discussionController.isSubmit = true;
-        this.$scope.discussionController.isDirty = true;
-        componentStateReplyingTo.replyText = null;
-      } else {
-        this.$scope.discussionController.studentResponse = this.$scope.discussionController.newResponse;
-        this.$scope.discussionController.isSubmit = true;
-      }
-      this.StudentDataService.broadcastComponentSubmitTriggered({
-        nodeId: this.$scope.discussionController.nodeId,
-        componentId: this.$scope.discussionController.componentId
-      });
-    };
+  handleSubmitButtonClicked(componentStateReplyingTo: any = null): void {
+    if (componentStateReplyingTo && componentStateReplyingTo.replyText) {
+      const componentState = componentStateReplyingTo;
+      const componentStateId = componentState.id;
+      this.studentResponse = componentState.replyText;
+      this.componentStateIdReplyingTo = componentStateId;
+      this.isSubmit = true;
+      this.isDirty = true;
+      componentStateReplyingTo.replyText = null;
+    } else {
+      this.studentResponse = this.newResponse;
+      this.isSubmit = true;
+    }
+    this.StudentDataService.broadcastComponentSubmitTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   initializeScopeGetComponentState() {
@@ -241,12 +237,6 @@ class DiscussionController extends ComponentController {
         deferred.resolve();
       }
       return deferred.promise;
-    };
-  }
-
-  initializeScopeStudentDataChanged() {
-    this.$scope.studentdatachanged = () => {
-      this.$scope.discussionController.studentDataChanged();
     };
   }
 
@@ -435,7 +425,7 @@ class DiscussionController extends ComponentController {
   submitButtonClicked() {
     this.isSubmit = true;
     this.disableComponentIfNecessary();
-    this.$scope.submitbuttonclicked();
+    this.handleSubmitButtonClicked();
   }
 
   studentDataChanged() {
@@ -696,7 +686,7 @@ class DiscussionController extends ComponentController {
    * @param componentState the student component state the teacher wants to
    * delete.
    */
-  deletebuttonclicked(componentState) {
+  deleteButtonClicked(componentState: any): void {
     const toWorkgroupId = componentState.workgroupId;
     const userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
     const periodId = userInfo.periodId;
@@ -737,7 +727,7 @@ class DiscussionController extends ComponentController {
    * @param componentState the student component state the teacher wants to
    * show again.
    */
-  undodeletebuttonclicked(componentState) {
+  undoDeleteButtonClicked(componentState: any): any {
     const toWorkgroupId = componentState.workgroupId;
     const userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
     const periodId = userInfo.periodId;

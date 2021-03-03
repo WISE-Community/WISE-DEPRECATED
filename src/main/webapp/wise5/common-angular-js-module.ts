@@ -70,6 +70,7 @@ import './themes/default/theme';
 import SideMenu from './common/sideMenuComponent';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from './directives/wise-tinymce-editor/wise-tinymce-editor.component';
+import './components/discussion/class-response/classResponseComponentModule';
 
 angular
   .module('common', [
@@ -78,6 +79,7 @@ angular
     'angular-toArrayFilter',
     'animationComponentModule',
     'audioOscillatorComponentModule',
+    'classResponseComponentModule',
     'components',
     'conceptMapComponentModule',
     'discussionComponentModule',

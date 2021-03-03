@@ -1,0 +1,48 @@
+.discussion-post {
+  padding: 0px !important;
+}
+
+.discussion-comments__contents {
+  .discussion-comments__header {
+    padding: 16px;
+  }
+}
+
+.discussion-reply {
+  height: 100% !important;
+  width: 95% !important;
+}
+
+::ng-deep .mat-list-item-content {
+  width: 100% !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+}
+
+.discussion-post__user {
+  font-size: 14px;
+  padding: 0px;
+  margin: 0px;
+}
+
+.discussion-new-reply__input-container {
+  width: 100%;
+}
+
+.discussion-reply__input {
+  width: 95%;
+  padding: 12px;
+  border: 0;
+  outline: none;
+  line-height: 1.5em;
+}
+
+.delete-button {
+  color: red;
+  margin-left: 12px;
+}
+
+.parent-deleted-message {
+  color: red;
+  margin-left: 12px;
+}
