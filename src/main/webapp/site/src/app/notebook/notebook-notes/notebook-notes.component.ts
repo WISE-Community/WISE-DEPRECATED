@@ -27,7 +27,6 @@ export class NotebookNotesComponent extends NotebookParentComponent {
   title: string;
   insertModeSubscription: Subscription;
   notebookUpdatedSubscription: Subscription;
-  openNotebookSubscription: Subscription;
   publicNotebookItemsRetrievedSubscription: Subscription;
 
   constructor(
@@ -85,11 +84,10 @@ export class NotebookNotesComponent extends NotebookParentComponent {
 
   unsubscribeAll(): void {
     this.notebookUpdatedSubscription.unsubscribe();
-    this.openNotebookSubscription.unsubscribe();
     this.insertModeSubscription.unsubscribe();
     this.publicNotebookItemsRetrievedSubscription.unsubscribe();
   }
-  
+
   isHasPrivateNotes(): boolean {
     return this.groupNameToGroup['private'].items.some(note => note.serverDeleteTime == null);
   }
