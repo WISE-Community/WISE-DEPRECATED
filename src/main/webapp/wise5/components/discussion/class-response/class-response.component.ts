@@ -47,6 +47,7 @@ export class ClassResponse {
     if (changes.numreplies != null && !changes.numreplies.isFirstChange()) {
       this.expanded = true;
       this.injectLinksIntoReplies();
+      this.showAllReplies();
     }
   }
 
