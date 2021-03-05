@@ -69,13 +69,15 @@
   </ng-container>
   <div class="notes notes-grading" *ngIf="mode === 'classroomMonitor'">
     <div *ngFor="let group of groups">
-      <h4 *ngIf="groups.length > 1" class="group-header mat-body-2 secondary-text">{{group.title}}</h4>
+      <h4 *ngIf="groups.length > 1" class="group-header mat-body-2 secondary-text">
+        {{group.title}}
+      </h4>
       <p *ngIf="group.name === 'private' && !hasPrivateNotes" class="empty" i18n>
         Team hasn't created any {{label.plural}} yet.
       </p>
       <div fxLayout="row wrap" fxLayoutAlign="start center">
         <ng-container *ngFor="let note of group.items">
-          <notebook-item *ngIf="note.serverDeleteTime == null"
+          <notebook-item *ngIf="note.serverDeleteTime == null && this.workgroupId === note.workgroupId"
               [config]="config"
               [group]="group.name"
               [itemId]="note.localNotebookItemId"

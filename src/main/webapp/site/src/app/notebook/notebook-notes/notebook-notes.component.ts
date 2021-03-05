@@ -76,6 +76,8 @@ export class NotebookNotesComponent extends NotebookParentComponent {
         }
       }
     );
+
+    this.NotebookService.retrievePublicNotebookItems('public');
   }
 
   ngOnDestroy(): void {

@@ -5632,7 +5632,7 @@
         <source> Team hasn't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="3de550daa9bf35829dbeb9099844614347d2dbc5">
