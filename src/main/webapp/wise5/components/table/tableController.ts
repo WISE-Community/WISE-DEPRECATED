@@ -105,59 +105,41 @@ class TableController extends ComponentController {
       this.initializeDataExplorer();
     }
 
-    if (this.mode === 'student') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.isResetTableButtonVisible = true;
-    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isResetTableButtonVisible = false;
-      this.isDisabled = true;
-    } else if (this.mode === 'showPreviousWork') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isResetTableButtonVisible = false;
-      this.isDisabled = true;
-    }
+    this.isPromptVisible = true;
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.isResetTableButtonVisible = true;
 
     let componentState = null;
 
     // get the component state from the scope
     componentState = this.$scope.componentState;
 
-    if (this.mode == 'student') {
-      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-        // we will show work from another component
-        this.handleConnectedComponents();
-      } else if (
-        this.TableService.componentStateHasStudentWork(componentState, this.componentContent)
-      ) {
-        /*
-         * the student has work so we will populate the work into this
-         * component
-         */
-        this.setStudentWork(componentState);
-      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        // we will import work from another component
-        this.handleConnectedComponents();
-      } else if (componentState == null) {
-        // check if we need to import work
-
-        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          /*
-           * the student does not have any work and there are connected
-           * components so we will get the work from the connected
-           * components
-           */
-          this.handleConnectedComponents();
-        }
-      }
-    } else {
-      // populate the student work into this component
+    if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+      // we will show work from another component
+      this.handleConnectedComponents();
+    } else if (
+      this.TableService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
+      /*
+       * the student has work so we will populate the work into this
+       * component
+       */
       this.setStudentWork(componentState);
+    } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      // we will import work from another component
+      this.handleConnectedComponents();
+    } else if (componentState == null) {
+      // check if we need to import work
+
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        /*
+         * the student does not have any work and there are connected
+         * components so we will get the work from the connected
+         * components
+         */
+        this.handleConnectedComponents();
+      }
     }
 
     // set up the table
@@ -458,7 +440,11 @@ class TableController extends ComponentController {
         this.dataExplorerXColumn = null;
         this.dataExplorerXAxisLabel = null;
         this.dataExplorerYAxisLabel = null;
-        this.dataExplorerYAxisLabels = null;
+        if (this.componentContent.numDataExplorerYAxis > 1) {
+          this.dataExplorerYAxisLabels = Array(this.componentContent.numDataExplorerYAxis).fill('');
+        } else {
+          this.dataExplorerYAxisLabels = null;
+        }
         this.createDataExplorerSeries();
       }
       this.studentDataChanged();

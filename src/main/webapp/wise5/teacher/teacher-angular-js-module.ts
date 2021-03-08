@@ -68,6 +68,7 @@ import '../components/openResponse/openResponseGradingComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
+import '../components/table/tableGradingComponentModule';
 
 angular
   .module('teacher', [
@@ -102,6 +103,7 @@ angular
     'outsideURLAuthoringComponentModule',
     'structureAuthoringModule',
     'tableAuthoringComponentModule',
+    'tableGradingComponentModule',
     'theme.notebook'
   ])
   .service('MilestoneService', downgradeInjectable(MilestoneService))

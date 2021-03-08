@@ -1,0 +1,29 @@
+.table {
+  margin-bottom: 20px;
+}
+
+::ng-deep.mat-form-field-disabled .mat-form-field-underline { 
+  background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 33%, #c2c7cc 0 ) !important; 
+  background-size: 1px 100% !important;
+  background-repeat: repeat-x !important; 
+}
+
+.mat-input-element:disabled {
+  color: rgba(0, 0, 0, 1);
+}
+
+::ng-deep .mat-form-field-wrapper{
+  margin-bottom: -1em;
+}
+
+::ng-deep.mat-select-value-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.data-explorer-div {
+  margin-bottom: 20px;
+}
+
+.data-explorer-field {
+  margin-right: 20px;
+}

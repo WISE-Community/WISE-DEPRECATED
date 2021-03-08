@@ -8703,6 +8703,52 @@
           <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="c1ac7b8d0d0a0d2e7452433c930cef085486540c">
+        <source>Graph Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="35fa7bf86df2c1b28cda5dd5452cf036ce96bd37">
+        <source>X Column</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="310b6ade177e4fb8a9f30579b05696c0122f08a6">
+        <source>(None)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="bed094103adb333647feb0104f6ef45566c11545">
+        <source>Y Column <x equiv-text="{{i + 1}}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b703c5f9773985dca9e4594ae0c3ecb9f3da4462">
+        <source>X Axis Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f15f150caaef41e4e915900660dae93b053ec897">
+        <source>Y Axis <x equiv-text="{{i + 1}}" id="INTERPOLATION"/> Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/table/table-grading/table-grading.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">
         <source>(Team <x equiv-text="{{workgroupId}}" id="INTERPOLATION"/>)</source>
         <context-group purpose="location">

@@ -1,0 +1,84 @@
+<div>
+  <table class="table">
+    <tbody>
+      <tr *ngFor="let row of tableData">
+        <td *ngFor="let cell of row"
+            [ngClass]="{'inactive': !cell.editable}">
+          <span *ngIf="!cell.editable">
+            {{ cell.text }}
+          </span>
+          <mat-form-field *ngIf="cell.editable" style="width: {{cell.width}}px;">
+            <input matInput
+                [ngModel]="cell.text"
+                [disabled]="true"/>
+          </mat-form-field>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="componentContent.isDataExplorerEnabled">
+    <div *ngIf="componentContent.dataExplorerGraphTypes.length > 1"
+        class="data-explorer-div">
+      <mat-form-field>
+        <mat-label i18n>Graph Type</mat-label>
+        <mat-select [ngModel]="componentState.studentData.dataExplorerGraphType"
+            [disabled]="true">
+          <mat-option *ngFor="let graphType of componentContent.dataExplorerGraphTypes"
+              [value]="graphType.value">
+            {{graphType.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="data-explorer-div">
+      <mat-form-field class="data-explorer-field">
+        <mat-label i18n>X Column</mat-label>
+        <mat-select [ngModel]="xColumnIndex != null ? xColumnIndex : -1" [disabled]="true">
+          <mat-option [value]="-1" i18n>(None)</mat-option>
+          <mat-option *ngFor="let columnName of columnNames; index as i"
+              [value]="i">
+            {{columnName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngFor="let yAxis of [].constructor(componentContent.numDataExplorerYAxis); index as i"
+          class="data-explorer-field">
+        <mat-label i18n>Y Column {{i + 1}}</mat-label>
+        <mat-select [ngModel]="componentState.studentData.dataExplorerSeries[i].yColumn != null ? componentState.studentData.dataExplorerSeries[i].yColumn : -1"
+            [disabled]="true">
+          <mat-option [value]="-1" i18n>(None)</mat-option>
+          <mat-option *ngFor="let columnName of columnNames; index as i"
+              [value]="i">
+            {{columnName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="componentContent.isDataExplorerAxisLabelsEditable"
+        class="data-explorer-div">
+      <mat-form-field class="data-explorer-field">
+        <mat-label i18n>X Axis Label</mat-label>
+        <input matInput
+            *ngIf="componentState.studentData.dataExplorerXAxisLabel == null"
+            [ngModel]="'(None)'"
+            [disabled]="true"/>
+        <input matInput
+            *ngIf="componentState.studentData.dataExplorerXAxisLabel != null"
+            [ngModel]="componentState.studentData.dataExplorerXAxisLabel"
+            [disabled]="true"/>
+      </mat-form-field>
+      <mat-form-field *ngFor="let yAxisLabel of [].constructor(componentContent.numDataExplorerYAxis); index as i"
+          class="data-explorer-field">
+        <mat-label i18n>Y Axis {{i + 1}} Label</mat-label>
+        <input matInput
+            *ngIf="componentState.studentData.dataExplorerYAxisLabels[i] == ''"
+            [ngModel]="'(None)'"
+            [disabled]="true"/>
+        <input matInput
+            *ngIf="componentState.studentData.dataExplorerYAxisLabels[i] != ''"
+            [ngModel]="componentState.studentData.dataExplorerYAxisLabels[i]"
+            [disabled]="true"/>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

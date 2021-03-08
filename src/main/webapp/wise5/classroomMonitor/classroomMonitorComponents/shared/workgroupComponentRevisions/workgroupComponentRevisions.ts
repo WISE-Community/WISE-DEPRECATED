@@ -158,7 +158,7 @@ const WorkgroupComponentRevisions = {
                         </h3>
                         <div style="padding: 20px;">
                             <ng-content ng-switch="item.componentState.componentType">
-                              <div ng-switch-when="Draw|Label|Match|MultipleChoice|OpenResponse" ng-switch-when-separator="|" class="component__content" layout="row" layout-wrap>
+                              <div ng-switch-when="Draw|Label|Match|MultipleChoice|OpenResponse|Table" ng-switch-when-separator="|" class="component__content" layout="row" layout-wrap>
                                   <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
                                       <draw-grading
                                           ng-if="item.componentState.componentType === 'Draw'"
@@ -197,6 +197,13 @@ const WorkgroupComponentRevisions = {
                                           component-state="{{ item.componentState }}"
                                           workgroup-id="::$ctrl.workgroupId">
                                       </open-response-grading>
+                                      <table-grading
+                                          ng-if="item.componentState.componentType === 'Table'"
+                                          node-id="{{::$ctrl.nodeId}}"
+                                          component-id="{{::$ctrl.componentId}}"
+                                          component-state="{{ item.componentState }}"
+                                          workgroup-id="::$ctrl.workgroupId">
+                                      </table-grading>
                                       <component-revisions-info
                                           node-id="::$ctrl.nodeId"
                                           component-id="::$ctrl.componentId"

@@ -138,7 +138,7 @@ const WorkgroupNodeGrading = {
                     </h3>
                     <ng-content ng-switch="::component.type">
                       {{latestComponentState = $ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id); ""}}
-                      <div ng-switch-when="Draw|Label|Match|MultipleChoice|OpenResponse" ng-switch-when-separator="|" class="component__content" layout="row" layout-wrap>
+                      <div ng-switch-when="Draw|Label|Match|MultipleChoice|OpenResponse|Table" ng-switch-when-separator="|" class="component__content" layout="row" layout-wrap>
                         <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
                           <ng-content ng-if="latestComponentState != null && latestComponentState !== ''">
                             <draw-grading
@@ -171,6 +171,12 @@ const WorkgroupNodeGrading = {
                                 component-id="{{::component.id}}"
                                 component-state="{{latestComponentState}}">
                             </open-response-grading>
+                            <table-grading
+                                ng-if="component.type === 'Table'"
+                                node-id="{{::$ctrl.nodeId}}"
+                                component-id="{{::component.id}}"
+                                component-state="{{latestComponentState}}">
+                            </table-grading>
                             <span flex></span>
                             <component-revisions-info node-id="::$ctrl.nodeId"
                                 component-id="::component.id"
