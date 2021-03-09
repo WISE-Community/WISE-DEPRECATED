@@ -6318,6 +6318,114 @@
         </context-group>
         <target state="needs-translation">Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</target>
       </trans-unit>
+      <trans-unit datatype="html" id="7a4dcc3f14029f6e71021bc396effab868353ad5">
+        <source>You haven't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target state="needs-translation">You haven't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet.</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b19ee5aa027ce641a0df6d12215e956fce185f5">
+        <source>Select item to insert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <target state="needs-translation">Select item to insert</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="5d07b8b45b941a4c76827fba39b64fc7ff7e483b">
+        <source>Add <x equiv-text="{{label.singular}}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <target state="needs-translation">Add <x equiv-text="{{label.singular}}" id="INTERPOLATION"/></target>
+      </trans-unit>
+      <trans-unit datatype="html" id="63ed080bcfe44c14dbc55c5be82e82e602eef812">
+        <source> Team hasn't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <target state="needs-translation"> Team hasn't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet. </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3de550daa9bf35829dbeb9099844614347d2dbc5">
+        <source>Toggle Full Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <target state="needs-translation">Toggle Full Screen</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e8bcb762b48cf52fbea66ce9c4f6b970b99a80fd">
+        <source>Collapse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <target state="needs-translation">Collapse</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d5cec7468241d72cafd86ad1af6d55b09a6e3ae5">
+        <source>Restore</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <target state="needs-translation">Restore</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="52c9a103b812f258bcddc3d90a6e3f46871d25fe">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">277</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+        <target state="needs-translation">Save</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="044703276ff14d0a94f05154d5bc032872465a0d">
+        <source>Saved <x equiv-text="{{ saveTime | amTimeAgo }}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <target state="needs-translation">Saved <x equiv-text="{{ saveTime | amTimeAgo }}" id="INTERPOLATION"/></target>
+      </trans-unit>
+      <trans-unit datatype="html" id="70cfd60f574a2e5b823237ac05381d8d488e4c7c">
+        <source> Team hasn't worked on <x equiv-text="{{ config.itemTypes.report.notes[0].title }}" id="INTERPOLATION"/> yet. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <target state="needs-translation"> Team hasn't worked on <x equiv-text="{{ config.itemTypes.report.notes[0].title }}" id="INTERPOLATION"/> yet. </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="85fd3b01ce1968fbd2304a0c598d4a5676e5da03">
+        <source> Score: <x equiv-text="{{annotations.score.data.value}}" id="INTERPOLATION"/><x equiv-text="{{maxScoreDisplay}}" id="INTERPOLATION_1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report-annotations/notebook-report-annotations.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <target state="needs-translation"> Score: <x equiv-text="{{annotations.score.data.value}}" id="INTERPOLATION"/><x equiv-text="{{maxScoreDisplay}}" id="INTERPOLATION_1"/></target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b69db579ce83572bef4390bd17f235727ac6386d">
+        <source>
+          <x equiv-text="{{ latestAnnotationTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}" id="INTERPOLATION"/>
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report-annotations/notebook-report-annotations.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <target state="needs-translation">
+          <x equiv-text="{{ latestAnnotationTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}" id="INTERPOLATION"/>
+        </target>
+      </trans-unit>
       <trans-unit datatype="html" id="22003a1edfc137e76879183acaaea45adf8452fa">
         <source>Latest from the WISE Community</source>
         <context-group purpose="location">
@@ -8325,18 +8433,6 @@
           <context context-type="linenumber">274</context>
         </context-group>
         <target state="needs-translation">Save Starter Drawing</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="52c9a103b812f258bcddc3d90a6e3f46871d25fe">
-        <source>Save</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
-          <context context-type="linenumber">277</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">221</context>
-        </context-group>
-        <target state="needs-translation">Save</target>
       </trans-unit>
       <trans-unit datatype="html" id="a5a5b66acab96c55cf12967a05d09f0ad6524482">
         <source>Delete Starter Drawing</source>
