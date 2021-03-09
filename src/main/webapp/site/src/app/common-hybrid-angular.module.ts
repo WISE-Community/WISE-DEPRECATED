@@ -67,12 +67,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
+import { ClassResponse } from '../../../wise5/components/discussion/class-response/class-response.component';
 
 @Component({ template: `` })
 export class EmptyComponent {}
 
 @NgModule({
   declarations: [
+    ClassResponse,
     EmptyComponent,
     HelpIconComponent,
     NodeIconComponent,

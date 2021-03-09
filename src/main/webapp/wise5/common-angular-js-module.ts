@@ -75,6 +75,7 @@ import { NotebookNotesComponent } from '../site/src/app/notebook/notebook-notes/
 import { NotebookReportComponent } from '../site/src/app/notebook/notebook-report/notebook-report.component';
 import { NotebookReportAnnotationsComponent } from '../site/src/app/notebook/notebook-report-annotations/notebook-report-annotations.component';
 import EditNotebookItemController from './themes/default/notebook/editNotebookItemController';
+import './components/discussion/class-response/classResponseComponentModule';
 
 angular
   .module('common', [
@@ -83,6 +84,7 @@ angular
     'angular-toArrayFilter',
     'animationComponentModule',
     'audioOscillatorComponentModule',
+    'classResponseComponentModule',
     'components',
     'conceptMapComponentModule',
     'discussionComponentModule',

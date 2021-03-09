@@ -1,0 +1,67 @@
+@import '~style/abstracts/variables', '~style/abstracts/functions';
+
+.class-response {
+  margin: 0 auto 16px;
+
+  &.mat-card {
+    padding: 0px;
+  }
+
+  .contents,
+  .comments-header {
+    padding: 16px;
+  }
+
+  .post {
+    margin-top: 16px;
+  }
+
+  .attachment {
+    max-width: 100%;
+    height: auto;
+    margin-top: 16px;
+  }
+
+  .comments {
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .mat-list-base .mat-list-item {
+    &.mat-2-line {
+      height: auto;
+      margin-bottom: 12px;
+    }
+    
+    .mat-line {
+      white-space: normal;
+    }
+
+    .mat-list-item-content {
+      align-items: flex-start;
+    }
+
+    &.mat-list-item-with-avatar .mat-list-item-content .mat-list-text {
+      padding-left: 8px;
+
+      [dir=rtl] & {
+        padding-right: 8px;
+      }
+    }
+  }
+
+  .new-reply {
+    padding: 16px;
+  }
+
+  .new-reply-input {
+    width: 100%;
+    border: 0 none;
+    overflow: hidden;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
