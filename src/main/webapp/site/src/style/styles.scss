@@ -72,14 +72,14 @@
   @include theme-setup($default-theme, $default-colors);
 }
 
-.dark-theme {
-  @include theme-setup($dark-theme, $dark-colors);
-}
-
 .author-theme {
   @include theme-setup($author-theme, $author-colors);
 }
 
 .monitor-theme {
   @include theme-setup($monitor-theme, $monitor-colors);
+}
+
+.dark-theme {
+  @include theme-setup($dark-theme, $dark-colors);
 }

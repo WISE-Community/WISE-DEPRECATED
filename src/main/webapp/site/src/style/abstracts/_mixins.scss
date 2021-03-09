@@ -173,6 +173,22 @@
     opacity: 1;
   }
 
+  .mat-toolbar {
+    @include mat-typography-level-to-styles($custom-typography, subheading-2);
+
+    h1, h2, h3, h4, h5 ,h6 {
+      @include mat-typography-level-to-styles($custom-typography, subheading-2);
+    }
+  }
+
+  .mat-toolbar-row, .mat-toolbar-single-row {
+    height: $toolbar-height;
+  }
+
+  .mat-toolbar-multiple-rows {
+    min-height: $toolbar-height;
+  }
+
   td {
     &.mat-cell, &.mat-footer-cell, &.mat-header-cell {
       padding: 4px 8px 4px 0;

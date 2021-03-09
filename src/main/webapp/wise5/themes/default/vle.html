@@ -4,29 +4,48 @@
 <style ng-bind-html="::vleController.projectStyle"></style>
 <disable-delete-keypress>
   <listen-for-delete-keypress>
-    <div class="app-styles" role="main" layout="column" layout-fill
-         ng-controller="ThemeController as themeCtrl" ng-mousemove="themeCtrl.mouseMoved()"
-         ng-class="::{'notebook-enabled': vleController.notebookEnabled}"
-         style="position: absolute;">
+    <div class="app-styles"
+        role="main"
+        layout="column"
+        layout-fill
+        ng-controller="ThemeController as themeCtrl"
+        ng-mousemove="themeCtrl.mouseMoved()"
+        ng-class="::{'notebook-enabled': vleController.notebookEnabled}"
+        style="position: absolute;">
       <ng-include src="::vleController.themePath + '/templates/topbar.html'"></ng-include>
       <step-tools show-position="themeCtrl.numberProject" ng-if="themeCtrl.layoutState === 'node'">
       </step-tools>
-      <md-content id="content" flex role="main" ui-scrollpoint-target
-                  ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}"
-                  layout="column">
-        <div id="nav" ng-include="::vleController.themePath + '/navigation/navigation.html'"
-             ng-show="themeCtrl.layoutState === 'nav'"></div>
+      <md-content id="content"
+          flex
+          role="main"
+          ui-scrollpoint-target
+          ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}"
+          layout="column">
+        <div id="nav"
+            ng-include="::vleController.themePath + '/navigation/navigation.html'"
+            ng-show="themeCtrl.layoutState === 'nav'"></div>
         <div ng-if="themeCtrl.isEndedAndLocked"
-             style="color: red; display: flex; justify-content: center; align-items: center; height: 30px;">
-          <span
-                style="border: 1px solid black; border-radius: 3px; padding-left: 8px; padding-right: 8px; background-color: white;">{{
-            themeCtrl.endedAndLockedMessage }}</span>
+            style="color: red; display: flex; justify-content: center; align-items: center; height: 30px;">
+          <span style="border: 1px solid black; border-radius: 3px; padding-left: 8px; padding-right: 8px; background-color: white;">
+            {{ themeCtrl.endedAndLockedMessage }}
+          </span>
         </div>
         <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'">
         </div>
       </md-content>
+      <md-sidenav ng-if="vleController.notesEnabled"
+          class="md-sidenav-right md-whiteframe-4dp notebook-sidebar"
+          md-component-id="notes"
+          md-disable-backdrop
+          md-is-open="vleController.notesVisible">
+        <notebook-notes [config]="vleController.notebookConfig"></notebook-notes>
+      </md-sidenav>
       <global-annotations></global-annotations>
-      <notebook workgroup-id="::vleController.workgroupId"></notebook>
+      <notebook-report ng-if="vleController.reportEnabled"
+          ng-class="{'notes-visible': vleController.notesVisible, 'report-full': vleController.reportFullscreen}"
+          [config]="vleController.notebookConfig"></notebook-report>
+      <notebook-launcher ng-if="vleController.notesEnabled && !vleController.notesVisible"
+          [notebook-config]="vleController.notebookConfig"></notebook-launcher>
     </div>
   </listen-for-delete-keypress>
 </disable-delete-keypress>

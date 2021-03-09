@@ -101,8 +101,7 @@ angular
     'openResponseGradingComponentModule',
     'outsideURLAuthoringComponentModule',
     'structureAuthoringModule',
-    'tableAuthoringComponentModule',
-    'theme.notebook'
+    'tableAuthoringComponentModule'
   ])
   .service('MilestoneService', downgradeInjectable(MilestoneService))
   .factory('ProjectService', downgradeInjectable(TeacherProjectService))

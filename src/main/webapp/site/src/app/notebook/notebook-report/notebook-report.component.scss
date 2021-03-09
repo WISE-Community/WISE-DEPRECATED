@@ -1,0 +1,84 @@
+@import 'abstracts/variables';
+
+$height: 550px !default;
+$title-width: 240px !default;
+$title-width-collapsed: 164px !default;
+$width: 450px !default;
+$width-collapsed: 300px !default;
+
+.notebook-report {
+  height: $height;
+  width: $width;
+  padding: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  &.full {
+    height: 100%;
+    width: 100%;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+
+    .actions {
+      border-bottom-left-radius: $card-border-radius;
+      border-bottom-right-radius: $card-border-radius;
+    }
+  }
+}
+
+.collapsed {
+  height: auto;
+  width: $width-collapsed;
+}
+
+.hidden {
+  display: none;
+}
+
+.mat-card-header {
+  cursor: pointer;
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
+}
+
+.mat-card-header .mat-card-title {
+  max-width: $title-width;
+  margin-bottom: 0;
+  margin-left: -12px;
+  margin-right: -12px;
+
+  .collapsed & {
+    max-width: $title-width-collapsed;
+  }
+
+  @media (max-width: breakpoint('xs.max') - 1) {
+    max-width: $title-width-collapsed;
+  }
+}
+
+.mat-card-content {
+  margin-bottom: 0;
+}
+
+.mat-card-actions {
+  margin: 0;
+  padding: 0;
+
+  .mat-button {
+    margin: 0;
+  }
+}
+
+.actions {
+  padding: 4px;
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+
+  .mat-icon {
+    cursor: pointer;
+  }
+}
+
+.save-time {
+  border-bottom: 1px dotted;
+}

@@ -10,6 +10,7 @@ import { StudentDataService } from '../services/studentDataService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
 import { Directive } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Directive()
 class VLEController {
@@ -23,19 +24,24 @@ class VLEController {
   navFilters: any;
   newNotifications: any;
   noteDialog: any;
-  notebookEnabled: boolean;
+  notesEnabled: boolean = false;
   notebookConfig: any;
   notebookItemPath: string;
+  notesVisible: boolean = false;
   notifications: any;
   pauseDialog: any;
   projectName: string;
   projectStyle: string;
-  reportItem: any;
+  reportEnabled: boolean = false;
+  reportFullscreen: boolean = false;
   themePath: string;
   totalScore: any;
-  currentNodeChangedSubscription: any;
-  showSessionWarningSubscription: any;
-  notificationChangedSubscription: any;
+  currentNodeChangedSubscription: Subscription;
+  showSessionWarningSubscription: Subscription;
+  notificationChangedSubscription: Subscription;
+  notesVisibleSubscription: Subscription;
+  pauseScreenSubscription: Subscription;
+  reportFullscreenSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -98,11 +104,11 @@ class VLEController {
     this.projectName = this.ProjectService.getProjectTitle();
     this.totalScore = this.StudentDataService.getTotalScore();
     this.maxScore = this.StudentDataService.maxScore;
-    this.notebookEnabled = this.NotebookService.isNotebookEnabled();
-
-    this.notebookConfig = this.NotebookService.getNotebookConfig();
-    // Get report, if enabled; assume only one report for now
-    this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
+    if (this.NotebookService.isNotebookEnabled()) {
+      this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
+      this.notesEnabled = this.notebookConfig.itemTypes.note.enabled;
+      this.reportEnabled = this.notebookConfig.itemTypes.report.enabled;
+    }
 
     let userType = this.ConfigService.getConfigParam('userType');
     let contextPath = this.ConfigService.getConfigParam('contextPath');
@@ -213,12 +219,24 @@ class VLEController {
       }
     );
 
-    this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
-      if (doPause) {
-        this.pauseScreen();
-      } else {
-        this.unPauseScreen();
+    this.pauseScreenSubscription = this.StudentDataService.pauseScreen$.subscribe(
+      (doPause: boolean) => {
+        if (doPause) {
+          this.pauseScreen();
+        } else {
+          this.unPauseScreen();
+        }
       }
+    );
+
+    this.notesVisibleSubscription =
+        this.NotebookService.notesVisible$.subscribe((notesVisible: boolean) => {
+      this.notesVisible = notesVisible;
+    });
+
+    this.reportFullscreenSubscription =
+        this.NotebookService.reportFullScreen$.subscribe((full: boolean) => {
+      this.reportFullscreen = full;
     });
 
     // Make sure if we drop something on the page we don't navigate away
@@ -300,6 +318,7 @@ class VLEController {
     this.currentNodeChangedSubscription.unsubscribe();
     this.showSessionWarningSubscription.unsubscribe();
     this.notificationChangedSubscription.unsubscribe();
+    this.pauseScreenSubscription.unsubscribe();
   }
 
   goHome() {

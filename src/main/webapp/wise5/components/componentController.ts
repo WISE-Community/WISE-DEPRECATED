@@ -660,13 +660,14 @@ class ComponentController {
   }
 
   copyPublicNotebookItemButtonClicked() {
-    this.NotebookService.broadcastOpenNotebook({
+    this.NotebookService.setInsertMode({
       nodeId: this.nodeId,
       componentId: this.componentId,
       insertMode: true,
       requester: this.nodeId + '-' + this.componentId,
       visibleSpace: 'public'
     });
+    this.NotebookService.setNotesVisible(true);
   }
 
   importWorkByStudentWorkId(studentWorkId) {
@@ -674,7 +675,8 @@ class ComponentController {
       if (componentState != null) {
         this.setStudentWork(componentState);
         this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-        this.NotebookService.broadcastCloseNotebook();
+        this.NotebookService.setNotesVisible(false);
+        this.NotebookService.setInsertMode({insertMode: false});
       }
     });
   }

@@ -54,7 +54,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
+import { NotebookParentComponent } from './notebook/notebook-parent/notebook-parent.component';
+import { NotebookItemComponent } from './notebook/notebook-item/notebook-item.component';
+import { NotebookLauncherComponent } from './notebook/notebook-launcher/notebook-launcher.component';
+import { NotebookNotesComponent } from './notebook/notebook-notes/notebook-notes.component';
+import { NotebookReportComponent } from './notebook/notebook-report/notebook-report.component';
+import { NotebookReportAnnotationsComponent } from './notebook/notebook-report-annotations/notebook-report-annotations.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
@@ -70,6 +79,12 @@ export class EmptyComponent {}
     HelpIconComponent,
     NodeIconComponent,
     NodeStatusIcon,
+    NotebookParentComponent,
+    NotebookItemComponent,
+    NotebookLauncherComponent,
+    NotebookNotesComponent,
+    NotebookReportComponent,
+    NotebookReportAnnotationsComponent,
     WiseTinymceEditorComponent
   ],
   imports: [
@@ -92,6 +107,9 @@ export class EmptyComponent {}
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatToolbarModule,
     MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
@@ -151,6 +169,9 @@ export class EmptyComponent {}
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatToolbarModule,
     MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
