@@ -29,5 +29,7 @@
   <side-menu ng-if="classroomMonitorController.showToolbar"
       state="classroomMonitorController.$state"
       views="classroomMonitorController.views"></side-menu>
-  <notebook-report></notebook-report>
+  <notebook-report ng-if="classroomMonitorController.reportEnabled"
+      ng-class="{'report-full': classroomMonitorController.reportFullscreen}"
+      [notebook-config]="classroomMonitorController.notebookConfig"></notebook-report>
 </div>
