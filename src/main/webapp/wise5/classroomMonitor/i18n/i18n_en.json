@@ -147,8 +147,6 @@
   "newWorkCounter": "New Work Count: {{count}}",
   "nextTeam": "Next Team",
   "noMatchesFound": "No matches found",
-  "noNotes": "Team hasn't created any {{ term }} yet.",
-  "noReport": "Team hasn't worked on {{ term }} yet.",
   "notAssigned": "Not Assigned",
   "notCompleted": "Not Completed",
   "notes": "Notes",

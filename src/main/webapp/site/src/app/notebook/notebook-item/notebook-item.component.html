@@ -1,0 +1,47 @@
+<mat-card class="notebook-item"
+    (click)="doSelect($event)"
+    (keyup.enter)="doSelect($event)"
+    role="button"
+    tabindex="0">
+  <mat-card-content class="content" [ngClass]="{'text-only': !item.content.attachments.length}">
+    <div *ngIf="item.content.attachments.length > 0"
+        class="attachment-content"
+        style="background-image: url('{{item.content.attachments[0].iconURL}}')">
+    </div>
+    <div *ngIf="item.content.text"
+        class="text-content mat-body-1"
+        style="color: {{label.color}}">
+      {{item.content.text}}
+    </div>
+  </mat-card-content>
+  <mat-card-actions class="dark-theme">
+    <div class="actions app-bar"
+        fxLayoutAlign="start center"
+        style="background-color: {{color}}">
+      <span class="location" fxLayoutAlign="start center">
+        <mat-icon>place</mat-icon><span class="mat-body-1">{{getItemNodePosition()}}</span>
+      </span>
+      <span fxFlex></span>
+      <button mat-icon-button
+          *ngIf="canDeleteNotebookItem()"
+          i18n-aria-label
+          attr.aria-label="Delete {{label.singular}}"
+          i18n-matTooltip
+          attr.matTooltip="Delete {{label.singular}}"
+          matTooltipPosition="above"
+          (click)="doDelete($event)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-icon-button
+          *ngIf="canReviveNotebookItem()"
+          i18n-aria-label
+          attr.aria-label="Revive {{label.singular}}"
+          i18n-matTooltip
+          attr.matTooltip="Revive {{label.singular}}"
+          matTooltipPosition="above"
+          (click)="doRevive($event)">
+        <mat-icon>undo</mat-icon>
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

@@ -194,46 +194,26 @@ class LabelController extends ComponentController {
       this.enableCircles = this.componentContent.enableCircles;
     }
 
-    if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isNewLabelButtonVisible = false;
+    this.isPromptVisible = true;
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+    if (this.onlyHasShowWorkConnectedComponents()) {
       this.isDisabled = true;
-
-      if (componentState != null) {
-        // create a unique id for the application label element using this component state
-        this.canvasId = 'labelCanvas_' + componentState.id;
-        if (this.mode === 'gradingRevision') {
-          this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
-        }
-      }
-    } else if (this.mode === 'showPreviousWork') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isNewLabelButtonVisible = false;
-      this.isDisabled = true;
-    } else {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      if (this.onlyHasShowWorkConnectedComponents()) {
-        this.isDisabled = true;
-      }
-
-      if (this.canCreateLabels) {
-        this.isNewLabelButtonVisible = true;
-      } else {
-        this.isNewLabelButtonVisible = false;
-      }
-
-      if (this.isDisabled) {
-        this.isNewLabelButtonVisible = false;
-        this.canCreateLabels = false;
-        this.isResetButtonVisible = false;
-      }
     }
+
+    if (this.canCreateLabels) {
+      this.isNewLabelButtonVisible = true;
+    } else {
+      this.isNewLabelButtonVisible = false;
+    }
+
+    if (this.isDisabled) {
+      this.isNewLabelButtonVisible = false;
+      this.canCreateLabels = false;
+      this.isResetButtonVisible = false;
+    }
+
     this.$timeout(
       angular.bind(this, function () {
         // wait for angular to completely render the html before we initialize the canvas
@@ -366,11 +346,16 @@ class LabelController extends ComponentController {
   }
 
   setupCanvas() {
-    // initialize the canvas
-    const canvas = this.initializeCanvas();
+    const canvas = this.LabelService.initializeCanvas(
+      this.canvasId,
+      this.canvasWidth,
+      this.canvasHeight,
+      this.isDisabled
+    );
     this.canvas = canvas;
-
-    // get the component state from the scope
+    this.registerMouseDownListener();
+    this.registerObjectMovingListener();
+    this.registerTextChangedListener();
     const componentState = this.$scope.componentState;
 
     if (!this.disabled) {
@@ -378,50 +363,32 @@ class LabelController extends ComponentController {
       this.createKeydownListener();
     }
 
-    if (this.mode == 'student') {
-      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-        // we will show work from another component
-        this.handleConnectedComponents();
-      } else if (
-        this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)
-      ) {
-        /*
-         * the student has work so we will populate the work into this
-         * component
-         */
-        this.setStudentWork(componentState);
-      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        // we will import work from another component
-        this.handleConnectedComponents();
-
-        if (this.componentContent.labels != null) {
-          // populate the canvas with the starter labels
-          this.addLabelsToCanvas(this.componentContent.labels);
-        }
-      } else if (
-        this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)
-      ) {
-        // the student labels are the same as the starter labels
-        this.setStudentWork(componentState);
-      } else if (componentState == null) {
-        if (this.componentContent.labels != null) {
-          /*
-           * the student has not done any work and there are starter labels
-           * so we will populate the canvas with the starter labels
-           */
-          this.addLabelsToCanvas(this.componentContent.labels);
-        }
-      }
-    } else if (this.mode === 'grading') {
-      // populate the student work into this component
+    if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+      this.handleConnectedComponents();
+    } else if (
+      this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
       this.setStudentWork(componentState);
-    } else {
-      if (componentState == null && this.componentContent.labels != null) {
+    } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      // we will import work from another component
+      this.handleConnectedComponents();
+
+      if (this.componentContent.labels != null) {
         // populate the canvas with the starter labels
         this.addLabelsToCanvas(this.componentContent.labels);
-      } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+      }
+    } else if (
+      this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)
+    ) {
+      // the student labels are the same as the starter labels
+      this.setStudentWork(componentState);
+    } else if (componentState == null) {
+      if (this.componentContent.labels != null) {
+        /*
+         * the student has not done any work and there are starter labels
+         * so we will populate the canvas with the starter labels
+         */
+        this.addLabelsToCanvas(this.componentContent.labels);
       }
     }
 
@@ -448,85 +415,219 @@ class LabelController extends ComponentController {
     this.disableComponentIfNecessary();
   }
 
+  registerMouseDownListener(): void {
+    this.canvas.on(
+      angular.bind(this, (options: any) => {
+        // get the object that was clicked on if any
+        const activeObject = this.canvas.getActiveObject();
+        if (activeObject == null) {
+          /*
+           * no objects in the canvas were clicked. the user clicked
+           * on a blank area of the canvas so we will unselect any label
+           * that was selected and turn off edit label mode
+           */
+          this.unselectAll();
+        }
+      })
+    );
+  }
+
+  unselectAll() {
+    this.selectedLabel = null;
+    this.editLabelMode = false;
+  }
+
+  registerObjectMovingListener(): void {
+    this.canvas.on(
+      'object:moving',
+      angular.bind(this, (options: any) => {
+        const target = options.target;
+
+        if (target != null) {
+          // get the type of the object that is moving
+          const type = target.get('type');
+
+          // get the position of the element
+          let left = target.get('left');
+          let top = target.get('top');
+
+          // limit the x position to the canvas
+          if (left < 0) {
+            target.set('left', 0);
+            left = 0;
+          } else if (left > this.canvasWidth) {
+            target.set('left', this.canvasWidth);
+            left = this.canvasWidth;
+          }
+
+          // limit the y position to the canvas
+          if (top < 0) {
+            target.set('top', 0);
+            top = 0;
+          } else if (top > this.canvasHeight) {
+            target.set('top', this.canvasHeight);
+            top = this.canvasHeight;
+          }
+
+          if (type === 'circle') {
+            /*
+             * the student is moving the point of the label so we need to update
+             * the endpoint of the line and the position of the text element.
+             * the endpoint of the line and the position of the text element should
+             * maintain the relative position to the point.
+             */
+
+            // get the line associated with the circle
+            const line = target.line;
+
+            let xDiff = 0;
+            let yDiff = 0;
+
+            if (line != null) {
+              // calculate the relative offset of the end of the line
+              xDiff = line.x2 - line.x1;
+              yDiff = line.y2 - line.y1;
+
+              if (this.studentDataVersion === 1) {
+                // set the new position of the two endpoints of the line
+                line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
+              } else {
+                // set the new position of the circle endpoint of the line
+                line.set({ x1: left, y1: top });
+              }
+
+              // remove and add the line to refresh the element in the canvas
+              this.canvas.remove(line);
+              this.canvas.add(line);
+
+              // set the z index so it will be below the circle and text elements
+              this.canvas.moveTo(line, this.lineZIndex);
+            }
+
+            // get the text element
+            const text = target.text;
+
+            if (text != null) {
+              if (this.studentDataVersion === 1) {
+                /*
+                 * In the old student data version the text position is relative
+                 * to the circle so we need to move the text along with the circle.
+                 */
+
+                // set the new position of the text element
+                text.set({ left: left + xDiff, top: top + yDiff });
+
+                // remove and add the line to refresh the element in the canvas
+                this.canvas.remove(text);
+                this.canvas.add(text);
+
+                // set the z index so it will be above line elements and below circle elements
+                this.canvas.moveTo(text, this.textZIndex);
+              }
+            }
+          } else if (type === 'i-text') {
+            if (this.enableCircles) {
+              /*
+               * the student is moving the text of the label so we need to update
+               * the endpoint of the line. the endpoint of the line should be in
+               * the same position as the text element.
+               */
+              const line = target.line;
+              if (line != null) {
+                // set the new position of the text element
+                line.set({ x2: left, y2: top });
+
+                // remove and add the line to refresh the element in the canvas
+                this.canvas.remove(line);
+                this.canvas.add(line);
+
+                // set the z index so it will be below the circle and text elements
+                this.canvas.moveTo(line, this.lineZIndex);
+              }
+            } else {
+              /*
+               * Circles are not enabled so we are only showing the text. We will
+               * set the circle position to be the same as the text position.
+               */
+              let circle = target.circle;
+              let line = target.line;
+              circle.set({ left: left, top: top });
+              line.set({ x1: left, y1: top, x2: left, y2: top });
+            }
+          }
+
+          // refresh the canvas
+          this.canvas.renderAll();
+          this.studentDataChanged();
+        }
+      })
+    );
+  }
+
+  registerTextChangedListener(): void {
+    this.canvas.on(
+      'text:changed',
+      angular.bind(this, (options: any) => {
+        const target = options.target;
+        if (target.get('type') === 'i-text') {
+          this.studentDataChanged();
+        }
+      })
+    );
+  }
+
   /**
    * Populate the student work into the component
    * @param componentState the component state to populate into the component
    */
   setStudentWork(componentState) {
-    if (componentState != null) {
-      const studentData = componentState.studentData;
+    const studentData = componentState.studentData;
 
-      if (studentData != null) {
-        if (studentData.version == null) {
-          this.setStudentDataVersion(1);
-        } else {
-          this.setStudentDataVersion(studentData.version);
-        }
-
-        // get the labels from the student data
-        const labels = studentData.labels;
-
-        // add the labels to the canvas
-        this.addLabelsToCanvas(labels);
-
-        // get the background image from the student data
-        const backgroundImage = studentData.backgroundImage;
-
-        if (backgroundImage != null) {
-          this.setBackgroundImage(backgroundImage);
-        }
-
-        const submitCounter = studentData.submitCounter;
-
-        if (submitCounter != null) {
-          // populate the submit counter
-          this.submitCounter = submitCounter;
-        }
-
-        this.processLatestStudentWork();
-      }
+    if (studentData.version == null) {
+      this.setStudentDataVersion(1);
+    } else {
+      this.setStudentDataVersion(studentData.version);
     }
+
+    this.addLabelsToCanvas(studentData.labels);
+
+    const backgroundImage = studentData.backgroundImage;
+    if (backgroundImage != null) {
+      this.setBackgroundImage(studentData.backgroundImage);
+    }
+
+    const submitCounter = studentData.submitCounter;
+    if (submitCounter != null) {
+      this.submitCounter = submitCounter;
+    }
+
+    this.processLatestStudentWork();
   }
 
   /**
    * Add labels ot the canvas
    * @param labels an array of objects that contain the values for a label
    */
-  addLabelsToCanvas(labels) {
-    if (labels != null) {
-      // loop through all the labels
-      for (let x = 0; x < labels.length; x++) {
-        // get a label
-        const label = labels[x];
+  addLabelsToCanvas(labels: any[]): void {
+    const fabricLabels = this.LabelService.addLabelsToCanvas(
+      this.canvas,
+      labels,
+      this.canvasWidth,
+      this.canvasHeight,
+      this.componentContent.pointSize,
+      this.componentContent.fontSize,
+      this.componentContent.labelWidth,
+      this.enableCircles,
+      this.studentDataVersion
+    );
+    this.addListenersToLabels(fabricLabels);
+    this.addLabelsToLocalArray(fabricLabels);
+  }
 
-        if (label != null) {
-          // get the values of the label
-          let pointX = label.pointX;
-          let pointY = label.pointY;
-          let textX = label.textX;
-          let textY = label.textY;
-          let text = label.text;
-          let color = label.color;
-          let canEdit = label.canEdit;
-          let canDelete = label.canDelete;
-
-          // create the label
-          const fabricLabel: any = this.createLabel(
-            pointX,
-            pointY,
-            textX,
-            textY,
-            text,
-            color,
-            canEdit,
-            canDelete
-          );
-
-          // add the label to the canvas
-          this.addLabelToCanvas(this.canvas, fabricLabel);
-        }
-      }
-    }
+  addLabelsToLocalArray(labels: any[]): void {
+    labels.forEach((label: any) => {
+      this.labels.push(label);
+    });
   }
 
   newLabelButtonClicked() {
@@ -770,214 +871,13 @@ class LabelController extends ComponentController {
     return this.isCancelButtonVisible;
   }
 
-  /**
-   * Initialize the canvas
-   * @returns the canvas object
-   */
-  initializeCanvas() {
-    let canvas = null;
-
-    if (this.componentContent.width != null && this.componentContent.width != '') {
-      this.canvasWidth = this.componentContent.width;
-    }
-
-    if (this.componentContent.height != null && this.componentContent.height != '') {
-      this.canvasHeight = this.componentContent.height;
-    }
-
-    // get the canvas object from the html
-    if (this.isDisabled) {
-      // we will make the canvas uneditable
-      canvas = new fabric.StaticCanvas(this.canvasId);
-    } else {
-      // make the canvas editable
-      canvas = new fabric.Canvas(this.canvasId);
-    }
-
-    // disable selection of items
-    canvas.selection = false;
-
-    // change the cursor to a hand when it is hovering over an object
-    canvas.hoverCursor = 'pointer';
-
-    // set the width and height of the canvas
-    canvas.setWidth(this.canvasWidth);
-    canvas.setHeight(this.canvasHeight);
-    (<HTMLInputElement>document.getElementById(this.canvasId)).width = this.canvasWidth;
-    (<HTMLInputElement>document.getElementById(this.canvasId)).height = this.canvasHeight;
-
-    // set the height on the parent div so that a vertical scrollbar doesn't show up
-    $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
-
-    // listen for the mouse down event
-    canvas.on(
-      'mouse:down',
-      angular.bind(this, function (options) {
-        // get the object that was clicked on if any
-        const activeObject = this.canvas.getActiveObject();
-
-        if (activeObject == null) {
-          /*
-           * no objects in the canvas were clicked. the user clicked
-           * on a blank area of the canvas so we will unselect any label
-           * that was selected and turn off edit label mode
-           */
-          this.selectedLabel = null;
-          this.editLabelMode = false;
-        }
-      })
-    );
-
-    // listen for the object moving event
-    canvas.on(
-      'object:moving',
-      angular.bind(this, function (options) {
-        const target = options.target;
-
-        if (target != null) {
-          // get the type of the object that is moving
-          const type = target.get('type');
-
-          // get the position of the element
-          let left = target.get('left');
-          let top = target.get('top');
-
-          // limit the x position to the canvas
-          if (left < 0) {
-            target.set('left', 0);
-            left = 0;
-          } else if (left > this.canvasWidth) {
-            target.set('left', this.canvasWidth);
-            left = this.canvasWidth;
-          }
-
-          // limit the y position to the canvas
-          if (top < 0) {
-            target.set('top', 0);
-            top = 0;
-          } else if (top > this.canvasHeight) {
-            target.set('top', this.canvasHeight);
-            top = this.canvasHeight;
-          }
-
-          if (type === 'circle') {
-            /*
-             * the student is moving the point of the label so we need to update
-             * the endpoint of the line and the position of the text element.
-             * the endpoint of the line and the position of the text element should
-             * maintain the relative position to the point.
-             */
-
-            // get the line associated with the circle
-            const line = target.line;
-
-            let xDiff = 0;
-            let yDiff = 0;
-
-            if (line != null) {
-              // calculate the relative offset of the end of the line
-              xDiff = line.x2 - line.x1;
-              yDiff = line.y2 - line.y1;
-
-              if (this.isStudentDataVersion(1)) {
-                // set the new position of the two endpoints of the line
-                line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
-              } else {
-                // set the new position of the circle endpoint of the line
-                line.set({ x1: left, y1: top });
-              }
-
-              // remove and add the line to refresh the element in the canvas
-              canvas.remove(line);
-              canvas.add(line);
-
-              // set the z index so it will be below the circle and text elements
-              canvas.moveTo(line, this.lineZIndex);
-            }
-
-            // get the text element
-            const text = target.text;
-
-            if (text != null) {
-              if (this.isStudentDataVersion(1)) {
-                /*
-                 * In the old student data version the text position is relative
-                 * to the circle so we need to move the text along with the circle.
-                 */
-
-                // set the new position of the text element
-                text.set({ left: left + xDiff, top: top + yDiff });
-
-                // remove and add the line to refresh the element in the canvas
-                canvas.remove(text);
-                canvas.add(text);
-
-                // set the z index so it will be above line elements and below circle elements
-                canvas.moveTo(text, this.textZIndex);
-              }
-            }
-          } else if (type === 'i-text') {
-            if (this.enableCircles) {
-              /*
-               * the student is moving the text of the label so we need to update
-               * the endpoint of the line. the endpoint of the line should be in
-               * the same position as the text element.
-               */
-              const line = target.line;
-              if (line != null) {
-                // set the new position of the text element
-                line.set({ x2: left, y2: top });
-
-                // remove and add the line to refresh the element in the canvas
-                canvas.remove(line);
-                canvas.add(line);
-
-                // set the z index so it will be below the circle and text elements
-                canvas.moveTo(line, this.lineZIndex);
-              }
-            } else {
-              /*
-               * Circles are not enabled so we are only showing the text. We will
-               * set the circle position to be the same as the text position.
-               */
-              let circle = target.circle;
-              let line = target.line;
-              circle.set({ left: left, top: top });
-              line.set({ x1: left, y1: top, x2: left, y2: top });
-            }
-          }
-
-          // refresh the canvas
-          canvas.renderAll();
-          this.studentDataChanged();
-        }
-      })
-    );
-
-    // listen for the text changed event
-    canvas.on(
-      'text:changed',
-      angular.bind(this, function (options) {
-        const target = options.target;
-        if (target != null) {
-          const type = target.get('type');
-          if (type === 'i-text') {
-            this.studentDataChanged();
-          }
-        }
-      })
-    );
-
-    return canvas;
-  }
-
   createLabelOnCanvas() {
     this.createLabelMode = false;
     this.isCancelButtonVisible = false;
     const newLabelLocation = this.getNewLabelLocation();
     const canEdit = true;
     const canDelete = true;
-    const newLabel = this.createLabel(
+    const newLabel = this.LabelService.createLabel(
       newLabelLocation.pointX,
       newLabelLocation.pointY,
       newLabelLocation.textX,
@@ -985,9 +885,17 @@ class LabelController extends ComponentController {
       this.$translate('label.aNewLabel'),
       'blue',
       canEdit,
-      canDelete
+      canDelete,
+      this.componentContent.canvasWidth,
+      this.componentContent.canvasHeight,
+      this.componentContent.pointSize,
+      this.componentContent.fontSize,
+      this.componentContent.labelWidth,
+      this.studentDataVersion
     );
-    this.addLabelToCanvas(this.canvas, newLabel);
+    this.LabelService.addLabelToCanvas(this.canvas, newLabel, this.enableCircles);
+    this.addListenersToLabel(newLabel);
+    this.labels.push(newLabel);
     this.selectLabel(newLabel);
     this.studentDataChanged();
   }
@@ -1282,16 +1190,8 @@ class LabelController extends ComponentController {
    * @return The x coordinate that may have been modified to be within the
    * bounds.
    */
-  makeSureXIsWithinXMinMaxLimits(x) {
-    // make sure the x is not to the left of the left edge
-    if (x < 0) {
-      x = 0;
-    }
-    // make sure the x is not to the right of the right edge
-    if (x > this.canvasWidth) {
-      x = this.canvasWidth;
-    }
-    return x;
+  makeSureXIsWithinXMinMaxLimits(x: number): number {
+    return this.LabelService.makeSureValueIsWithinLimit(x, this.canvasWidth);
   }
 
   /**
@@ -1300,70 +1200,25 @@ class LabelController extends ComponentController {
    * @return The y coordinate that may have been modified to be within the
    * bounds.
    */
-  makeSureYIsWithinYMinMaxLimits(y) {
-    // make sure the y is not above the top edge
-    if (y < 0) {
-      y = 0;
-    }
-    // make sure the y is not below the bottom edge
-    if (y > this.canvasHeight) {
-      y = this.canvasHeight;
-    }
-    return y;
+  makeSureYIsWithinYMinMaxLimits(y: number): number {
+    return this.LabelService.makeSureValueIsWithinLimit(y, this.canvasHeight);
   }
 
-  /**
-   * Add a label to canvas
-   * @param canvas the canvas
-   * @param label an object that contains a Fabric circle, Fabric line,
-   * and Fabric itext elements
-   */
-  addLabelToCanvas(canvas, label) {
-    if (canvas != null && label != null) {
-      // get the circle, line and text elements
-      const circle = label.circle;
-      const line = label.line;
-      const text = label.text;
+  addListenersToLabels(labels: any[]): void {
+    labels.forEach((label: any) => {
+      this.addListenersToLabel(label);
+    });
+  }
 
-      if (circle != null && line != null && text != null) {
-        if (this.enableCircles) {
-          // add the elements to the canvas
-          canvas.add(circle, line, text);
-
-          // set the z indexes for the elements
-          canvas.moveTo(line, this.lineZIndex);
-          canvas.moveTo(text, this.textZIndex);
-          canvas.moveTo(circle, this.circleZIndex);
-        } else {
-          // add the text element to the canvas
-          canvas.add(text);
-          canvas.moveTo(text, this.textZIndex);
-        }
-
-        // refresh the canvas
-        canvas.renderAll();
-
-        if (this.enableCircles) {
-          circle.on('mousedown', () => {
-            /*
-             * the circle was clicked so we will make the associated
-             * label selected
-             */
-            this.selectLabel(label);
-          });
-        }
-
-        text.on('mousedown', () => {
-          /*
-           * the text was clicked so we will make the associated
-           * label selected
-           */
-          this.selectLabel(label);
-        });
-
-        this.labels.push(label);
-      }
+  addListenersToLabel(label: any): void {
+    if (this.enableCircles) {
+      label.circle.on('mousedown', () => {
+        this.selectLabel(label);
+      });
     }
+    label.text.on('mousedown', () => {
+      this.selectLabel(label);
+    });
   }
 
   /**

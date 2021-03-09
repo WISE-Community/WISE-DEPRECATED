@@ -4,7 +4,9 @@ import { ProjectService } from '../../../services/projectService';
 class PreviewComponentController {
   componentContent: any;
   componentId: string;
+  isDirty: boolean;
   nodeId: string;
+  updateInterval: any;
 
   static $inject = ['$scope', '$compile', '$element', 'NodeService', 'ProjectService'];
 
@@ -23,19 +25,30 @@ class PreviewComponentController {
     );
     this.$scope.nodeId = this.nodeId;
     this.$scope.type = this.componentContent.type;
+    this.compileComponent();
     this.$scope.$watch(
       () => {
         return this.componentContent;
       },
       () => {
-        this.$scope.componentContent = this.ProjectService.injectAssetPaths(this.componentContent);
-        this.compileComponent();
+        this.isDirty = true;
       },
       true
     );
+    this.updateInterval = setInterval(() => {
+      if (this.isDirty) {
+        this.compileComponent();
+        this.isDirty = false;
+      }
+    }, 3000);
+  }
+
+  $onDestroy() {
+    clearInterval(this.updateInterval);
   }
 
   compileComponent() {
+    this.$scope.componentContent = this.ProjectService.injectAssetPaths(this.componentContent);
     const componentHTML = `<div class="component__wrapper">
           <div ng-include="::componentTemplatePath" class="component__content component__content--{{::type}}"></div>
         </div>`;

@@ -2,11 +2,10 @@
 
 import ThemeController from './themeController';
 import './themeComponents';
-import './notebook/notebookComponents';
 
 import './js/webfonts';
 
-const themeModule = angular.module('theme', ['theme.components', 'theme.notebook'])
+const themeModule = angular.module('theme', ['theme.components'])
     .controller('ThemeController', ThemeController);
 
 export default themeModule;

@@ -138,27 +138,55 @@ const WorkgroupNodeGrading = {
                     </h3>
                     <ng-content ng-switch="::component.type">
                       {{latestComponentState = $ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id); ""}}
-                      <div ng-switch-when="OpenResponse" class="component__content" layout="row" layout-wrap>
+                      <div ng-switch-when="Draw|Label|Match|MultipleChoice|OpenResponse" ng-switch-when-separator="|" class="component__content" layout="row" layout-wrap>
                         <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
-                          <open-response-grading
-                              node-id="{{::$ctrl.nodeId}}"
-                              component-id="{{::component.id}}"
-                              component-state="{{latestComponentState}}">
-                          </open-response-grading>
-                          <span flex></span>
-                          <component-revisions-info node-id="::$ctrl.nodeId"
-                              component-id="::component.id"
-                              to-workgroup-id="::$ctrl.workgroupId"
-                              component-state="latestComponentState"
-                              active='true'>
-                          </component-revisions-info>
+                          <ng-content ng-if="latestComponentState != null && latestComponentState !== ''">
+                            <draw-grading
+                                ng-if="component.type === 'Draw'"
+                                node-id="{{::$ctrl.nodeId}}"
+                                component-id="{{::component.id}}"
+                                component-state="{{latestComponentState}}">
+                            </draw-grading>
+                            <label-grading
+                                ng-if="component.type === 'Label'"
+                                node-id="{{::$ctrl.nodeId}}"
+                                component-id="{{::component.id}}"
+                                component-state="{{latestComponentState}}">
+                            </label-grading>
+                            <match-grading
+                                ng-if="component.type === 'Match'"
+                                node-id="{{::$ctrl.nodeId}}"
+                                component-id="{{::component.id}}"
+                                component-state="{{latestComponentState}}">
+                            </match-grading>
+                            <multiple-choice-grading
+                                ng-if="component.type === 'MultipleChoice'"
+                                node-id="{{::$ctrl.nodeId}}"
+                                component-id="{{::component.id}}"
+                                component-state="{{latestComponentState}}">
+                            </multiple-choice-grading>
+                            <open-response-grading
+                                ng-if="component.type === 'OpenResponse'"
+                                node-id="{{::$ctrl.nodeId}}"
+                                component-id="{{::component.id}}"
+                                component-state="{{latestComponentState}}">
+                            </open-response-grading>
+                            <span flex></span>
+                            <component-revisions-info node-id="::$ctrl.nodeId"
+                                component-id="::component.id"
+                                from-workgroup-id="::$ctrl.teacherWorkgroupId"
+                                to-workgroup-id="::$ctrl.workgroupId"
+                                component-state="latestComponentState"
+                                active='true'>
+                            </component-revisions-info>
+                          </ng-content>
                         </div>
                         <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
                           <component-grading node-id="::$ctrl.nodeId"
                               component-id="::component.id"
                               max-score="componentContent.maxScore"
                               from-workgroup-id="::$ctrl.teacherWorkgroupId"
-                              to-workgroup-id="$ctrl.workgroupId"
+                              to-workgroup-id="::$ctrl.workgroupId"
                               component-state-id="latestComponentState.id"
                               show-all-annotations="false"
                               is-disabled="false">

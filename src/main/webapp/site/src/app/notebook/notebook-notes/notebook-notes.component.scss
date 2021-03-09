@@ -1,0 +1,64 @@
+$new-note-bottom: 24px;
+
+.notebook-notes {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .mat-toolbar {
+    background-color: transparent;
+  }
+
+  .mat-divider {
+    margin: -1px 0 0;
+  }
+
+  .mat-tab-label {
+    height: 42px;
+  }
+
+  .mat-tab-group {
+    height: 100%;
+  }
+
+  .mat-tab-body-content {
+    overflow: auto;
+  }
+
+  .notes-wrapper {
+    flex: 1 1 0%;
+    overflow: hidden;
+  }
+
+  .notes {
+    flex: 1 1 0%;
+    padding: 16px 8px ($new-note-bottom + 56px) 8px;
+  }
+
+  .notes-grading {
+    padding-bottom: 16px;
+  }
+
+  .empty {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  notebook-item {
+    padding: 0 8px 16px;
+  }
+
+  .new-note {
+    position: absolute;
+    bottom: $new-note-bottom;
+    right: 28px;
+    z-index: 1;
+  }
+
+  .group-header {
+    margin-top: 0;
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}

@@ -15,12 +15,12 @@
                 <div class='discussion-posts'
                     flex>
                   <class-response ng-repeat='componentState in discussionController.topLevelResponses.all'
-                      response='componentState'
-                      submitbuttonclicked='submitbuttonclicked(r)'
-                      mode='{{::discussionController.mode}}'
-                      deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
-                      undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
-                      studentdatachanged='studentdatachanged()'
+                      [response]='componentState'
+                      [numreplies]='componentState.replies.length'
+                      (submit-button-clicked)='discussionController.handleSubmitButtonClicked(componentState)'
+                      [mode]='discussionController.mode'
+                      (delete-button-clicked)='discussionController.deleteButtonClicked($event)'
+                      (undo-delete-button-clicked)='discussionController.undoDeleteButtonClicked($event)'
                       class='post'>
                   </class-response>
                 </div>
@@ -111,7 +111,7 @@
                     <md-icon>image</md-icon>
                   </md-button>
                   <md-button class='md-raised md-primary'
-                      ng-click='discussionController.submitButtonClicked()'
+                      ng-click='discussionController.handleSubmitButtonClicked()'
                       ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.attachments.length == 0)'>
                     {{ ::'discussion.post' | translate }}
                   </md-button>
@@ -119,36 +119,37 @@
               </md-card>
               <class-response ng-repeat='componentState in discussionController.topLevelResponses.all'
                   ng-if='!mdScreen'
-                  response='::componentState'
-                  submitbuttonclicked='submitbuttonclicked(r)'
-                  mode='{{::discussionController.mode}}'
-                  deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
-                  undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
-                  studentdatachanged='studentdatachanged()'
-                  isdisabled='::discussionController.isDisabled'
+                  [response]='componentState'
+                  [numreplies]='componentState.replies.length'
+                  (submit-button-clicked)='discussionController.handleSubmitButtonClicked(componentState)'
+                  [mode]='discussionController.mode'
+                  (delete-button-clicked)='discussionController.deleteButtonClicked($event)'
+                  (undo-delete-button-clicked)='discussionController.undoDeleteButtonClicked($event)'
+                  [isdisabled]='discussionController.isDisabled'
                   class='post'>
               </class-response>
               <class-response ng-repeat='componentState in discussionController.topLevelResponses.col2'
                   ng-if='mdScreen'
-                  response='::componentState'
-                  submitbuttonclicked='submitbuttonclicked(r)'
-                  mode='{{::discussionController.mode}}'
-                  deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
-                  undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
-                  studentdatachanged='studentdatachanged()'
-                  isdisabled='::discussionController.isDisabled'
+                  [response]='componentState'
+                  [numreplies]='componentState.replies.length'
+                  (submit-button-clicked)='discussionController.handleSubmitButtonClicked(componentState)'
+                  [mode]='discussionController.mode'
+                  (delete-button-clicked)='discussionController.deleteButtonClicked($event)'
+                  (undo-delete-button-clicked)='discussionController.undoDeleteButtonClicked($event)'
+                  [isdisabled]='discussionController.isDisabled'
                   class='post'>
               </class-response>
             </div>
             <div class='discussion-posts' ng-if='mdScreen' flex>
               <class-response ng-repeat='componentState in discussionController.topLevelResponses.col1'
-                  response='::componentState'
-                  submitbuttonclicked='submitbuttonclicked(r)'
-                  mode='{{::discussionController.mode}}'
-                  deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
-                  undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
-                  studentdatachanged='studentdatachanged()'
-                  isdisabled='::discussionController.isDisabled'
+                  [response]='componentState'
+                  [numreplies]='componentState.replies.length'
+                  (submit-button-clicked)='discussionController.handleSubmitButtonClicked(componentState)'
+                  [mode]='discussionController.mode'
+                  (delete-button-clicked)='discussionController.deleteButtonClicked($event)'
+                  (undo-delete-button-clicked)='discussionController.undoDeleteButtonClicked($event)'
+                  [isdisabled]='discussionController.isDisabled'
+                  class='post'
                   style='display: block;'>
               </class-response>
             </div>

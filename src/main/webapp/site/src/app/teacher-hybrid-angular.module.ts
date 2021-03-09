@@ -60,6 +60,10 @@ import { GraphAuthoring } from '../../../wise5/components/graph/graph-authoring/
 import { AudioOscillatorAuthoring } from '../../../wise5/components/audioOscillator/audio-oscillator-authoring/audio-oscillator-authoring.component';
 import { AnimationAuthoring } from '../../../wise5/components/animation/animation-authoring/animation-authoring.component';
 import { OpenResponseGrading } from '../../../wise5/components/openResponse/open-response-grading/open-response-grading.component';
+import { MultipleChoiceGrading } from '../../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component';
+import { MatchGrading } from '../../../wise5/components/match/match-grading/match-grading.component';
+import { LabelGrading } from '../../../wise5/components/label/label-grading/label-grading.component';
+import { DrawGrading } from '../../../wise5/components/draw/draw-grading/draw-grading.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +79,7 @@ import { OpenResponseGrading } from '../../../wise5/components/openResponse/open
     ComponentSelectComponent,
     ConceptMapAuthoring,
     DrawAuthoring,
+    DrawGrading,
     DiscussionAuthoring,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
@@ -87,11 +92,14 @@ import { OpenResponseGrading } from '../../../wise5/components/openResponse/open
     GraphAuthoring,
     HtmlAuthoring,
     LabelAuthoring,
+    LabelGrading,
     ManageStudentsComponent,
     MatchAuthoring,
+    MatchGrading,
     MilestonesComponent,
     MilestoneReportDataComponent,
     MultipleChoiceAuthoring,
+    MultipleChoiceGrading,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,

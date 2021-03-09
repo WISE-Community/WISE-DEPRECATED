@@ -65,6 +65,11 @@
                 "bundleName": "siteStyles"
               }
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/main/webapp/site/src/style"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -274,6 +279,11 @@
             "styles": [
               "src/main/webapp/site/src/style/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/main/webapp/site/src/style"
+              ]
+            },
             "assets": [
               "src/main/webapp/site/src/assets",
               "src/main/webapp/site/src/favicon.ico"

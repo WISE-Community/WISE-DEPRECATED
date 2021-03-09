@@ -267,8 +267,8 @@ class EditNotebookItemController {
   }
 
   canCopyPublicNotebookItem() {
-    return this.ProjectService.isSpaceExists('public') &&
-      !this.isMyNotebookItem();
+    return !this.ConfigService.isClassroomMonitor() && 
+        this.ProjectService.isSpaceExists('public') && !this.isMyNotebookItem();
   }
 
   isMyNotebookItem() {

@@ -5593,6 +5593,102 @@
           <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="f1affa088d785794802225dbc56ee2ff3d785f87">
+        <source>Post attachment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d7acc4c320f2cec1d3d4e86dfa25ac5f5e6783b9">
+        <source> Delete </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f524c5795e54443e0f5c72ab2a19075cc9718bea">
+        <source>Delete this post so students will not see it</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d7f72f04c70b2b96fbd7fe3141ac1d37180cd293">
+        <source> Undo Delete </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="36ef0871b0f11b13ec0c34610f695b32a85f0bdf">
+        <source>Make this post viewable to students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="44f8132ed48105af852b8d21db511dfc43914bea">
+        <source> Comments (<x equiv-text="{{ response.replies.length }}" id="INTERPOLATION"/>) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e0335c4f9937223080bd249fff412f965e5a75d2">
+        <source>Comments (<x equiv-text="{{ response.replies.length }}" id="INTERPOLATION"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7aafd81526e4dbfbfe16413c3e1350f66939ec96">
+        <source> Delete </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="02c1d5b1e28ebc2ffda15aefc9e8f281bb2d8b46">
+        <source> Parent Deleted </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="49ab78663d368b2e86c7b44c46e10636f5c0d6eb">
+        <source>Students will not see this post</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="df53535d31be0673e662796139ade095bd430358">
+        <source> Undo Delete </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="73c0a017e42353ac091f4a487c3d9ada970c7dce">
+        <source>Add Comment</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/discussion/class-response/class-response.component.html</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
         <source>Choose a Branch Path</source>
         <context-group purpose="location">
@@ -5605,6 +5701,100 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7a4dcc3f14029f6e71021bc396effab868353ad5">
+        <source>You haven't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b19ee5aa027ce641a0df6d12215e956fce185f5">
+        <source>Select item to insert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5d07b8b45b941a4c76827fba39b64fc7ff7e483b">
+        <source>Add <x equiv-text="{{label.singular}}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="63ed080bcfe44c14dbc55c5be82e82e602eef812">
+        <source> Team hasn't created any <x equiv-text="{{label.plural}}" id="INTERPOLATION"/> yet. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-notes/notebook-notes.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3de550daa9bf35829dbeb9099844614347d2dbc5">
+        <source>Toggle Full Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e8bcb762b48cf52fbea66ce9c4f6b970b99a80fd">
+        <source>Collapse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d5cec7468241d72cafd86ad1af6d55b09a6e3ae5">
+        <source>Restore</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="52c9a103b812f258bcddc3d90a6e3f46871d25fe">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">277</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="044703276ff14d0a94f05154d5bc032872465a0d">
+        <source>Saved <x equiv-text="{{ saveTime | amTimeAgo }}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="70cfd60f574a2e5b823237ac05381d8d488e4c7c">
+        <source> Team hasn't worked on <x equiv-text="{{ config.itemTypes.report.notes[0].title }}" id="INTERPOLATION"/> yet. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report/notebook-report.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="85fd3b01ce1968fbd2304a0c598d4a5676e5da03">
+        <source> Score: <x equiv-text="{{annotations.score.data.value}}" id="INTERPOLATION"/><x equiv-text="{{maxScoreDisplay}}" id="INTERPOLATION_1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report-annotations/notebook-report-annotations.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b69db579ce83572bef4390bd17f235727ac6386d">
+        <source>
+          <x equiv-text="{{ latestAnnotationTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}" id="INTERPOLATION"/>
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/notebook/notebook-report-annotations/notebook-report-annotations.component.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="22003a1edfc137e76879183acaaea45adf8452fa">
@@ -7434,17 +7624,6 @@
           <context context-type="linenumber">274</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="52c9a103b812f258bcddc3d90a6e3f46871d25fe">
-        <source>Save</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
-          <context context-type="linenumber">277</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/label/label-authoring/label-authoring.component.html</context>
-          <context context-type="linenumber">221</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="a5a5b66acab96c55cf12967a05d09f0ad6524482">
         <source>Delete Starter Drawing</source>
         <context-group purpose="location">
@@ -8194,6 +8373,39 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">213</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f80d8048e1a73a4f0c35681cc5f8a250754eaf4b">
+        <source> You have used <x equiv-text="{{componentState.studentData.submitCounter}}" id="INTERPOLATION"/> of <x equiv-text="{{componentContent.maxSubmitCount}}" id="INTERPOLATION_1"/> attempt(s) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-grading/match-grading.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="00a48b9fab48a5ccc0ebf0a2793495ee1cc9f968">
+        <source> Correct </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-grading/match-grading.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="49a3371af0eb58f02e541105eb395340048527ec">
+        <source> Incorrect </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-grading/match-grading.component.html</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-grading/multiple-choice-grading.component.html</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e9f75e02d7db72cd425f81c273a721c62a617dc4">

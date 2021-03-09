@@ -1,0 +1,105 @@
+@import '~@angular/material/theming', 
+    '~style/abstracts/variables',
+    '~style/themes/default';
+
+$light-gray: map-get($mat-grey, 300);
+
+.notebook-item {
+  transition: box-shadow 250ms;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    @include mat-elevation(4);
+    outline: none;
+  }
+
+  &:active {
+    outline: none;
+  }
+}
+
+.content {
+  height: 200px;
+  padding: 0;
+  background-color: $light-gray;
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
+}
+
+.attachment-content, .text-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.attachment-content {
+  background-repeat: no-repeat;
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
+  background-position: center top;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+}
+
+.text-content {
+  bottom: 0;
+  padding: 8px;
+  font-weight: 500;
+  overflow: hidden;
+  max-height: 120px;
+  min-height: 56px;
+  background-color: rgba(255,255,255,0.95);
+  border-top: 1px solid $light-gray;
+
+  &:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 0.8em;
+    background: linear-gradient(180deg,hsla(0,0%,100%,0),rgba(255,255,255,0.95) 100%);
+  }
+}
+
+.text-only {
+  &:after {
+    content: "note";
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    font-size: 80px;
+    color: map-get($default-colors, disabled-text);
+  }
+}
+
+.location {
+  opacity: 0.9;
+  padding: 8px 0;
+}
+
+mat-card-actions {
+  padding-top: 0;
+}
+
+.actions {
+  margin: 0;
+  padding: 0 8px;
+  border-bottom-left-radius: $card-border-radius;
+  border-bottom-right-radius: $card-border-radius;
+}

@@ -11,7 +11,7 @@ const loginRoutes: Routes = [
     component: LoginComponent,
     children: [
       { path: '', component: LoginHomeComponent },
-      { path: 'login/googleUserNotFound', component: LoginGoogleUserNotFoundComponent }
+      { path: 'googleUserNotFound', component: LoginGoogleUserNotFoundComponent }
     ]
   }
 ];

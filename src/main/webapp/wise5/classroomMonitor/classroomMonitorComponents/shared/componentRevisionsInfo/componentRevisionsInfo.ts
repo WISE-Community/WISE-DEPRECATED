@@ -15,6 +15,7 @@ class ComponentRevisionsInfoController {
   nodeId: string;
   periodId: number;
   runId: number;
+  fromWorkgroupId: number;
   toWorkgroupId: number;
   usernames: any;
 
@@ -60,17 +61,16 @@ class ComponentRevisionsInfoController {
     }
 
     if (latest) {
-      // calculate the save time of the latest component state
-      let serverSaveTime = Date.parse(latest.serverSaveTime);
-      this.latestComponentStateTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-      // check if the latest component state is a submit
+      this.latestComponentStateTime = this.ConfigService.convertToClientTimestamp(
+        latest.serverSaveTime
+      );
       this.latestComponentStateIsSubmit = latest.isSubmit;
     }
   }
 
   showRevisions($event) {
     let workgroupId = this.toWorkgroupId;
+    let fromWorkgroupId = this.fromWorkgroupId;
     let componentId = this.componentId;
     let nodeId = this.nodeId;
     let usernames = this.usernames;
@@ -91,6 +91,8 @@ class ComponentRevisionsInfoController {
                         <div class="md-dialog-content gray-lighter-bg">
                             <workgroup-component-revisions component-states="componentStates"
                                                            node-id="{{ nodeId }}"
+                                                           component-id="{{ componentId }}"
+                                                           from-workgroup-id="{{ fromWorkgroupId }}"
                                                            workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>
                         </div>
                     </md-dialog-content>
@@ -100,6 +102,7 @@ class ComponentRevisionsInfoController {
                 </md-dialog>`,
       locals: {
         workgroupId: workgroupId,
+        fromWorkgroupId: fromWorkgroupId,
         componentId: componentId,
         nodeId: nodeId,
         usernames: usernames,
@@ -111,12 +114,14 @@ class ComponentRevisionsInfoController {
       $scope,
       $mdDialog,
       workgroupId,
+      fromWorkgroupId,
       componentId,
       nodeId,
       usernames,
       componentStates
     ) {
       $scope.workgroupId = workgroupId;
+      $scope.fromWorkgroupId = fromWorkgroupId;
       $scope.componentId = componentId;
       $scope.nodeId = nodeId;
       $scope.usernames = usernames;
@@ -129,6 +134,7 @@ class ComponentRevisionsInfoController {
       '$scope',
       '$mdDialog',
       'workgroupId',
+      'fromWorkgroupId',
       'componentId',
       'nodeId',
       'usernames',
@@ -143,6 +149,7 @@ const ComponentRevisionsInfo = {
     componentId: '<',
     componentState: '<',
     nodeId: '<',
+    fromWorkgroupId: '<',
     toWorkgroupId: '<'
   },
   template: `<div class="component__actions__info component--grading__actions__info md-caption">

@@ -12,11 +12,10 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class NotebookService {
-  // TODO: i18n
-  // TODO: allow wise instance to set defaults, enabled/disabled for each type in wise config?
+  // TODO: allow wise instance to set defaults in wise config?
   config = {
     enabled: false,
-    label: 'Notebook',
+    label: $localize`Notebook`,
     icon: 'book',
     enableAddNew: true,
     addIcon: 'note_add',
@@ -29,9 +28,9 @@ export class NotebookService {
         enableStudentUploads: true,
         type: 'note',
         label: {
-          singular: 'note',
-          plural: 'notes',
-          link: 'Manage Notes',
+          singular: $localize`note`,
+          plural: $localize`notes`,
+          link: $localize`Manage Notes`,
           icon: 'note',
           color: '#1565C0'
         }
@@ -41,9 +40,9 @@ export class NotebookService {
         enableLink: true,
         type: 'report',
         label: {
-          singular: 'report',
-          plural: 'reports',
-          link: 'Report',
+          singular: $localize`report`,
+          plural: $localize`reports`,
+          link: $localize`Report`,
           icon: 'assignment',
           color: '#AD1457'
         },
@@ -55,24 +54,22 @@ export class NotebookService {
   publicNotebookItems = {};
   notebooksByWorkgroup = {};
   notebookItemAnnotationReceivedSubscription: any;
-  private addNoteSource: Subject<any> = new Subject<any>();
-  public addNote$ = this.addNoteSource.asObservable();
-  private closeNotebookSource: Subject<any> = new Subject<any>();
-  public closeNotebook$ = this.closeNotebookSource.asObservable();
-  private editNoteSource: Subject<any> = new Subject<any>();
-  public editNote$ = this.editNoteSource.asObservable();
   private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
   public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
   private notebookItemChosenSource: Subject<any> = new Subject<any>();
   public notebookItemChosen$ = this.notebookItemChosenSource.asObservable();
   private notebookUpdatedSource: Subject<any> = new Subject<any>();
   public notebookUpdated$ = this.notebookUpdatedSource.asObservable();
-  private openNotebookSource: Subject<any> = new Subject<any>();
-  public openNotebook$ = this.openNotebookSource.asObservable();
   private publicNotebookItemsRetrievedSource: Subject<any> = new Subject<any>();
   public publicNotebookItemsRetrieved$ = this.publicNotebookItemsRetrievedSource.asObservable();
   private showReportAnnotationsSource: Subject<any> = new Subject<any>();
   public showReportAnnotations$ = this.showReportAnnotationsSource.asObservable();
+  private notesVisibleSource: Subject<boolean> = new Subject<boolean>();
+  public notesVisible$ = this.notesVisibleSource.asObservable();
+  private insertModeSource: Subject<any> = new Subject<any>();
+  public insertMode$ = this.insertModeSource.asObservable();
+  private reportFullScreenSource: Subject<boolean> = new Subject<boolean>();
+  public reportFullScreen$ = this.reportFullScreenSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -106,23 +103,69 @@ export class NotebookService {
     return Object.assign(this.config, this.ProjectService.project.teacherNotebook);
   }
 
-  editItem(ev, itemId) {
-    this.broadcastEditNote({ itemId: itemId, ev: ev });
+  addNote(
+    file: any = null,
+    text: string = null,
+    studentWorkIds: number[] = null,
+    isEditTextEnabled: boolean= true,
+    isFileUploadEnabled: boolean = true
+  ) {
+    const note = null;
+    const isEditMode = true;
+    this.showEditNoteDialog(
+      note,
+      isEditMode,
+      file,
+      text,
+      isEditTextEnabled,
+      isFileUploadEnabled,
+      studentWorkIds
+    );
   }
 
-  addNote(
-    file,
-    text = null,
-    studentWorkIds = null,
-    isEditTextEnabled = true,
-    isFileUploadEnabled = true
+  editNote(
+    note: any,
+    isEditMode: boolean = true
   ) {
-    this.broadcastAddNote({
-      file: file,
-      text: text,
-      studentWorkIds: studentWorkIds,
-      isEditTextEnabled: isEditTextEnabled,
-      isFileUploadEnabled: isFileUploadEnabled
+    const file = null;
+    const noteText = null;
+    const isEditTextEnabled = true;
+    const isFileUploadEnabled = true;
+    const studentWorkIds = null;
+    this.showEditNoteDialog(
+      note,
+      isEditMode,
+      file,
+      noteText,
+      isEditTextEnabled,
+      isFileUploadEnabled,
+      studentWorkIds
+    );
+  }
+
+  showEditNoteDialog(
+    note: any,
+    isEditMode: boolean,
+    file: any,
+    text: string,
+    isEditTextEnabled: boolean,
+    isFileUploadEnabled: boolean,
+    studentWorkIds: number[]
+  ): void {
+    this.upgrade.$injector.get('$mdDialog').show({
+      templateUrl: `${this.ProjectService.getThemePath()}/notebook/editNotebookItem.html`,
+      controller: 'EditNotebookItemController',
+      controllerAs: 'editNotebookItemController',
+      bindToController: true,
+      locals: {
+        note: note,
+        isEditMode: isEditMode,
+        file: file,
+        text: text,
+        studentWorkIds: studentWorkIds,
+        isEditTextEnabled: isEditTextEnabled,
+        isFileUploadEnabled: isFileUploadEnabled
+      }
     });
   }
 
@@ -595,18 +638,6 @@ export class NotebookService {
     );
   }
 
-  broadcastAddNote(args: any) {
-    this.addNoteSource.next(args);
-  }
-
-  broadcastCloseNotebook() {
-    this.closeNotebookSource.next();
-  }
-
-  broadcastEditNote(args: any) {
-    this.editNoteSource.next(args);
-  }
-
   broadcastNotebookItemChosen(args: any) {
     this.notebookItemChosenSource.next(args);
   }
@@ -615,15 +646,23 @@ export class NotebookService {
     this.notebookUpdatedSource.next(args);
   }
 
-  broadcastOpenNotebook(args: any) {
-    this.openNotebookSource.next(args);
-  }
-
   broadcastPublicNotebookItemsRetrieved(args: any) {
     this.publicNotebookItemsRetrievedSource.next(args);
   }
 
   broadcastShowReportAnnotations() {
     this.showReportAnnotationsSource.next();
+  }
+
+  setNotesVisible(value: boolean): void {
+    this.notesVisibleSource.next(value);
+  }
+
+  setInsertMode(args: any): void {
+    this.insertModeSource.next(args);
+  }
+
+  setReportFullScreen(value: boolean): void {
+    this.reportFullScreenSource.next(value);
   }
 }
