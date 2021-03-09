@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { ConfigService } from '../../../services/configService';
 
 @Component({
   selector: 'class-response',
   templateUrl: 'class-response.component.html',
-  styleUrls: ['class-response.component.scss']
+  styleUrls: ['class-response.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ClassResponse {
   @Input()
