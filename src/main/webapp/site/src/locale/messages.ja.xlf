@@ -256,7 +256,7 @@
           <context context-type="sourcefile">app/modules/shared/select-menu/select-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">more</target>
+        <target state="translated">詳細</target>
       </trans-unit>
       <trans-unit datatype="html" id="692e665f8177ee9150169dca0ff15418616cb3cb">
         <source>Google logo</source>
@@ -604,7 +604,7 @@
           <context context-type="sourcefile">app/modules/shared/unlink-google-account-confirm/unlink-google-account-confirm.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Continue</target>
+        <target state="translated">次へ</target>
       </trans-unit>
       <trans-unit datatype="html" id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d">
         <source>Current Password</source>
@@ -752,7 +752,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">Sign up for free!</target>
+        <target state="translated">無料で新規登録</target>
       </trans-unit>
       <trans-unit datatype="html" id="da6aa9950c74cadd85a3bf26272f34f28d8338c8">
         <source>Connect</source>
@@ -848,7 +848,7 @@
           <context context-type="sourcefile">app/app.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Back to Top</target>
+        <target state="translated">トップに戻る</target>
       </trans-unit>
       <trans-unit datatype="html" id="ea4d9fe61420a3fce81cf54c4c615e3c19c646a6">
         <source>Dismiss</source>
