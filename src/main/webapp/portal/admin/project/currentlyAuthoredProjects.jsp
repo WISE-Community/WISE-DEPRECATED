@@ -49,7 +49,7 @@ table, tr, td {
                                            items="${projectsToAuthor.value}"
                                            varStatus="loopStatus">
                                     <c:out value="${username}" /> |
-                                    <a onclick='impersonateUser("${username}")'>Log in as this user</a> |
+                                    <a onclick='impersonateUser("${username}", "teacher")'>Log in as this user</a> |
                                     <a target='_blank' href='../../teacher/account/info?username=${username}'>info</a>
                                     <c:if test="${!loopStatus.isLast()}"><br/></c:if>
                                 </c:forEach>

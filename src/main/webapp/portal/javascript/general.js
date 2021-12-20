@@ -1,9 +1,11 @@
-function impersonateUser(username) {
-  $(`<form style="visibility:hidden" action="/login/impersonate" method="POST"><input name="username" value="${username}"/></form>`)
-      .appendTo('body').submit();
+function impersonateUser(username, userType) {
+  $.post( "/api/login/impersonate", {username: username}).always(function( data ) {
+    window.location.href = `/${userType}`;
+  });
 }
 
 function switchBackToOriginalUser() {
-  $(`<form style="visibility:hidden" action="/logout/impersonate" method="POST"></form>`)
-      .appendTo('body').submit();
+  $.post( "/api/logout/impersonate").always(function( data ) {
+    window.location.href = "/teacher";
+  });
 }

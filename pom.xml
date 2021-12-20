@@ -332,7 +332,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.3.2.RELEASE</version>
+    <version>2.4.13</version>
     <relativePath/>
   </parent>
   <dependencies>
@@ -365,6 +365,10 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-messaging</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -507,17 +511,10 @@
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>net.bull.javamelody</groupId>
-      <artifactId>javamelody-spring-boot-starter</artifactId>
-      <version>1.78.0</version>
-    </dependency>
-    -->
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
-      <version>3.1.0</version>
+      <version>3.7.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.api-client</groupId>
@@ -539,5 +536,6 @@
     <startup.listeners>
     </startup.listeners>
     <m2e.apt.activation>disabled</m2e.apt.activation>
+    <log4j2.version>2.16.0</log4j2.version>
   </properties>
 </project>
