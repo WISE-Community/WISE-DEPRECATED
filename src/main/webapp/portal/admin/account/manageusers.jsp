@@ -73,7 +73,7 @@ a:hover {
         <tr>
             <td>${username}</td>
             <td><a target='_blank' href='../../teacher/management/changepassword.html?username=${username}'><spring:message code="changePassword" /></a></td>
-            <td><a onclick='impersonateUser("${username}")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+            <td><a onclick='impersonateUser("${username}", "teacher")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
             <td><a target='_blank' href='../../teacher/account/info?username=${username}'><spring:message code="info" /></a></td>
             <td><a target='_blank' href='manageuserroles.html?username=${username}'><spring:message code="admin.index.manageUserRoles" /></a></td>
         </tr>
@@ -88,7 +88,7 @@ a:hover {
         <tr>
             <td>${username}</td>
             <td><a target='_blank' href='../../teacher/management/changepassword.html?username=${username}'><spring:message code="changePassword" /></a></td>
-            <td><a onclick='impersonateUser("${username}")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+            <td><a onclick='impersonateUser("${username}", "student")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
             <td><a target='_blank' href='../../student/account/info?username=${username}'><spring:message code="info" /></a></td>
         </tr>
     </c:forEach>
@@ -113,7 +113,7 @@ a:hover {
                 </c:choose>
                 <td>${username}</td>
                 <td><a target='_blank' href='../../teacher/management/changepassword.html?username=${username}'><spring:message code="changePassword" /></a></td>
-                <td><a onclick='impersonateUser("${username}")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                <td><a onclick='impersonateUser("${username}", "teacher")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
                 <td><a target='_blank' href='../../teacher/account/info?username=${username}'><spring:message code="info" /></a></td>
                 <td>${user.userDetails.schoolname},${user.userDetails.city},${user.userDetails.state},${user.userDetails.country}</td>
                 </tr>
@@ -135,7 +135,7 @@ a:hover {
                 </c:choose>
                 <td>${username}</td>
                 <td><a target='_blank' href='../../teacher/management/changepassword.html?username=${username}'><spring:message code="changePassword" /></a></td>
-                <td><a onclick='impersonateUser("${username}")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                <td><a onclick='impersonateUser("${username}", "student")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
                 <td><a target='_blank' href='../../student/account/info?username=${username}'><spring:message code="info" /></a></td>
                 </tr>
             </c:forEach>
@@ -150,7 +150,7 @@ a:hover {
                         <tr>
                             <td>${username}</td>
                             <td><a target='_blank' href='../../teacher/management/changepassword.html?username=${username}'><spring:message code="changePassword" /></a></td>
-                            <td><a onclick='impersonateUser("${username}")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                            <td><a onclick='impersonateUser("${username}", "teacher")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
                             <td><a target='_blank' href='../../teacher/account/info?username=${username}'><spring:message code="info" /></a></td>
                             <td><a target='_blank' href='manageuserroles.html?username=${username}'><spring:message code="admin.index.manageUserRoles" /></a></td>
                         </tr>
@@ -164,7 +164,7 @@ a:hover {
                         <tr>
                             <td>${username}</td>
                             <td><a target='_blank' href='../../teacher/management/changepassword.html?username=${username}'><spring:message code="changePassword" /></a></td>
-                            <td><a onclick='impersonateUser("${username}")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
+                            <td><a onclick='impersonateUser("${username}", "student")'><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
                             <td><a target='_blank' href='../../student/account/info?username=${username}'><spring:message code="info" /></a></td>
                         </tr>
                     </c:forEach>

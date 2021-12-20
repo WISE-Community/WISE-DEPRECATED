@@ -87,14 +87,14 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
         .addFilterAfter(googleOpenIdConnectFilter(), OAuth2ClientContextFilter.class)
         .addFilterAfter(authenticationProcessingFilter(), GoogleOpenIdConnectFilter.class)
         .authorizeRequests()
-        .antMatchers("/admin/**").hasAnyRole("ADMINISTRATOR,RESEARCHER")
+        .antMatchers("/admin/**").hasAnyRole("ADMINISTRATOR","RESEARCHER")
         .antMatchers("/author/**").hasAnyRole("TEACHER")
         .antMatchers("/project/notifyAuthor*/**").hasAnyRole("TEACHER")
         .antMatchers("/student/account/info").hasAnyRole("TEACHER")
         .antMatchers("/student/**").hasAnyRole("STUDENT")
-        .antMatchers("/studentStatus").hasAnyRole("TEACHER,STUDENT")
+        .antMatchers("/studentStatus").hasAnyRole("TEACHER","STUDENT")
         .antMatchers("/teacher/**").hasAnyRole("TEACHER")
-        .antMatchers("/sso/discourse").hasAnyRole("TEACHER,STUDENT")
+        .antMatchers("/sso/discourse").hasAnyRole("TEACHER","STUDENT")
         .antMatchers("/").permitAll();
     http.formLogin().loginPage("/login").permitAll();
     http.sessionManagement().maximumSessions(2).sessionRegistry(sessionRegistry());

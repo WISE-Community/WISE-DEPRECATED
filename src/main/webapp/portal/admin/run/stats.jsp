@@ -50,7 +50,7 @@ th {
 				<td>${run.id} (${run.runcode})</td>
 				<td>${run.name} (${run.project.wiseVersion})</td>
 				<td>
-						<a onclick='impersonateUser("${run.owner.userDetails.username}")'>${run.owner.userDetails.username}</a><br/>
+						<a onclick='impersonateUser("${run.owner.userDetails.username}", "teacher")'>${run.owner.userDetails.username}</a><br/>
 						(${run.owner.userDetails.schoolname}, ${run.owner.userDetails.city}, ${run.owner.userDetails.state},${run.owner.userDetails.country})
 				</td>
 				<c:if test="${period!=null}">
