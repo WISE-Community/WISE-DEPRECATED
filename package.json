@@ -64,7 +64,7 @@
     "sockjs-client": "^1.4.0",
     "svg.draggable.js": "2.2.0",
     "svg.js": "2.3.2",
-    "tinymce": "^5.5.1",
+    "tinymce": "^5.10.7",
     "tslib": "^2.0.0",
     "webfontloader": "^1.6.20",
     "xmldom": "^0.1.31",
